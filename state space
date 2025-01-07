@@ -1,1 +1,36 @@
+Opdracht 1
+n=20, r = 12
+Geen herhaling, geen order: n!/r!(n-r)! = 125,970 mogelijkheden 
+
+Opdracht 2
+n=3, r = 20
+3^20 = 3.486.784.401
+
+Opdracht 3
+n=3, r=25
+met repetitie, zonder order: (r+n-1)!/r!(n-1)! = 351
+
+Opdracht 4
+r={30, 31, 32}, n = 110
+
+Opdracht 5
+
+Opdracht 6
+
+Opdracht 7
+
+Variabelen: 
+Aantal gates 
+Hoeveelheid connecties 
+Afmetingen van de grid 
+Aantal lagen 
+
+Aanames:
+Standaard afmetingen van de grid 
+Maximum aantal lagen 
+Vaste plaatsen van de gates 
+De nets mogen elkaar kruisen, maar kunnen niet over dezelfde gridsectie heen 
+
+
+
 
