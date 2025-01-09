@@ -5,24 +5,42 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# gates coordinaten importeren
-gates = pd.read_csv('gates&netlists/gates&netlists/chip_0/print_0.csv')
+def grid(chip_path):
 
-# gates plotten in correcte formaat grid
-for line in range(7):
-    plt.axvline(line, color = 'black')
-    plt.axhline(line, color = 'black')
+    # gates coordinaten importeren
+    gates = pd.read_csv(chip_path)
 
-plt.plot(gates['x'], gates['y'], 'rs', markersize = 18)
+    max_x = max(gates['x']) + 1
+    max_y = max(gates['y']) + 1
 
-for index, row in gates.iterrows():
-    plt.text(row[1]-0.08, row[2]-0.08, row[0], weight='bold', fontsize = 12)
-plt.xticks([])
-plt.yticks([])
-plt.ylim(0, 6)
-plt.xlim(0, 7)
+    # gates plotten in correcte formaat grid
+    for line in range(max_x):
+        plt.axvline(line, color = 'black')
 
-plt.show()
+    for line in range(max_y):
+        plt.axhline(line, color = 'black')
+
+    plt.plot(gates['x'], gates['y'], 'rs', markersize = 18)
+
+    for index, row in gates.iterrows():
+        plt.text(row[1]-0.3, row[2]-0.1, row[0], weight='bold', fontsize = 12)
+    
+    plt.xticks([])
+    plt.yticks([])
+    plt.ylim(0, max_y)
+    plt.xlim(0, max_x)
+
+    plt.show()
+
+grid('gates&netlists/chip_1/print_1.csv')
+
+# connecties plotted (in blauw) met behulp van coordinaten van gates die verbonden
+# moeten worden (x-x y-y, zoiets)
+
+# To Do:
+# in functie zetten: voor elke input: voor elke chip moet het werken
+# connecties eerste poging
+
 
 
 # connecties plotted (in blauw) met behulp van coordinaten van gates die verbonden
