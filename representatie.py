@@ -10,6 +10,8 @@ def grid(chip_path):
     # gates coordinaten importeren
     gates = pd.read_csv(chip_path)
 
+    print(gates)
+    
     max_x = max(gates['x']) + 1
     max_y = max(gates['y']) + 1
 
@@ -23,8 +25,8 @@ def grid(chip_path):
     plt.plot(gates['x'], gates['y'], 'rs', markersize = 18)
 
     for index, row in gates.iterrows():
-        plt.text(row[1]-0.3, row[2]-0.1, row[0], weight='bold', fontsize = 12)
-    
+        plt.text(row[1]-0.2, row[2]-0.1, row[0], weight='bold', fontsize = 12)
+
     plt.xticks([])
     plt.yticks([])
     plt.ylim(0, max_y)
@@ -32,7 +34,7 @@ def grid(chip_path):
 
     plt.show()
 
-grid('gates&netlists/chip_1/print_1.csv')
+grid('gates&netlists/chip_2/print_2.csv')
 
 # connecties plotted (in blauw) met behulp van coordinaten van gates die verbonden
 # moeten worden (x-x y-y, zoiets)
@@ -40,13 +42,3 @@ grid('gates&netlists/chip_1/print_1.csv')
 # To Do:
 # in functie zetten: voor elke input: voor elke chip moet het werken
 # connecties eerste poging
-
-
-
-# connecties plotted (in blauw) met behulp van coordinaten van gates die verbonden
-# moeten worden (x-x y-y, zoiets)
-
-# To Do:
-# in functie zetten: voor elke input: voor elke chip moet het werken
-# connecties eerste poging
-
