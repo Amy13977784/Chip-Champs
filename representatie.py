@@ -41,13 +41,13 @@ def plot_connections(connections_path, gates):
         coor_a = gates.loc[row['chip_a']]
         coor_b = gates.loc[row['chip_b']]
 
-        horizontal_steps = coor_b['x'] - coor_a['x']
-        vertical_steps = coor_b['y'] - coor_a['y']
-        
-        plt.plot((coor_a['x'], coor_a['x'] + horizontal_steps, coor_a['x'] + horizontal_steps), (coor_a['y'], coor_a['y'], coor_a['y'] + vertical_steps), linewidth = 4, color='b')
-    
+        horizontal_step = coor_b['x'] - coor_a['x']
+        vertical_step = coor_b['y'] - coor_a['y']
 
-    
+        x_coor = (coor_a['x'], coor_a['x'] + horizontal_step, coor_a['x'] + horizontal_steps)
+        y_coor = (coor_a['y'], coor_a['y'], coor_a['y'] + vertical_step)
+        
+        plt.plot(x_coor, y_coor, linewidth = 4, color='b')
 
 gates_path = 'gates&netlists/chip_2/print_2.csv'
 connections_path = 'gates&netlists/chip_2/netlist_7.csv'
