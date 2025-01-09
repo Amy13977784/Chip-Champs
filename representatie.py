@@ -6,7 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # gates coordinaten importeren
-gates = pd.read_csv('gates&netlists/chip_0/print_0.csv')
+gates = pd.read_csv('gates&netlists/gates&netlists/chip_0/print_0.csv')
 
 # gates plotten in correcte formaat grid
 for line in range(7):
@@ -31,4 +31,3 @@ plt.show()
 # To Do:
 # in functie zetten: voor elke input: voor elke chip moet het werken
 # connecties eerste poging
-
