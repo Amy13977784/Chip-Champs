@@ -44,7 +44,7 @@ def plot_connections(connections_path, gates):
         horizontal_step = coor_b['x'] - coor_a['x']
         vertical_step = coor_b['y'] - coor_a['y']
 
-        x_coor = (coor_a['x'], coor_a['x'] + horizontal_step, coor_a['x'] + horizontal_steps)
+        x_coor = (coor_a['x'], coor_a['x'] + horizontal_step, coor_a['x'] + horizontal_step)
         y_coor = (coor_a['y'], coor_a['y'], coor_a['y'] + vertical_step)
         
         plt.plot(x_coor, y_coor, linewidth = 4, color='b')
