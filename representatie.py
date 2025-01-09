@@ -17,7 +17,6 @@ def plot_grid(connections_path, gates_path):
     for line in range(1, y_max):
         plt.axhline(line, color = 'black', linewidth = 0.75)
 
-
     plot_connections(connections_path, gates)
 
     plt.plot(gates['x'], gates['y'], 'rs', markersize = 29 - max([x_max, y_max]))
@@ -25,6 +24,7 @@ def plot_grid(connections_path, gates_path):
     for index, row in gates.iterrows():
         plt.text(row['x'], row['y'], index, fontsize = 27 - max([x_max, y_max]), \
             horizontalalignment='center', verticalalignment='center_baseline')
+    
 
     plt.xticks([])
     plt.yticks([])
@@ -34,24 +34,65 @@ def plot_grid(connections_path, gates_path):
     plt.show()
 
 
+def x_step(coor_a, coor_b, location):
+    if coor_a['x'] > coor_b['x']:
+        new_location = location['x'] - 1
+    else:
+        new_location = location['x'] + 1
+
+    return (location['x'], location['y']), (new_location, location['y'])
+
+    
+def y_step(coor_a, coor_b, location):
+    if coor_a['y'] > coor_b['y']:
+        new_location = location['y'] - 1
+    else:
+        new_location = location['y'] + 1
+
+    return (location['x'], location['y']), (location['x'], new_location)
+    
+
 def plot_connections(connections_path, gates):
     connections = pd.read_csv(connections_path)
+
+    occupied_segments = []
    
     for _, row in connections.iterrows():
         coor_a = gates.loc[row['chip_a']]
         coor_b = gates.loc[row['chip_b']]
 
-        horizontal_step = coor_b['x'] - coor_a['x']
-        vertical_step = coor_b['y'] - coor_a['y']
+        location = coor_a.copy()
 
-        x_coor = (coor_a['x'], coor_a['x'] + horizontal_step, coor_a['x'] + horizontal_step)
-        y_coor = (coor_a['y'], coor_a['y'], coor_a['y'] + vertical_step)
-        
-        plt.plot(x_coor, y_coor, linewidth = 4, color='b')
+        # while location['x'] != coor_b['x'] and location['y'] != coor_b['y']:
+        while location['x'] != coor_b['x']:
+            segment_a, segment_b = x_step(coor_a, coor_b, location)
+            
+            if (segment_a, segment_b) in occupied_segments or (segment_b, segment_a) in occupied_segments:
+                segment_a, segment_b = y_step(coor_a, coor_b, location)
 
-gates_path = 'gates&netlists/chip_2/print_2.csv'
-connections_path = 'gates&netlists/chip_2/netlist_7.csv'
+            occupied_segments.append((segment_a, segment_b))
+
+            plt.plot((segment_a[0], segment_b[0]), (segment_a[1], segment_b[1]), linewidth = 4, color='b')
+            location['x'] = segment_b[0]
+
+
+        while location['y'] != coor_b['y']:
+            segment_a, segment_b = y_step(coor_a, coor_b, location)
+            
+            if (segment_a, segment_b) in occupied_segments or (segment_b, segment_a) in occupied_segments:
+                segment_a, segment_b = x_step(coor_a, coor_b, location)
+            
+            occupied_segments.append((segment_a, segment_b))
+
+            plt.plot((segment_a[0], segment_b[0]), (segment_a[1], segment_b[1]), linewidth = 4, color='b')
+            location['y'] = segment_b[1]
+
+gates_path = 'gates&netlists/chip_0/print_0.csv'
+connections_path = 'gates&netlists/chip_0/netlist_1.csv'
 plot_grid(connections_path, gates_path)
 
 
+
+
 # To Do: kruisingen tussen draden vinden, hoe?
+# 3d plot om alle lagen te representeren
