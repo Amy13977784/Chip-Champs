@@ -6,13 +6,18 @@ class Connection:
     ''' Class that creates connections by implementing their starting location (chip a) and
         their einding location (chip b), and lets the connections take form by taking steps in 
         the right directions. '''
+    
     def __init__(self, connection, gates, occupied_segments):
-        self.location = gates.loc[connection['chip_a']]
+        '''Implements the starting/current and end location of the connection/wire. '''
+
+        self.location = gates.loc[connection['chip_a']].copy()
         self.end_location = gates.loc[connection['chip_b']]
 
         self.occupied_segments = occupied_segments
 
     def step(self, axis):
+        '''Let's the connection take a step according to the end location.'''
+
         if self.location[axis] > self.end_location[axis]:
             new_location = self.location[axis] - 1
         elif self.location[axis] < self.end_location[axis]:
@@ -29,6 +34,9 @@ class Connection:
 
 
     def plot_and_update_values(self):
+        ''' Plots step of the connection and updates its current location (end segment becomes
+        start of segment, in next step the new end segment is determined). '''
+
         plt.plot((self.segment_start[0], self.segment_end[0]), (self.segment_start[1], self.segment_end[1]), linewidth = 4, color='b')
 
         self.occupied_segments.append((self.segment_start, self.segment_end))
@@ -36,6 +44,10 @@ class Connection:
 
 
     def make_connection(self):
+        '''Form the connections by taking steps. If a certain segment is already in use by
+        a connection/wire, the next step will be in the direction of the other axis. Each step
+        is plotted. '''
+
         while self.location['x'] != self.end_location['x'] or self.location['y'] != self.end_location['y']:
 
             while self.location['x'] != self.end_location['x']:
