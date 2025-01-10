@@ -1,8 +1,8 @@
 class Visualize_chip:
     """ This class contains the code for making the grid. """
 
-    def __init__(self, gates_path, connections_path):
-        self.gates = pd.read_csv(gates_path, index_col='chip')
+    def __init__(self, gates, connections_path):
+        self.gates = gates
         self.connections = pd.read_csv(connections_path)
 
         self.x_max = max(self.gates['x']) + 1
@@ -38,4 +38,7 @@ class Visualize_chip:
         plt.xlim(0, self.x_max)
         plt.ylim(0, self.y_max)
         plt.show()
+
+
+        
 
