@@ -124,7 +124,8 @@ class Error:
         self.length = len(chip.occupied_segments)
     
     def intersections(self):
-
+        '''Check if segment ends occur mulitple times in the occupied segments list. In other words,
+         check if certain point in the grid are used twice or more.'''
         intersections_amount = 0
         return intersections_amount
 
@@ -144,5 +145,5 @@ if __name__ == '__main__':
 
     costs = Error(my_chip)
     cost = costs.error_calculation()
-    print(f'The costs for this solution: {cost}')
+    print(f'The cost for this solution: {cost}')
 
