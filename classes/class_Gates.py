@@ -1,3 +1,5 @@
+import pandas as pd
+
 class Gates:
     """Class to manage the properties of the gates."""
 

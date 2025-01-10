@@ -1,4 +1,3 @@
-import pandas as pd
 import matplotlib.pyplot as plt
 
 from classes import class_Step
@@ -34,17 +33,17 @@ class Connection:
         while self.location['x'] != self.end_location['x'] or self.location['y'] != self.end_location['y']:
 
             while self.location['x'] != self.end_location['x']:
-                class_Step.Step.make_step(self.location, self.end_location, 'x')
+                self.segment_start, self.segment_end = class_Step.Step(self.location, self.end_location, 'x').make_step()
 
                 while (self.segment_start, self.segment_end) in self.occupied_segments or (self.segment_end, self.segment_start) in self.occupied_segments:
-                    class_Step.Step.make_step(self.location, self.end_location, 'y')
+                    self.segment_start, self.segment_end = class_Step.Step(self.location, self.end_location, 'y').make_step()
 
                 self.plot_and_update_values()
 
             while self.location['y'] != self.end_location['y']:
-                class_Step.Step.make_step(self.location, self.end_location, 'y')
+                self.segment_start, self.segment_end = class_Step.Step(self.location, self.end_location, 'y').make_step()
 
                 while (self.segment_start, self.segment_end) in self.occupied_segments or (self.segment_end, self.segment_start) in self.occupied_segments:
-                    class_Step.Step.make_step(self.location, self.end_location, 'x')
+                    self.segment_start, self.segment_end = class_Step.Step(self.location, self.end_location, 'x').make_step()
 
                 self.plot_and_update_values()

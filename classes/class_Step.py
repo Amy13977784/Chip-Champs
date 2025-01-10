@@ -2,7 +2,7 @@ import random
 
 class Step:
     def __init__(self, location, end_location, axis):
-        self_location = location
+        self.location = location
         self.end_location = end_location
         self.axis = axis
 
@@ -15,9 +15,11 @@ class Step:
         else:
             new_location = self.location[self.axis] + random.choice([-1, 1])
 
-        self.segment_start = (self.location['x'], self.location['y'])
+        segment_start = (self.location['x'], self.location['y'])
 
-        if axis == 'x':
-            self.segment_end = (new_location, self.location['y'])
+        if self.axis == 'x':
+            segment_end = (new_location, self.location['y'])
         else:
-            self.segment_end = (self.location['x'], new_location)
+            segment_end = (self.location['x'], new_location)
+
+        return segment_start, segment_end

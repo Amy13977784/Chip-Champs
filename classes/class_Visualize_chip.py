@@ -1,3 +1,8 @@
+import matplotlib.pyplot as plt
+import pandas as pd
+
+from classes import class_Connection
+
 class Visualize_chip:
     """ This class contains the code for making the grid. """
 
@@ -21,11 +26,11 @@ class Visualize_chip:
     def plot_connections(self):
         """ Plot the connections in the connections list. """
         for _, connection in self.connections.iterrows():
-            Connection(connection, self.gates, self.occupied_segments).make_connection()
+            class_Connection.Connection(connection, self.gates, self.occupied_segments).make_connection()
 
     def plot_gates(self):
         """ Plot the gates on the grid. """
-        plt.plot(self.gates.gates['x'], self.gates.gates['y'], 'rs', markersize=29 - max([self.x_max, self.y_max]))
+        plt.plot(self.gates['x'], self.gates['y'], 'rs', markersize=29 - max([self.x_max, self.y_max]))
 
         for index, row in self.gates.iterrows():
             plt.text(row['x'], row['y'], index, fontsize=27 - max([self.x_max, self.y_max]),
