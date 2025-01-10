@@ -118,19 +118,29 @@ class Chip:
 
 
 class Error:
-    '''Calculated the cost of the soolution '''
+    '''Calculated the cost of the solution '''
     def __init__(self, chip):
-        self.chip = chip
-        self.length = len(chip.occupied_segments)
+        self.occupied_segments = chip.occupied_segments
+        self.gates = chip.gates.values.tolist()
+
     
-    def intersections(self):
+    def calculate_intersections(self):
         '''Check if segment ends occur mulitple times in the occupied segments list. In other words,
-         check if certain point in the grid are used twice or more.'''
-        intersections_amount = 0
-        return intersections_amount
+        check if certain point in the grid are used twice or more.'''
+        
+        end_points = []
+
+        for segment in self.occupied_segments:
+            if list(segment[1]) not in self.gates:
+                end_points.append(segment[1])
+
+        unique_end_points = set(end_points)
+        intersections = len(end_points) - len(unique_end_points)
+
+        return intersections
 
     def error_calculation(self):
-        error = self.length + 300 * self.intersections()
+        error = len(self.occupied_segments) + 300 * self.calculate_intersections()
         return error
 
 if __name__ == '__main__':
