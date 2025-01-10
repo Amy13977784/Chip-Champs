@@ -2,8 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import random
 
-from classes import class_Vizualise_chip
-from classes import class_Steps
+from classes import class_Visualize_chip
+from classes import class_Step
 from classes import class_Cost
 from classes import class_Gates
 from classes import class_Connection
