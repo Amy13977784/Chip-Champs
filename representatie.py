@@ -7,6 +7,9 @@ import matplotlib.pyplot as plt
 import random
 
 def plot_grid(connections_path, gates_path):
+    '''
+    Function that plots a grid of correct dimension, the gates of the chip and their connections.
+    '''
     gates = pd.read_csv(gates_path, index_col = 'chip')
 
     x_max = max(gates['x']) + 1
@@ -19,7 +22,7 @@ def plot_grid(connections_path, gates_path):
         plt.axhline(line, color = 'black', linewidth = 0.75)
 
     plot_connections(connections_path, gates)
-
+    
     plt.plot(gates['x'], gates['y'], 'rs', markersize = 29 - max([x_max, y_max]))
 
     for index, row in gates.iterrows():
@@ -35,6 +38,11 @@ def plot_grid(connections_path, gates_path):
 
 
 def x_step(coor_b, location):
+    '''
+    Lets a connection take a horizontal step.
+    '''
+
+    # check how to change x coordinate of connection to resemble x destination coordinate.
     if location['x'] > coor_b['x']:
         new_location = location['x'] - 1
     elif location['x'] < coor_b['x']:
@@ -46,6 +54,11 @@ def x_step(coor_b, location):
 
 
 def y_step(coor_b, location):
+    '''
+    Lets a connection take a vertical step.
+    '''
+
+    # check how to change y coordinate of connection to resemble y destination coordinate.
     if location['y'] > coor_b['y']:
         new_location = location['y'] - 1
     elif location['y'] < coor_b['y']:
@@ -57,9 +70,14 @@ def y_step(coor_b, location):
 
 
 def plot_connections(connections_path, gates):
+    '''
+    Function that 
+    '''
+
     connections = pd.read_csv(connections_path)
 
     occupied_segments = []
+
 
     for _, row in connections.iterrows():
         coor_a = gates.loc[row['chip_a']]
@@ -107,11 +125,9 @@ def plot_connections(connections_path, gates):
 
         print('connection done')
 
-
 gates_path = 'gates&netlists/chip_0/print_0.csv'
 connections_path = 'gates&netlists/chip_0/netlist_1.csv'
 plot_grid(connections_path, gates_path)
-
 
 # To Do: kruisingen tussen draden vinden, hoe?
 # 3d plot om alle lagen te representeren
