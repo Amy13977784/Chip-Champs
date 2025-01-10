@@ -4,6 +4,7 @@
 
 import pandas as pd
 import matplotlib.pyplot as plt
+import random
 
 def plot_grid(connections_path, gates_path):
     gates = pd.read_csv(gates_path, index_col = 'chip')
@@ -24,7 +25,6 @@ def plot_grid(connections_path, gates_path):
     for index, row in gates.iterrows():
         plt.text(row['x'], row['y'], index, fontsize = 27 - max([x_max, y_max]), \
             horizontalalignment='center', verticalalignment='center_baseline')
-    
 
     plt.xticks([])
     plt.yticks([])
@@ -34,64 +34,83 @@ def plot_grid(connections_path, gates_path):
     plt.show()
 
 
-def x_step(coor_a, coor_b, location):
-    if coor_a['x'] > coor_b['x']:
+def x_step(coor_b, location):
+    if location['x'] > coor_b['x']:
         new_location = location['x'] - 1
-    else:
+    elif location['x'] < coor_b['x']:
         new_location = location['x'] + 1
+    else:
+        new_location = location['x'] + random.choice([-1, 1])
 
     return (location['x'], location['y']), (new_location, location['y'])
 
-    
-def y_step(coor_a, coor_b, location):
-    if coor_a['y'] > coor_b['y']:
+
+def y_step(coor_b, location):
+    if location['y'] > coor_b['y']:
         new_location = location['y'] - 1
-    else:
+    elif location['y'] < coor_b['y']:
         new_location = location['y'] + 1
+    else:
+        new_location = location['y'] + random.choice([-1, 1])
 
     return (location['x'], location['y']), (location['x'], new_location)
-    
+
 
 def plot_connections(connections_path, gates):
     connections = pd.read_csv(connections_path)
 
     occupied_segments = []
-   
+
     for _, row in connections.iterrows():
         coor_a = gates.loc[row['chip_a']]
         coor_b = gates.loc[row['chip_b']]
 
         location = coor_a.copy()
 
-        # while location['x'] != coor_b['x'] and location['y'] != coor_b['y']:
-        while location['x'] != coor_b['x']:
-            segment_a, segment_b = x_step(coor_a, coor_b, location)
-            
-            if (segment_a, segment_b) in occupied_segments or (segment_b, segment_a) in occupied_segments:
-                segment_a, segment_b = y_step(coor_a, coor_b, location)
+        while location['x'] != coor_b['x'] or location['y'] != coor_b['y']:
+            while location['x'] != coor_b['x']:
+                x_change = True
+                segment_a, segment_b = x_step(coor_b, location)
 
-            occupied_segments.append((segment_a, segment_b))
+                while (segment_a, segment_b) in occupied_segments or (segment_b, segment_a) in occupied_segments:
+                    segment_a, segment_b = y_step(coor_b, location)
+                    x_change = False
 
-            plt.plot((segment_a[0], segment_b[0]), (segment_a[1], segment_b[1]), linewidth = 4, color='b')
-            location['x'] = segment_b[0]
+                occupied_segments.append((segment_a, segment_b))
+
+                plt.plot((segment_a[0], segment_b[0]), (segment_a[1], segment_b[1]), linewidth = 4, color='b')
+
+                if x_change:
+                    location['x'] = segment_b[0]
+                else:
+                    location['y'] = segment_b[1]
+                print('x')
 
 
-        while location['y'] != coor_b['y']:
-            segment_a, segment_b = y_step(coor_a, coor_b, location)
-            
-            if (segment_a, segment_b) in occupied_segments or (segment_b, segment_a) in occupied_segments:
-                segment_a, segment_b = x_step(coor_a, coor_b, location)
-            
-            occupied_segments.append((segment_a, segment_b))
+            while location['y'] != coor_b['y']:
+                y_change = True
+                segment_a, segment_b = y_step(coor_b, location)
 
-            plt.plot((segment_a[0], segment_b[0]), (segment_a[1], segment_b[1]), linewidth = 4, color='b')
-            location['y'] = segment_b[1]
+                while (segment_a, segment_b) in occupied_segments or (segment_b, segment_a) in occupied_segments:
+                    segment_a, segment_b = x_step(coor_b, location)
+                    y_change = False
+
+                occupied_segments.append((segment_a, segment_b))
+
+                plt.plot((segment_a[0], segment_b[0]), (segment_a[1], segment_b[1]), linewidth = 4, color='b')
+
+                if y_change:
+                    location['y'] = segment_b[1]
+                else:
+                    location['x'] = segment_b[0]
+                print('y')
+
+        print('connection done')
+
 
 gates_path = 'gates&netlists/chip_0/print_0.csv'
 connections_path = 'gates&netlists/chip_0/netlist_1.csv'
 plot_grid(connections_path, gates_path)
-
-
 
 
 # To Do: kruisingen tussen draden vinden, hoe?
