@@ -1,4 +1,8 @@
-class Error:
+import pandas as pd
+import matplotlib.pyplot as plt
+import random
+
+class Cost:
     """ This class calculates the cost of the solution. """
     
     def __init__(self, chip):
