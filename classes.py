@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 import random
 
 class Connection:
+    ''' Class that creates connections by implementing their starting location (chip a) and
+        their einding location (chip b), and lets the connections take form by taking steps in 
+        the right directions. '''
     def __init__(self, connection, gates, occupied_segments):
         self.location = gates.loc[connection['chip_a']]
         self.end_location = gates.loc[connection['chip_b']]
