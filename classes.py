@@ -67,7 +67,7 @@ class Connection:
                 self.plot_and_update_values()
 
 
-class Chip:
+class Vizualiation_chip:
     """ This class contains the code for making the grid"""
 
     def __init__(self, gates_path, connections_path):
@@ -147,7 +147,7 @@ if __name__ == '__main__':
     gates_path = 'gates&netlists/chip_0/print_0.csv'
     connections_path = 'gates&netlists/chip_0/netlist_1.csv'
 
-    my_chip = Chip(gates_path, connections_path)
+    my_chip = Vizualiation_chip(gates_path, connections_path)
     my_chip.draw_grid()
     my_chip.plot_connections()
     my_chip.plot_gates()
