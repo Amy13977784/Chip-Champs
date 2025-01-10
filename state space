@@ -51,3 +51,5 @@ n = de grootte van de grid (het aantal gridsegmenten)
 
 
 
+kijk alleen naar kortste routes: bekijk hoeveel variaties er hiervan zijn voor alle connecties --> state space
+
