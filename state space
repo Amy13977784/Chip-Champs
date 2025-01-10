@@ -1,37 +1,3 @@
-Opdracht 1
-n=20, r = 12
-Geen herhaling, geen order: n!/r!(n-r)! = 125,970 mogelijkheden 
-
-Opdracht 2
-n=3, r = 20
-3^20 = 3.486.784.401
-
-Opdracht 3
-n=3, r=25
-met repetitie, zonder order: (r+n-1)!/r!(n-1)! = 351
-
-Opdracht 4
-r={30, 31, 32}, n = 110
-zonder repetitie, zonder order 
-met r = 30:  n!/r!(n-r)! = 8.366309e^26
-met r = 31: n!/r!(n-r)! = 2.1590273e^27
-met r = 32: n!/r!(n-r)! = 5.3300987e^27
-in totaal is de state space: 8.3257492e^27
-
-Opdracht 5
-r = 7
-n = 26
-
-Opdracht 6
-r = 3 
-r = 2
-n = 45
-maar 30 dozen broodjes, dus eerst eerste 30 dozen voor in de vrachtwagen uitrekenen met alle drie de categorieen dozen (water, fruit, doosjes). 
-Daarna laatste 15 dozen met 2 overgebleven categorieën. 
-
-
-Opdracht 7
-
 Variabelen: 
 Aantal gates 
 Hoeveelheid connecties 
@@ -49,5 +15,6 @@ r = aantal connecties die gelegd moeten worden
 n = de grootte van de grid (het aantal gridsegmenten)
 
 
-
+Verbeteringen voor meeting!
+- kijk alleen naar kortste routes: bekijk hoeveel variaties er hiervan zijn voor alle connecties --> state space
 
