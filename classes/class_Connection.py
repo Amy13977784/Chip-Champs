@@ -2,6 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import random
 
+from classes import class_Step
+
 class Connection:
     """
     This class creates connections by implementing their starting location (chip a) and
@@ -33,17 +35,17 @@ class Connection:
         while self.location['x'] != self.end_location['x'] or self.location['y'] != self.end_location['y']:
 
             while self.location['x'] != self.end_location['x']:
-                Step.make_step(self.location, self.end_location, 'x')
+                class_Step.Step.make_step(self.location, self.end_location, 'x')
 
                 while (self.segment_start, self.segment_end) in self.occupied_segments or (self.segment_end, self.segment_start) in self.occupied_segments:
-                    Step.make_step(self.location, self.end_location, 'y')
+                    class_Step.Step.make_step(self.location, self.end_location, 'y')
 
                 self.plot_and_update_values()
 
             while self.location['y'] != self.end_location['y']:
-                Step.make_step(self.location, self.end_location, 'y')
+                class_Step.Step.make_step(self.location, self.end_location, 'y')
 
                 while (self.segment_start, self.segment_end) in self.occupied_segments or (self.segment_end, self.segment_start) in self.occupied_segments:
-                    Step.make_step(self.location, self.end_location, 'x')
+                    class_Step.Step.make_step(self.location, self.end_location, 'x')
 
                 self.plot_and_update_values()
