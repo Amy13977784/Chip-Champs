@@ -5,7 +5,7 @@ import random
 class Connection:
     ''' Class that creates connections by implementing their starting location (chip a) and
         their einding location (chip b), and lets the connections take form by taking steps in 
-        the right directions. '''
+        the right directions.'''
     
     def __init__(self, connection, gates, occupied_segments):
         '''Implements the starting/current and end location of the connection/wire. '''
@@ -35,7 +35,7 @@ class Connection:
 
     def plot_and_update_values(self):
         ''' Plots step of the connection and updates its current location (end segment becomes
-        start of segment, in next step the new end segment is determined). '''
+        start of segment, in next step the new end segment is determined).'''
 
         plt.plot((self.segment_start[0], self.segment_end[0]), (self.segment_start[1], self.segment_end[1]), linewidth = 4, color='b')
 
@@ -116,6 +116,22 @@ class Chip:
         plt.ylim(0, self.y_max)
         plt.show()
 
+
+class Error:
+    '''Calculated the cost of the soolution '''
+    def __init__(self, chip):
+        self.chip = chip
+        self.length = len(chip.occupied_segments)
+    
+    def intersections(self):
+
+        intersections_amount = 0
+        return intersections_amount
+
+    def error_calculation(self):
+        error = self.length + 300 * self.intersections()
+        return error
+
 if __name__ == '__main__':
     gates_path = 'gates&netlists/chip_0/print_0.csv'
     connections_path = 'gates&netlists/chip_0/netlist_1.csv'
@@ -125,3 +141,8 @@ if __name__ == '__main__':
     my_chip.plot_connections()
     my_chip.plot_gates()
     my_chip.show_plot()
+
+    costs = Error(my_chip)
+    cost = costs.error_calculation()
+    print(f'The costs for this solution: {cost}')
+
