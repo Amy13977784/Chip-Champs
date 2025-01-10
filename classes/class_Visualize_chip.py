@@ -25,7 +25,7 @@ class Visualize_chip:
 
     def plot_gates(self):
         """ Plot the gates on the grid. """
-        plt.plot(self.gates['x'], self.gates['y'], 'rs', markersize=29 - max([self.x_max, self.y_max]))
+        plt.plot(self.gates.gates['x'], self.gates.gates['y'], 'rs', markersize=29 - max([self.x_max, self.y_max]))
 
         for index, row in self.gates.iterrows():
             plt.text(row['x'], row['y'], index, fontsize=27 - max([self.x_max, self.y_max]),
