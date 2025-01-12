@@ -1,3 +1,9 @@
+# Visualisation of Chip & Circuit problem.
+# running the code will give the current solution and the amount of error for that particular
+# solution.
+#
+# Authors: Merel, Amy, Kyra
+
 from classes import class_Visualize_chip
 from classes import class_Cost
 from classes import class_Gates
