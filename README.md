@@ -14,8 +14,6 @@ python main.py
 een lijst met uitleg over elk element in deze git_hub
 
 # Auteurs:
-Merel Besseling
-
-Amy Koelman
-
-Kyra Paul
+- Merel Besseling
+- Amy Koelman
+- Kyra Paul
