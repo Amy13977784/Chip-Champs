@@ -45,6 +45,6 @@ class Connection:
             # let line/connection take horizontal step
             self.segment_start, self.segment_end = class_Step.Step(self.location, self.end_location, axis).make_step()
 
-                # If segment already occupied: retake vertical step until free gridsegment is found
-                if (self.segment_start, self.segment_end) not in self.occupied_segments or (self.segment_end, self.segment_start) not in self.occupied_segments:
-                    self.plot_and_update_values()
+            # If segment already occupied: retake vertical step until free gridsegment is found
+            if (self.segment_start, self.segment_end) not in self.occupied_segments or (self.segment_end, self.segment_start) not in self.occupied_segments:
+                self.plot_and_update_values()

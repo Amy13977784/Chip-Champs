@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from classes import class_Connection
+from classes import class_Connection2
 
 class Visualize_chip:
     """ This class contains the code for making the grid.
@@ -37,7 +37,7 @@ class Visualize_chip:
         for _, connection in self.connections.iterrows():
 
             # connection --> pandas series (one column chip a, second column chip b)
-            class_Connection.Connection(connection, self.gates, self.occupied_segments).make_connection()
+            class_Connection2.Connection(connection, self.gates, self.occupied_segments).make_connection()
 
     def plot_gates(self):
         """ Plot the gates on the grid."""

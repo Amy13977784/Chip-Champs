@@ -9,8 +9,8 @@ from classes import class_Cost
 from classes import class_Gates
 
 if __name__ == '__main__':
-    gates_path = 'gates&netlists/chip_0/print_0.csv'
-    connections_path = 'gates&netlists/chip_0/netlist_1.csv'
+    gates_path = 'data/chip_0/print_0.csv'
+    connections_path = 'data/chip_0/netlist_1.csv'
 
     gates = class_Gates.Gates(gates_path).gates
 
