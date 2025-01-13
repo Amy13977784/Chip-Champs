@@ -7,7 +7,7 @@ Aantal lagen
 
 Aannames:
 De nets mogen elkaar kruisen en kunnen over dezelfde gridsegment heen.
-Er is geen repetitie, connecties hebben allemaal een unieke route.
+Er is geen repetitie, connecties hebben allemaal een unieke route met een vast aantal stappen langs de assen.
 Er is geen order omdat het niet uitmaakt in welke volgorde stappen worden gezet om connecties te maken.
 x1 en y1: coordinaten van begin connectie (gate a)
 x2 en y2: coordinaten van eind connectie (gate b)
