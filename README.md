@@ -7,7 +7,8 @@ Chips or integrated circuits, can be found on all kinds of computers. They are c
 De code is volledig geschreven in Python 3.7.
 
 Een voorbeeld van de huidige oplossing voor het Chips & circuits probleem kan worden aangeroepen met:
-python main.py
+
+```python main.py```
 
 # structuur
 
