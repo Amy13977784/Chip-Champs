@@ -4,7 +4,7 @@ Hoeveelheid connecties
 Afmetingen van de grid 
 Aantal lagen 
 
-Aanames:
+Aannames:
 De nets mogen elkaar kruisen en kunnen over dezelfde gridsegment heen.
 Er is geen repetitie, connecties hebben allemaal een unieke route.
 Er is geen order omdat het niet uitmaakt in welke volgorde stappen worden gezet om connecties te maken.
