@@ -17,7 +17,8 @@ n = Het totaal aantal stappen (berekend met de manhattan afstand: |x2-x1| + |y2-
 
 Verbeteringen voor meeting!
 - kijk alleen naar kortste routes: bekijk hoeveel variaties er hiervan zijn voor alle connecties --> state space
-- voor elke connecte het aantal routes uitrekenen: elke connectie state space. Alle state spaces bij elkaar optellen --> totale state space.
+- voor elke connecte het aantal routes uitrekenen: elke connectie state space.
+- totale state space: vermenigvuldig het aantal routes van elke connectie met elkaar: aantal combinaties van kortste routes.
 
 Voorbeeld state space: chip 0, netlist 1
 connectie 1: gate 1 (1,5), gate 2 (6,5): 4!/4!*(4-4)! = 1 route mogelijk
