@@ -29,9 +29,9 @@ class Connection:
         self.location.update({'x': self.segment_end[0], 'y': self.segment_end[1]})
 
     def make_connection(self):
-        """Form the connections by keep initializing a step until it has reached the end gate by 
-        taking steps in a random direction (either vertical or horizontal). If gridsegment already
-        in use, step will not be 'saved' and thusa different direction is chosen in the next loop."""
+        """Form the connections until it has reached the end gate by taking steps in a random direction 
+        (either vertical or horizontal). If gridsegment alreadyin use, step will not be 'saved' and 
+        thus a different direction is chosen in the next loop."""
 
         # while current location is not the end location (for both x and y coordinate)
         while self.location['x'] != self.end_location['x'] or self.location['y'] != self.end_location['y']:
