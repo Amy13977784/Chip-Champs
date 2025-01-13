@@ -10,7 +10,7 @@ Een voorbeeld van de huidige oplossing voor het Chips & circuits probleem kan wo
 
 ```python main.py```
 
-# Structuur
+# structuur
 
 een lijst met uitleg over elk element in deze git_hub
 
