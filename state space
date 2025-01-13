@@ -12,7 +12,7 @@ Er is geen order omdat het niet uitmaakt in welke volgorde stappen worden gezet 
 x1 en y1: coordinaten van begin connectie (gate a)
 x2 en y2: coordinaten van eind connectie (gate b)
 
-geen repetitie en geen order: n!/r!*(n-r)!
+geen repetitie en geen order: n!/(r!*(n-r)!)
 r = het aantal stappen in een specifieke richting (wij kiezen horizontaal: |x2-x1|)
 n = Het totaal aantal stappen (berekend met de manhattan afstand: |x2-x1| + |y2-y1|)
 
@@ -22,11 +22,11 @@ Verbeteringen voor meeting!
 - totale state space: vermenigvuldig het aantal routes van elke connectie met elkaar: aantal combinaties van kortste routes.
 
 Voorbeeld state space: chip 0, netlist 1
-connectie 1: gate 1 (1,5), gate 2 (6,5): 4!/4!*(4-4)! = 1 route mogelijk
-connectie 2: gate 1 (1,5), gate 3 (4,4): 4!/3!*(4-3)! = 4 routes mogelijk
-connectie 3: gate 3 (4,4), gate 5 (3,1): 4!/1!*(4-1)! = 4 routes mogelijk
-connectie 4: gate 4 (6,2), gate 2 (6,5): 3!/0!*(3-0)! = 1 route mogelijk
-connectie 5: gate 4 (6,2), gate 5 (3,1): 4!/3!*(4-3)! = 4 routes mogelijk
+connectie 1: gate 1 (1,5) - gate 2 (6,5): 4!/(4!*(4-4)!) = 1 route mogelijk
+connectie 2: gate 1 (1,5) - gate 3 (4,4): 4!/(3!*(4-3)!) = 4 routes mogelijk
+connectie 3: gate 3 (4,4) - gate 5 (3,1): 4!/(1!*(4-1)!) = 4 routes mogelijk
+connectie 4: gate 4 (6,2) - gate 2 (6,5): 3!/(0!*(3-0)!) = 1 route mogelijk
+connectie 5: gate 4 (6,2) - gate 5 (3,1): 4!/(3!*(4-3)!) = 4 routes mogelijk
 
 aantal mogelijke combinaties van routes: 1*4*4*1*4 = 64
 state space = 64
