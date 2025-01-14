@@ -17,16 +17,28 @@ class Step:
     def make_step(self):
         """ Let's the connection take a step according to the end location. It returns the coordinates
         of the start of the step (segment_start) and the end of the step (segment_end)."""
+        
+        # if it x/y is equal: randomly -1 or +1
+        if self.location[self.axis] == 0:
+            new_location = self.location[self.axis] + 1
+
+        elif self.axis == 'x' and self.location['x'] == 7:
+            new_location = self.location[self.axis] - 1
+        
+        elif self.axis == 'y' and self.location['y'] == 6:
+            new_location = self.location[self.axis] - 1
+
+        elif self.axis == 'z' and self.location['z'] == 7:
+            new_location = self.location[self.axis] - 1
 
         # if the current value x/y value is bigger than the desired x/y value: -1
-        if self.location[self.axis] > self.end_location[self.axis]:
+        elif self.location[self.axis] > self.end_location[self.axis]:
             new_location = self.location[self.axis] - 1
 
         # if the current x/y value is smaller: +1
         elif self.location[self.axis] < self.end_location[self.axis]:
             new_location = self.location[self.axis] + 1
         
-        # if it x/y is equal: randomly -1, +0 or +1
         else:
             new_location = self.location[self.axis] + random.choice([-1, 1])
 
@@ -36,7 +48,9 @@ class Step:
         # get coordinates of end point from segment (tuple made according to direction of step)
         if self.axis == 'x':
             segment_end = (new_location, self.location['y'], self.location['z'])
-        else:
+        elif self.axis == 'y':
             segment_end = (self.location['x'], new_location, self.location['z'])
+        else:
+            segment_end = (self.location['x'], self.location['y'], new_location)
 
         return segment_start, segment_end

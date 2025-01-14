@@ -21,7 +21,7 @@ class Visualize_chip:
 
         self.x_max = max(self.gates['x']) + 1
         self.y_max = max(self.gates['y']) + 1
-        self.z_max = 2
+        self.z_max = 7
 
         self.occupied_segments = []
 
@@ -43,7 +43,7 @@ class Visualize_chip:
             connection2.Connection(connection, self.gates, self.occupied_segments).make_connection()
         
         for segment in self.occupied_segments:
-            plt.plot((segment[0][0], segment[1][0]), (segment[0][1], segment[1][1]), (segment[0][2], segment[1][2]), linewidth = 4, color='b')
+            plt.plot((segment[0][0], segment[1][0]), (segment[0][1], segment[1][1]), (segment[0][2], segment[1][2]), linewidth = 3, color='b')
 
     def plot_gates(self):
         """ Plot the gates on the grid."""

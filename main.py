@@ -8,7 +8,7 @@ from classes import visualize_chip, cost, gates
 
 if __name__ == '__main__':
     gates_path = 'data/chip_0/print_0.csv'
-    connections_path = 'data/chip_0/netlist_1.csv'
+    connections_path = 'data/chip_0/netlist_2.csv'
 
     gates = gates.Gates(gates_path).gates
 

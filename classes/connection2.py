@@ -17,6 +17,7 @@ class Connection:
         self.occupied_segments list."""
         self.location = gates.loc[connection['chip_a']].copy()
         self.end_location = gates.loc[connection['chip_b']]
+        self.gates = gates
 
         self.occupied_segments = occupied_segments
 
@@ -27,24 +28,50 @@ class Connection:
         thus a different direction is chosen in the next loop."""
 
         # while current location is not the end location (for both x and y coordinate)
-        while self.location['x'] != self.end_location['x'] or self.location['y'] != self.end_location['y'] or self.location['z'] != 0:
+        while self.location['x'] != self.end_location['x'] or self.location['y'] != self.end_location['y'] or self.location['z'] != self.end_location['z']:
 
             # if both x and y values are not correct --> choose random direction
-            if self.location['x'] != self.end_location['x'] and self.location['y'] != self.end_location['y']:
-                axis = random.choice(['x', 'y'])
+            # if self.location['x'] != self.end_location['x'] and self.location['y'] != self.end_location['y'] and self.location['z'] != self.end_location['z']:
+            #    axis = random.choice(['x', 'y', 'z'])
 
-            # if x value correct --> only move in vertical direction
-            elif self.location['x'] == self.end_location['x']:
-                axis = 'y'
+            # # if x value correct --> only move in vertical direction
+            # elif self.location['x'] == self.end_location['x']:
+            #     axis = random.choice(['y', 'z'])
 
-            # if y value correct --> only move in horizontal direction
-            else:
-                axis = 'x'
+            # # if y value correct --> only move in horizontal direction
+            # elif self.location['y'] == self.end_location['y']:
+            #     axis = random.choice(['x', 'z'])
+
+            # elif self.location['z'] == self.end_location['z']:
+            #     axis = random.choice(['x', 'y'])
+
+            # elif self.location['x'] == self.end_location['x'] and self.location['y'] == self.end_location['y']:
+            #     axis = 'z'
+
+            # elif self.location['x'] == self.end_location['x'] and self.location['z'] == self.end_location['z']:
+            #     axis = 'y'
+
+            # elif self.location['y'] == self.end_location['y'] and self.location['z'] == self.end_location['z']:
+            #     axis = 'x'
 
             # let line/connection take a step in certain axis direction
+            axis = random.choice(['x', 'y', 'z'])
             self.segment_start, self.segment_end = step.Step(self.location, self.end_location, axis).make_step()
 
             # If segment still free, updates its current location (end segment becomes start of segment, in the next step the new end segment is determined).
-            if (self.segment_start, self.segment_end) not in self.occupied_segments and (self.segment_end, self.segment_start) not in self.occupied_segments:
+            if (self.segment_start, self.segment_end) in self.occupied_segments or (self.segment_end, self.segment_start) in self.occupied_segments \
+                or self.segment_end in self.gates:
+                if axis == 'x':
+                    axis = random.choice(['y', 'z'])
+                elif axis == 'y':
+                    axis = random.choice(['x', 'z'])
+                else: 
+                    axis = random.choice(['x', 'y'])
+    
+                self.segment_start, self.segment_end = step.Step(self.location, self.end_location, axis).make_step()
+                
+            if (self.segment_start, self.segment_end) not in self.occupied_segments and (self.segment_end, self.segment_start) not in self.occupied_segments \
+                and self.segment_end not in self.gates:
+                print(self.segment_end)
                 self.occupied_segments.append((self.segment_start, self.segment_end))
                 self.location.update({'x': self.segment_end[0], 'y': self.segment_end[1], 'z': self.segment_end[2]})
