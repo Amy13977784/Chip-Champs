@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-from classes import class_Step
+from classes import step
 
 class Connection:
     """ Class creates connections by implementing their starting location (chip a) and
@@ -38,11 +38,11 @@ class Connection:
             while self.location['x'] != self.end_location['x']:
 
                 # let line/connection take horizontal step
-                self.segment_start, self.segment_end = class_Step.Step(self.location, self.end_location, 'x').make_step()
+                self.segment_start, self.segment_end = step.Step(self.location, self.end_location, 'x').make_step()
 
                 # If segment already occupied: retake vertical step until free gridsegment is found
                 while (self.segment_start, self.segment_end) in self.occupied_segments or (self.segment_end, self.segment_start) in self.occupied_segments:
-                    self.segment_start, self.segment_end = class_Step.Step(self.location, self.end_location, 'y').make_step()
+                    self.segment_start, self.segment_end = step.Step(self.location, self.end_location, 'y').make_step()
 
                 self.plot_and_update_values()
 
@@ -50,10 +50,10 @@ class Connection:
             while self.location['y'] != self.end_location['y']:
 
                 # take vertical step
-                self.segment_start, self.segment_end = class_Step.Step(self.location, self.end_location, 'y').make_step()
+                self.segment_start, self.segment_end = step.Step(self.location, self.end_location, 'y').make_step()
 
                 # If segment already occupied: retake horizontal step until free gridsegment is found
                 while (self.segment_start, self.segment_end) in self.occupied_segments or (self.segment_end, self.segment_start) in self.occupied_segments:
-                    self.segment_start, self.segment_end = class_Step.Step(self.location, self.end_location, 'x').make_step()
+                    self.segment_start, self.segment_end = step.Step(self.location, self.end_location, 'x').make_step()
 
                 self.plot_and_update_values()

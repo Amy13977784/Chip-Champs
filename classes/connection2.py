@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import random
 
-from classes import class_Step
+from classes import step
 
 class Connection:
     """Class creates connections by implementing their starting location (chip a) and
@@ -49,7 +49,7 @@ class Connection:
                 axis = 'x'
 
             # let line/connection take a step in certain axis direction
-            self.segment_start, self.segment_end = class_Step.Step(self.location, self.end_location, axis).make_step()
+            self.segment_start, self.segment_end = step.Step(self.location, self.end_location, axis).make_step()
 
             # If segment still free
             if (self.segment_start, self.segment_end) not in self.occupied_segments and (self.segment_end, self.segment_start) not in self.occupied_segments:
