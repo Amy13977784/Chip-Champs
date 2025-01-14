@@ -27,7 +27,7 @@ class Connection:
         thus a different direction is chosen in the next loop."""
 
         # while current location is not the end location (for both x and y coordinate)
-        while self.location['x'] != self.end_location['x'] or self.location['y'] != self.end_location['y']:
+        while self.location['x'] != self.end_location['x'] or self.location['y'] != self.end_location['y'] or self.location['z'] != 0:
 
             # if both x and y values are not correct --> choose random direction
             if self.location['x'] != self.end_location['x'] and self.location['y'] != self.end_location['y']:

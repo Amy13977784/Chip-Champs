@@ -25,16 +25,15 @@ class Visualize_chip:
 
         self.occupied_segments = []
 
-        fig = plt.figure()
-        ax = plt.axes(projection='3d')
+        plt.axes(projection='3d')
 
     def plot_grid(self):
-        """ Plot the grid with vertical and horizontal lines. """
-        for line in range(1, self.x_max):
-            ax.axvline(line, color='black', linewidth=0.75)
+        """ Plot the grid with vertical and horizontal lines. """   
+        for x in range(1, self.x_max):
+            plt.plot(x, [0, self.y_max], 0, color='black', linewidth=0.5)
+        for y in range(1, self.y_max):
+            plt.plot([0, self.x_max], y, 0, color='black', linewidth=0.5)
 
-        for line in range(1, self.y_max):
-            ax.axhline(line, color='black', linewidth=0.75)
 
     def plot_connections(self):
         """ Plot the connections in the connections list. """
@@ -44,31 +43,30 @@ class Visualize_chip:
             connection2.Connection(connection, self.gates, self.occupied_segments).make_connection()
         
         for segment in self.occupied_segments:
-            ax.plot3D((segment[0][0], segment[1][0]), (segment[0][1], segment[1][1]), (segment[0][2], segment[1][2]), linewidth = 4, color='b')
+            plt.plot((segment[0][0], segment[1][0]), (segment[0][1], segment[1][1]), (segment[0][2], segment[1][2]), linewidth = 4, color='b')
 
     def plot_gates(self):
         """ Plot the gates on the grid."""
-        ax.plot3D(self.gates['x'], self.gates['y'], self.gates['z'], 'rs', markersize=29 - max([self.x_max, self.y_max]))
+        plt.plot(self.gates['x'], self.gates['y'], self.gates['z'], 'rD', markersize=18 - max([self.x_max, self.y_max]))
 
+        ax = plt.gca()
         # plot number (index) of gates on top
         for index, row in self.gates.iterrows():
-            ax.text(row['x'], row['y'], row['z'], index, fontsize=27 - max([self.x_max, self.y_max]),
+            ax.text(row['x'], row['y'], row['z'], index, fontsize=18 - max([self.x_max, self.y_max]),
                      horizontalalignment='center', verticalalignment='center_baseline')
 
     def show_plot(self):
         """ Adjust the layout and show the grid. """
 
         # remove axes values
-        ax.xticks([])
-        ax.yticks([])
+        plt.xticks([])
+        plt.yticks([])
 
         # set grid bounds
-        ax.xlim(0, self.x_max)
-        ax.ylim(0, self.y_max)
-        ax.ylim(0, self.z_max)
+        plt.xlim(0, self.x_max)
+        plt.ylim(0, self.y_max)
 
-        ax.show()
+        ax = plt.gca()  # get the current axis
+        ax.set_zlim(0, self.z_max)
 
-
-        
-
+        plt.show()
