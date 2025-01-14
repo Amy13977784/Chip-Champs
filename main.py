@@ -4,9 +4,7 @@
 #
 # Authors: Merel, Amy, Kyra
 
-from classes import class_Visualize_chip
-from classes import class_Cost
-from classes import class_Gates
+from classes import class_Visualize_chip, class_Cost, class_Gates
 
 if __name__ == '__main__':
     gates_path = 'data/chip_0/print_0.csv'
