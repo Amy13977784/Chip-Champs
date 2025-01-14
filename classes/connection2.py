@@ -20,13 +20,6 @@ class Connection:
 
         self.occupied_segments = occupied_segments
 
-    def plot_and_update_values(self):
-        """Plots each step of the connection and updates its current location (end segment becomes
-        start of segment, in the next step the new end segment is determined)."""
-        plt.plot((self.segment_start[0], self.segment_end[0]), (self.segment_start[1], self.segment_end[1]), linewidth = 4, color='b')
-
-        self.occupied_segments.append((self.segment_start, self.segment_end))
-        self.location.update({'x': self.segment_end[0], 'y': self.segment_end[1]})
 
     def make_connection(self):
         """Form a connection until it has reached the end gate by taking steps in a random direction 
@@ -51,6 +44,7 @@ class Connection:
             # let line/connection take a step in certain axis direction
             self.segment_start, self.segment_end = step.Step(self.location, self.end_location, axis).make_step()
 
-            # If segment still free
+            # If segment still free, updates its current location (end segment becomes start of segment, in the next step the new end segment is determined).
             if (self.segment_start, self.segment_end) not in self.occupied_segments and (self.segment_end, self.segment_start) not in self.occupied_segments:
-                self.plot_and_update_values()
+                self.occupied_segments.append((self.segment_start, self.segment_end))
+                self.location.update({'x': self.segment_end[0], 'y': self.segment_end[1]})

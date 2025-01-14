@@ -38,6 +38,9 @@ class Visualize_chip:
 
             # connection --> pandas series (one column chip a, second column chip b)
             connection2.Connection(connection, self.gates, self.occupied_segments).make_connection()
+        
+        for segment in self.occupied_segments:
+            plt.plot((segment[0][0], segment[1][0]), (segment[0][1], segment[1][1]), linewidth = 4, color='b')
 
     def plot_gates(self):
         """ Plot the gates on the grid."""
