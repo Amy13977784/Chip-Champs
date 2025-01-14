@@ -47,4 +47,4 @@ class Connection:
             # If segment still free, updates its current location (end segment becomes start of segment, in the next step the new end segment is determined).
             if (self.segment_start, self.segment_end) not in self.occupied_segments and (self.segment_end, self.segment_start) not in self.occupied_segments:
                 self.occupied_segments.append((self.segment_start, self.segment_end))
-                self.location.update({'x': self.segment_end[0], 'y': self.segment_end[1]})
+                self.location.update({'x': self.segment_end[0], 'y': self.segment_end[1], 'z': self.segment_end[2]})

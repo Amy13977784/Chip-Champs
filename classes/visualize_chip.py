@@ -21,16 +21,20 @@ class Visualize_chip:
 
         self.x_max = max(self.gates['x']) + 1
         self.y_max = max(self.gates['y']) + 1
+        self.z_max = 2
 
         self.occupied_segments = []
+
+        fig = plt.figure()
+        ax = plt.axes(projection='3d')
 
     def plot_grid(self):
         """ Plot the grid with vertical and horizontal lines. """
         for line in range(1, self.x_max):
-            plt.axvline(line, color='black', linewidth=0.75)
+            ax.axvline(line, color='black', linewidth=0.75)
 
         for line in range(1, self.y_max):
-            plt.axhline(line, color='black', linewidth=0.75)
+            ax.axhline(line, color='black', linewidth=0.75)
 
     def plot_connections(self):
         """ Plot the connections in the connections list. """
@@ -40,29 +44,30 @@ class Visualize_chip:
             connection2.Connection(connection, self.gates, self.occupied_segments).make_connection()
         
         for segment in self.occupied_segments:
-            plt.plot((segment[0][0], segment[1][0]), (segment[0][1], segment[1][1]), linewidth = 4, color='b')
+            ax.plot3D((segment[0][0], segment[1][0]), (segment[0][1], segment[1][1]), (segment[0][2], segment[1][2]), linewidth = 4, color='b')
 
     def plot_gates(self):
         """ Plot the gates on the grid."""
-        plt.plot(self.gates['x'], self.gates['y'], 'rs', markersize=29 - max([self.x_max, self.y_max]))
+        ax.plot3D(self.gates['x'], self.gates['y'], self.gates['z'], 'rs', markersize=29 - max([self.x_max, self.y_max]))
 
         # plot number (index) of gates on top
         for index, row in self.gates.iterrows():
-            plt.text(row['x'], row['y'], index, fontsize=27 - max([self.x_max, self.y_max]),
+            ax.text(row['x'], row['y'], row['z'], index, fontsize=27 - max([self.x_max, self.y_max]),
                      horizontalalignment='center', verticalalignment='center_baseline')
 
     def show_plot(self):
         """ Adjust the layout and show the grid. """
 
         # remove axes values
-        plt.xticks([])
-        plt.yticks([])
+        ax.xticks([])
+        ax.yticks([])
 
         # set grid bounds
-        plt.xlim(0, self.x_max)
-        plt.ylim(0, self.y_max)
+        ax.xlim(0, self.x_max)
+        ax.ylim(0, self.y_max)
+        ax.ylim(0, self.z_max)
 
-        plt.show()
+        ax.show()
 
 
         

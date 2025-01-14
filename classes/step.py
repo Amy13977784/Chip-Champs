@@ -31,12 +31,12 @@ class Step:
             new_location = self.location[self.axis] + random.choice([-1, 1])
 
         # get coordinates of the beginning point from segment
-        segment_start = (self.location['x'], self.location['y'])
+        segment_start = (self.location['x'], self.location['y'], self.location['z'])
 
         # get coordinates of end point from segment (tuple made according to direction of step)
         if self.axis == 'x':
-            segment_end = (new_location, self.location['y'])
+            segment_end = (new_location, self.location['y'], self.location['z'])
         else:
-            segment_end = (self.location['x'], new_location)
+            segment_end = (self.location['x'], new_location, self.location['z'])
 
         return segment_start, segment_end

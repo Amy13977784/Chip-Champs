@@ -8,6 +8,7 @@ class Gates:
     def __init__(self, gates_path):
         """Reads in  the coordinates of the gates and stores it in self.gates."""
         self.gates = pd.read_csv(gates_path, index_col='chip')
+        self.gates['z'] = 0
 
     def gate_location(self, chip):
         """Get the location of a specific gate and returns that location."""
