@@ -14,21 +14,26 @@ class Step:
         self.end_location = end_location
         self.axis = axis
 
+    def step_down(self):
+        new_location = self.location['z'] - 1
+
+        segment_start = (self.location['x'], self.location['y'], self.location['z'])
+        segment_end = (self.location['x'], self.location['y'], new_location)
+
+        return segment_start, segment_end
+
     def make_step(self):
         """ Let's the connection take a step according to the end location. It returns the coordinates
         of the start of the step (segment_start) and the end of the step (segment_end)."""
         
         # if it x/y is equal: randomly -1 or +1
-        if self.location[self.axis] == 0:
+        if self.location[self.axis] == 0 or self.axis == 'z':
             new_location = self.location[self.axis] + 1
 
         elif self.axis == 'x' and self.location['x'] == 7:
             new_location = self.location[self.axis] - 1
         
         elif self.axis == 'y' and self.location['y'] == 6:
-            new_location = self.location[self.axis] - 1
-
-        elif self.axis == 'z' and self.location['z'] == 7:
             new_location = self.location[self.axis] - 1
 
         # if the current value x/y value is bigger than the desired x/y value: -1
