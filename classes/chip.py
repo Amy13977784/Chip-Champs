@@ -20,7 +20,7 @@ class Chip:
             for j in i:
                 coordinaten.append(j)
             coordinaten_gate = tuple(coordinaten)
-            self.gates[index:gate.Gate(coordinaten_gate)]
+            self.gates[index] = gate.Gate(coordinaten_gate)
 
 
     def connections_list(self, connections_path):
