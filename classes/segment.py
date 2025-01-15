@@ -1,7 +1,3 @@
 class Segment():
-    def __init__(self, segment, occupied_segments):
+    def __init__(self, segment):
         self.segment = segment
-        self.occupied_segments = occupied_segments
-    
-    def check_segment():
-        pass

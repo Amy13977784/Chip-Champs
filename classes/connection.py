@@ -16,5 +16,4 @@ class Connection:
         self.end_location = gates.loc[connection['chip_b']]
         self.gates = gates
         self.occupied_segments = occupied_segments
-
    
