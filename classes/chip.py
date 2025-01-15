@@ -30,7 +30,7 @@ class Chip:
 
         for _, con in df_connections.iterrows():
             start = self.gates[con['chip_a']].gate
-            end = self.gates[con['chip_a']].gate
+            end = self.gates[con['chip_b']].gate
             connections.append(connection.Connection(start, end))
 
         return connections

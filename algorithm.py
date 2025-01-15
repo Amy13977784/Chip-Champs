@@ -16,9 +16,11 @@ class Random_algorithm:
         thus a different direction is chosen in the next loop."""
 
         self.current_location = connection.start_location.copy()
+        counter = 0
 
         # while current location is not the end location (for both x and y coordinate)
-        while connection.check_end() == False:
+        while connection.check_end() == False and counter < 500:
+            counter += 1
                 
             # [0, 1, 2] = [x, y, z]
             axis = random.choice([0, 1, 2])
@@ -27,13 +29,15 @@ class Random_algorithm:
             coor_start, coor_end = self.make_step(axis, connection)
 
             # If segment still free, updates its current location (end segment becomes start of segment, in the next step the new end segment is determined).
-            if not self.check_occupied_segment(coor_start, coor_end):
+            if self.check_occupied_segment(coor_start, coor_end) == False:
                 print(coor_end)
                 self.occupied_segments.append((coor_start, coor_end))
                 connection.add_coor(coor_end)
                 self.current_location = coor_end
 
-        print('yes')
+            print(self.current_location)
+            print(counter)
+            
 
 
     def check_occupied_segment(self, coor_start, coor_end):

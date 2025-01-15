@@ -10,7 +10,7 @@ import time
         
 if __name__ == '__main__':
     gates_path = 'data/chip_0/print_0.csv'
-    connections_path = 'data/chip_0/netlist_1.csv'
+    connections_path = 'data/chip_0/netlist_2.csv'
 
     for i in range(100):        
         my_chip = chip.Chip(gates_path, connections_path)
