@@ -64,7 +64,8 @@ class Chip:
         plt.xlim(0, self.x_max)
         plt.ylim(0, self.y_max)
 
-        ax = plt.gca()  # get the current axis
+        # get the current axis
+        ax = plt.gca()  
         ax.set_zlim(0, self.z_max)
 
         plt.show()
@@ -78,7 +79,7 @@ class Chip:
             # check if the segment end is not a gate/destination
             if list(segment[1]) not in self.gates:
                 end_points.append(segment[1])
-
+                
         unique_end_points = set(end_points)
 
         return len(end_points) - len(unique_end_points)
