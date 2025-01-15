@@ -1,8 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from classes import connection
-from classes import gate
+from classes import connection, gate
 
 class Chip:
     def __init__(self, gates_path, connections_path):
