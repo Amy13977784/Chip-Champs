@@ -1,22 +1,11 @@
-import matplotlib.pyplot as plt
 import pandas as pd
+import matplotlib.pyplot as plt
 
-from classes import connection2
+from classes_new import connection
 
-class Visualize_chip:
-    """ This class contains the code for making the grid.
-    Method __init__ creates self.gates, self.connections, self.x_max, self.y_max, 
-    and self.occupied_segments.
-    Method plot_grid creates the horizontal and vertical lines of the grid.
-    Method plot_connections plots the solution for the connections from the Connection class.
-    Method plot_gates plots the gates according to their coordinates.
-    Method show_plot makes final adjustments to the plot and shows it."""
-    
-    def __init__(self, gates, connections_path):
-        """ creates self.gates (dataframe with coordinates of gates), self.connections (gates
-        to be connected), self.x_max (how wide the grid has to be according to the gates' coordinates), 
-        self.y_max (how long grid has to be), and self.occupied_segments (list of segments)."""
-        self.gates = gates
+class Chip:
+    def __init__(self, gates_path, connections_path):
+        self.gates = pd.read_csv(gates_path, index_col='chip')
         self.connections = pd.read_csv(connections_path)
 
         self.x_max = max(self.gates['x']) + 1
@@ -37,10 +26,10 @@ class Visualize_chip:
 
     def plot_connections(self):
         """ Plot the connections in the connections list. """
-        for _, connection in self.connections.iterrows():
+        for _, con in self.connections.iterrows():
 
             # connection --> pandas series (one column chip a, second column chip b)
-            connection2.Connection(connection, self.gates, self.occupied_segments).make_connection()
+            connection.Connection(con, self.gates, self.occupied_segments).make_connection()
         
         for segment in self.occupied_segments:
             plt.plot((segment[0][0], segment[1][0]), (segment[0][1], segment[1][1]), (segment[0][2], segment[1][2]), linewidth = 3, color='b')
@@ -70,3 +59,21 @@ class Visualize_chip:
         ax.set_zlim(0, self.z_max)
 
         plt.show()
+
+    def calculate_intersections(self):
+        """Check if segment ends occur mulitple times in the occupied segments list. In other words,
+        check if certain point in the grid are used twice or more."""
+        end_points = []
+        for segment in self.occupied_segments:
+
+            # check if the segment end is not a gate/destination
+            if list(segment[1]) not in self.gates:
+                end_points.append(segment[1])
+
+        unique_end_points = set(end_points)
+
+        return len(end_points) - len(unique_end_points)
+
+    def error_calculation(self):
+        """ Using the error formula C = n + 300 * k, it returns the calculated error. """
+        return len(self.occupied_segments) + 300 * self.calculate_intersections()
