@@ -6,7 +6,6 @@ class Gate:
     def __init__(self, gate):
         """creates self.gate: the coordinates of a gate"""
         self.gate = gate
-        self.gates['z'] = 0
 
     def gate_location(self, chip):
         """Get the location of a specific gate and returns that location."""

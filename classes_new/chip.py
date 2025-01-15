@@ -2,11 +2,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 from classes_new import connection
+from classes_new import gate
 
 class Chip:
-    def __init__(self, gates_path, connections_path):
-        self.gates = pd.read_csv(gates_path, index_col='chip')
+    def __init__(self, connections_path):
+        self.gates = []
         self.connections = pd.read_csv(connections_path)
+        self.connections = []
 
         self.x_max = max(self.gates['x']) + 1
         self.y_max = max(self.gates['y']) + 1
@@ -15,6 +17,19 @@ class Chip:
         self.occupied_segments = []
 
         plt.axes(projection='3d')
+
+    def gates_list(self, gates_path):
+
+        self.gates = pd.read_csv(gates_path, index_col='chip')
+        self.gates['z'] = 0
+        for _,i in gates.iterrows():
+            coordinaten = []
+            for j in i:
+                coordinaten.append(j)
+    
+        coordinaten_gate = tuple(coordinaten)
+        gate.Gate(coordinaten_gate)
+            
 
     def plot_grid(self):
         """ Plot the grid with vertical and horizontal lines. """   

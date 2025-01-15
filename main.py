@@ -5,7 +5,7 @@
 # Authors: Merel, Amy, Kyra
 
 from classes import visualize_chip, cost, gates
-
+        
 if __name__ == '__main__':
     gates_path = 'data/chip_0/print_0.csv'
     connections_path = 'data/chip_0/netlist_3.csv'
@@ -21,3 +21,5 @@ if __name__ == '__main__':
     costs = cost.Cost(my_chip)
     cost = costs.error_calculation()
     print(f'The costs for this solution: {cost}')
+
+
