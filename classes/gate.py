@@ -1,7 +1,6 @@
 class Gate:
     """Class to manage the properties of the gates.
-    The method __init__ creates self.gates (the coordinates for all the gates). 
-    The method gate_location returns the location (coordinates) of a certain gate."""
+    The method __init__ creates self.gates, self., self.y, and self.z."""
 
     def __init__(self, gate):
         """creates self.gate: the coordinates of a gate"""
