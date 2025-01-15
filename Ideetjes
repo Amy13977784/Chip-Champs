@@ -1,3 +1,6 @@
 path finding algorithm:
 - A*
 - heuristiek: segmenten bezet of niet/kruisingen
+
+
+connections loop: van meest moeilijk naar minst moeilijk
