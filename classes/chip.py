@@ -29,10 +29,12 @@ class Chip:
         df_connections = pd.read_csv(connections_path)
 
         for _, con in df_connections.iterrows():
-            connections.append(connection.Connection(con, self.gates))
+            start = self.gates[connection['chip_a']].gate
+            end = self.gates[connection['chip_a']].gate
+            connections.append(connection.Connection(start, end))
 
         return connections
-
+        
     def plot_chip(self):
 
         self.x_max = max(gate.x for gate in self.gates.values()) + 1
@@ -78,7 +80,7 @@ class Chip:
             # check if the segment end is not a gate/destination
             if list(segment[1]) not in self.gates:
                 end_points.append(segment[1])
-                
+
         unique_end_points = set(end_points)
 
         return len(end_points) - len(unique_end_points)
