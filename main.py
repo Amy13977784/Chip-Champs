@@ -12,9 +12,7 @@ if __name__ == '__main__':
     gates_path = 'data/chip_0/print_0.csv'
     connections_path = 'data/chip_0/netlist_1.csv'
 
-    for i in range(100):
-        start_time = time.time()
-        
+    for i in range(100):        
         my_chip = chip.Chip(gates_path, connections_path)
 
         algorithm.Random_algorithm(my_chip).all_connections()

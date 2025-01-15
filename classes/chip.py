@@ -29,8 +29,8 @@ class Chip:
         df_connections = pd.read_csv(connections_path)
 
         for _, con in df_connections.iterrows():
-            start = self.gates[connection['chip_a']].gate
-            end = self.gates[connection['chip_a']].gate
+            start = self.gates[con['chip_a']].gate
+            end = self.gates[con['chip_a']].gate
             connections.append(connection.Connection(start, end))
 
         return connections
