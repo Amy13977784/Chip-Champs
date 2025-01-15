@@ -5,8 +5,7 @@ class Gate:
 
     def __init__(self, gate):
         """creates self.gate: the coordinates of a gate"""
-        self.gate = gate
-
-    def gate_location(self, chip):
-        """Get the location of a specific gate and returns that location."""
-        return self.gates.loc[chip]
+        self.x = gate['x']
+        self.y = gate['y']
+        self.z = 0
+        self.gate = tuple(self.x, self.y, self.z)

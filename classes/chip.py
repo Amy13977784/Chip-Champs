@@ -5,31 +5,33 @@ from classes import connection
 from classes import gate
 
 class Chip:
-    def __init__(self):
-        self.gates = {}
-        self.connections = []
+    def __init__(self, gates_path, connections_path):
 
         self.occupied_segments = []
 
-    def gates_dict(self, gates_path):
+        self.gates = self.gates_dict(gates_path)
+        self.connections = self.connections_list(connections_path)
 
-        gates = pd.read_csv(gates_path, index_col='chip')
-        gates['z'] = 0
-        for index,i in gates.iterrows():
-            coordinaten = []
-            for j in i:
-                coordinaten.append(j)
-            coordinaten_gate = tuple(coordinaten)
-            self.gates[index] = gate.Gate(coordinaten_gate)
+    def gates_dict(self, gates_path):
+        gates = {}
+        df_gates = pd.read_csv(gates_path, index_col='chip')
+        for index,coors in df_gates.iterrows():
+            gates[index] = gate.Gate(coors)
+            
+        return gates
 
 
     def connections_list(self, connections_path):
-        """ Plot the connections in the connections list. """
+        """ Plot the connections in the connections list. """   
+        self.connections = []
+
         connections = pd.read_csv(connections_path)
         for _, con in connections.iterrows():
 
             # connection --> pandas series (one column chip a, second column chip b)
             connection.Connection(con, self.gates, self.occupied_segments).make_connection()
+
+        return self.connections
 
     def plot_chip(self):
 
