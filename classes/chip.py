@@ -78,13 +78,13 @@ class Chip:
         for segment in self.occupied_segments:
 
             # check if the segment end is not a gate/destination
-            if list(segment[1]) not in self.gates:
+            if list(segment[1]) not in self.gates.values():
                 end_points.append(segment[1])
 
         unique_end_points = set(end_points)
 
         return len(end_points) - len(unique_end_points)
 
-    def error_calculation(self):
-        """ Using the error formula C = n + 300 * k, it returns the calculated error. """
+    def cost_calculation(self):
+        """ Using the cost formula C = n + 300 * k, it returns the calculated costs. """
         return len(self.occupied_segments) + 300 * self.calculate_intersections()

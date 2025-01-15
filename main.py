@@ -18,7 +18,7 @@ if __name__ == '__main__':
         algorithm.Random_algorithm(my_chip).all_connections()
 
         my_chip.plot_chip()
-        cost = my_chip.error_calculation()
+        cost = my_chip.cost_calculation()
         print(f'The costs for this solution: {cost}')
 
 

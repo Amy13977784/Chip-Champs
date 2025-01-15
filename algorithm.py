@@ -12,7 +12,7 @@ class Random_algorithm:
 
     def make_connection(self, connection):
         """Form a connection until it has reached the end gate by taking steps in a random direction 
-        (either vertical or horizontal). If gridsegment alreadyin use, step will not be 'saved' and 
+        (either vertical or horizontal). If the gridsegment is already in use, step will not be 'saved' and 
         thus a different direction is chosen in the next loop."""
 
         self.current_location = connection.start_location.copy()
@@ -21,6 +21,11 @@ class Random_algorithm:
         # while current location is not the end location (for both x and y coordinate)
         while connection.check_end() == False and counter < 500:
             counter += 1
+
+            # if there are no possible steps, then stop the algorithm 
+            if not check_possible_steps(self.current_location, self.occupied_segments, self.chip.gates, self.chip.x_max, self.chip.y_max, self.chip.z_max):
+                print(f"No valid steps available from {self.current_location}. No solution found in this experiment.")
+                return  # exit the algorithm 
                 
             # [0, 1, 2] = [x, y, z]
             axis = random.choice([0, 1, 2])
@@ -29,7 +34,7 @@ class Random_algorithm:
             coor_start, coor_end = self.make_step(axis, connection)
 
             # If segment still free, updates its current location (end segment becomes start of segment, in the next step the new end segment is determined).
-            if self.check_occupied_segment(coor_start, coor_end) == False:
+            if not self.check_occupied_segment(coor_start, coor_end):
                 print(coor_end)
                 self.occupied_segments.append((coor_start, coor_end))
                 connection.add_coor(coor_end)
@@ -38,12 +43,37 @@ class Random_algorithm:
             print(self.current_location)
             print(counter)
             
-
-
     def check_occupied_segment(self, coor_start, coor_end):
         return (coor_start, coor_end) in self.occupied_segments or (coor_end, coor_start) in self.occupied_segments \
                 or coor_end in self.chip.gates
-    
+
+    def check_possible_steps(self, current_location, occupied_segments, gates, x_max, y_max, z_max):
+        """ Check if there are any steps available from the current location."""
+     
+        possible_steps = [
+        (current_location[0] + 1, current_location[1], current_location[2]),  # x + 1
+        (current_location[0] - 1, current_location[1], current_location[2]),  # x - 1
+        (current_location[0], current_location[1] + 1, current_location[2]),  # y + 1
+        (current_location[0], current_location[1] - 1, current_location[2]),  # y - 1
+        (current_location[0], current_location[1], current_location[2] + 1),  # z + 1
+        (current_location[0], current_location[1], current_location[2] - 1),  # z - 1 
+        ]
+
+        # edge cases: get rid of the steps that are out of bound, already occupied, or is a gate
+        valid_steps = []
+        for step in possible_steps:
+            if (
+                0 <= step[0] < x_max and    # check if the step is still within the grid 
+                0 <= step[1] < y_max and 
+                0 <= step[2] < z_max and 
+                (current_location, step) not in occupied_segments and  # Check if the segment (current_location -> step) is already occupied
+                (step, current_location) not in occupied_segments and  # Check if the segment (step -> current_location) is already occupied 
+                step not in gates.values()  # check if the step is not a gate 
+                ):
+
+                valid_steps.append(step)
+
+        return len(valid_steps) > 0  # Return True if there is at least one valid step possible 
 
     def make_step(self, axis, connection):
             """ Let's the connection take a step according to the end location. It returns the coordinates
