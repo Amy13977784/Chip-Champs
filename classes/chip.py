@@ -12,8 +12,10 @@ class Chip:
         self.connections = self.connections_list(connections_path)
 
     def gates_dict(self, gates_path):
+        
         gates = {}
         df_gates = pd.read_csv(gates_path, index_col='chip')
+
         for index,coors in df_gates.iterrows():
             gates[index] = gate.Gate(coors)
             
@@ -22,15 +24,14 @@ class Chip:
 
     def connections_list(self, connections_path):
         """ Plot the connections in the connections list. """   
-        self.connections = []
 
-        connections = pd.read_csv(connections_path)
-        for _, con in connections.iterrows():
+        connections = []
+        df_connections = pd.read_csv(connections_path)
 
-            # connection --> pandas series (one column chip a, second column chip b)
-            connection.Connection(con, self.gates, self.occupied_segments).make_connection()
+        for _, con in df_connections.iterrows():
+            connections.append(connection.Connection(con, self.gates))
 
-        return self.connections
+        return connections
 
     def plot_chip(self):
 
