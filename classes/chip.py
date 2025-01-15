@@ -34,7 +34,7 @@ class Chip:
             connections.append(connection.Connection(start, end))
 
         return connections
-        
+
     def plot_chip(self):
 
         self.x_max = max(gate.x for gate in self.gates.values()) + 1
