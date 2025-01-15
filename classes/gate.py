@@ -7,4 +7,4 @@ class Gate:
         self.x = gate['x']
         self.y = gate['y']
         self.z = 0
-        self.gate = tuple(self.x, self.y, self.z)
+        self.gate = [self.x, self.y, self.z]

@@ -35,8 +35,8 @@ class Chip:
 
     def plot_chip(self):
 
-        self.x_max = max(self.gates['x']) + 1
-        self.y_max = max(self.gates['y']) + 1
+        self.x_max = max(gate.x for gate in self.gates.values()) + 1
+        self.y_max = max(gate.y for gate in self.gates.values()) + 1
         self.z_max = 7
         
         plt.axes(projection='3d')
@@ -49,12 +49,10 @@ class Chip:
         for segment in self.occupied_segments:
             plt.plot((segment[0][0], segment[1][0]), (segment[0][1], segment[1][1]), (segment[0][2], segment[1][2]), linewidth = 3, color='b')
 
-        plt.plot(self.gates['x'], self.gates['y'], self.gates['z'], 'rD', markersize=18 - max([self.x_max, self.y_max]))
-
         ax = plt.gca()
-        # plot number (index) of gates on top
-        for index, row in self.gates.iterrows():
-            ax.text(row['x'], row['y'], row['z'], index, fontsize=18 - max([self.x_max, self.y_max]),
+        for number, gate in self.gates.items():
+            plt.plot(gate.x, gate.y, gate.z, 'rD', markersize=18 - max([self.x_max, self.y_max]))
+            ax.text(gate.x, gate.y, gate.z, number, fontsize=18 - max([self.x_max, self.y_max]),
                      horizontalalignment='center', verticalalignment='center_baseline')
 
         # remove axes values
