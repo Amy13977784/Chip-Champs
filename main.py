@@ -8,17 +8,17 @@ from classes import chip
 import random_algorithm
         
 if __name__ == '__main__':
-    gates_path = 'data/chip_0/print_0.csv'
-    connections_path = 'data/chip_0/netlist_1.csv'
+    chip_number = 0
+    netlist = 1
 
     for i in range(5):        
-        my_chip = chip.Chip(gates_path, connections_path)
+        my_chip = chip.Chip(chip_number, netlist)
 
         random_algorithm.Random_algorithm(my_chip).all_connections()
 
         my_chip.plot_chip()
         cost = my_chip.calculate_cost()
         print(f'The costs for this solution: {cost}')
-        my_chip.output(i)
+        my_chip.output_file(i, chip_number, netlist, save=False)
 
 
