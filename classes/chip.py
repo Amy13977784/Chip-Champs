@@ -108,3 +108,4 @@ class Chip:
         df_output = pd.concat([df_output, end_row])
 
         df_output.to_csv(f'output/output_{file_number}.csv', index=False)
+
