@@ -145,7 +145,7 @@ class Chip:
             df_output = pd.concat([df_output, row])
 
         # last row shows which chip, which netlist, and the cost of the solution 
-        end_row = pd.DataFrame({'net': [f'chip_{chip_number}_net_{netlist}'], 'wires': [(f'cost{cost}')]})
+        end_row = pd.DataFrame({'net': [f'chip_{chip_number}_net_{netlist}'], 'wires': [cost]})
         df_output = pd.concat([df_output, end_row])
         
         print(df_output)
