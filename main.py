@@ -19,5 +19,6 @@ if __name__ == '__main__':
         my_chip.plot_chip()
         cost = my_chip.calculate_cost()
         print(f'The costs for this solution: {cost}')
+        my_chip.output(i)
 
 

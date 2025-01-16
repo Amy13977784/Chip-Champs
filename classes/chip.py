@@ -86,7 +86,7 @@ class Chip:
         """ Using the error formula C = n + 300 * k, it returns the calculated error. """
         return len(self.occupied_segments) + 300 * self.calculate_intersections()
     
-    def output(self):
+    def output(self, filenumber):
         df_output = pd.DataFrame(columns = ['net', 'wires'])
 
         for connection in self.connections:
@@ -96,6 +96,10 @@ class Chip:
                     start_gate = gate_number_key
                 elif gate.coor == connection.end_location:
                     end_gate = gate_number_key
-                    
-            row = pd.DataFrame({'net': (start_gate, end_gate), 'wires': connection.coor_list})
+
+            row = pd.DataFrame({'net': [(start_gate, end_gate)], 'wires': [connection.coor_list]})
             df_output = pd.concat([df_output, row])
+
+        print(df_output)
+
+        df_output.to_csv(f'output/output_{filenumber}.csv', index=False)
