@@ -50,11 +50,6 @@ class Random_algorithm:
                 connection.add_coor(new_location)
                 self.current_location = new_location
 
-        # check if connection has reached the end location (gate)
-        if connection.check_end():
-            print('connection succesful')
-        else:
-            print('connection unsuccesful')
 
 
     def check_occupied_segment(self, coor_start, coor_end):
