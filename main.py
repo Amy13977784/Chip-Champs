@@ -1,7 +1,7 @@
 # Visualisation of Chip & Circuit problem.
 # running the code will give the current solution and the amount of error for that particular
 # solution. It also displays what coordinates belong to which connection/net. 
-# In addition to this output a csv.file of this output can be created (set save to True).
+# In addition to this a csv.file of this output can be created (set save to True).
 #
 # Authors: Merel, Amy, Kyra
 
