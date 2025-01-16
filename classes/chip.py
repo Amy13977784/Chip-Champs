@@ -6,8 +6,15 @@ from classes import connection, gate
 
 class Chip:
     """Class that implements a chip and all its properties (gates, grid, connections).
-     method __init__ creates self.occupied_segments, self.gates, self.connections, self.x_max, 
-      self.y_max, and self.z_max."""
+    Method __init__ creates self.occupied_segments, self.gates, self.connections, self.x_max, 
+      self.y_max, and self.z_max.
+    Method gates_dict creates a dictionary in the form; gate numberss: Gate class instance.
+    Method connections_list creates a list. Every elements contains a Connection class instance.
+    Method plot_chip, plots the elements of the chip.
+    Method calculate_intersections calculated how many wires cross in the solution provided by the
+    algorithm.
+    Method calculate cost uses a formula to return the cost of the solution.
+    Method output_file creates the an csv_file containing the results from the solution."""
     
     def __init__(self, chip_number, netlist):
         """This method initiates the occupied segments list of that contain the segments used by
@@ -41,9 +48,10 @@ class Chip:
         return gates
 
     def connections_list(self, chip_number, netlist):
-        """ Reads in the connections (gates to be connected). By looking for the keys with the 
+        """Reads in the connections (gates to be connected). By looking for the keys with the 
         number of the start and end gate in the gates dictionary, we can obtain the starting
-         and ending coordinates of the connections, and put them in a list. This list is returned."""   
+         and ending coordinates of the connections, use them to create a Connection class instance, 
+         and put those instances in a list. This list is returned."""   
 
         connections = []
 
@@ -115,9 +123,8 @@ class Chip:
         return len(self.occupied_segments) + 300 * self.calculate_intersections()
     
     def output_file(self, file_number, chip_number, netlist, cost, save=True):
-        """Creates the output of the solution in a plot and an output file is created, in which 
-        the coordinates of every connection, what chip, and the error for the solution is shown.
-        If a solution is not found a message will be printed."""
+        """Creates an output file, in which the coordinates of every connection, what chip, 
+        and the error for the solution is shown."""
 
         # create dataframe 
         df_output = pd.DataFrame(columns = ['net', 'wires'])
@@ -138,7 +145,7 @@ class Chip:
             df_output = pd.concat([df_output, row])
 
         # last row shows which chip, which netlist, and the cost of the solution 
-        end_row = pd.DataFrame({'net': [f'chip_{chip_number}_net_{netlist}'], 'wires': [cost]})
+        end_row = pd.DataFrame({'net': [f'chip_{chip_number}_net_{netlist}'], 'wires': [(f'cost{cost}')]})
         df_output = pd.concat([df_output, end_row])
         
         print(df_output)
