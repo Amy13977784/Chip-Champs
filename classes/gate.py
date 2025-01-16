@@ -3,7 +3,8 @@ class Gate:
     The method __init__ creates self.gates, self., self.y, and self.z."""
 
     def __init__(self, coordinates):
-        """creates self.gate: the coordinates of a gate"""
+        """creates self.gate: the coordinates of a gate, self.x: x coordinate of the gate instance,
+        self.y: y coordinate, and self.z: z coordinate."""
         self.x = coordinates['x']
         self.y = coordinates['y']
         self.z = 0
