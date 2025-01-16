@@ -4,22 +4,20 @@ import matplotlib.pyplot as plt
 from classes import connection, gate
 
 class Chip:
-    def __init__(self, chip_number, netlist):
+    def __init__(self, gates_path, connections_path):
 
         self.occupied_segments = []
 
-        self.gates = self.gates_dict(chip_number)
-        self.connections = self.connections_list(chip_number, netlist)
+        self.gates = self.gates_dict(gates_path)
+        self.connections = self.connections_list(connections_path)
 
         self.x_max = max(gate.x for gate in self.gates.values()) + 1
         self.y_max = max(gate.y for gate in self.gates.values()) + 1
         self.z_max = 7
 
-    def gates_dict(self, chip_number):
+    def gates_dict(self, gates_path):
         
         gates = {}
-
-        gates_path = f'data/chip_{chip_number}/print_{chip_number}.csv'
         df_gates = pd.read_csv(gates_path, index_col='chip')
 
         for index, coordinates in df_gates.iterrows():
@@ -27,12 +25,10 @@ class Chip:
             
         return gates
 
-    def connections_list(self, chip_number, netlist):
+    def connections_list(self, connections_path):
         """ Plot the connections in the connections list. """   
 
         connections = []
-
-        connections_path = f'data/chip_{chip_number}/netlist_{netlist}.csv'
         df_connections = pd.read_csv(connections_path)
 
         for _, con in df_connections.iterrows():
@@ -90,7 +86,7 @@ class Chip:
         """ Using the error formula C = n + 300 * k, it returns the calculated error. """
         return len(self.occupied_segments) + 300 * self.calculate_intersections()
     
-    def output(self, file_number, chip_number, net_number):
+    def output(self, filenumber):
         df_output = pd.DataFrame(columns = ['net', 'wires'])
 
         for connection in self.connections:
@@ -104,8 +100,7 @@ class Chip:
             row = pd.DataFrame({'net': [(start_gate, end_gate)], 'wires': [connection.coor_list]})
             df_output = pd.concat([df_output, row])
 
-        end_row = pd.DataFrame({'net': [f'chip_{chip_number}_net_{net_number}'], 'wires': [file_number]})
-        df_output = pd.concat([df_output, end_row])
+        print(df_output)
 
         df_output.to_csv(f'output/output_{file_number}.csv', index=False)
 
