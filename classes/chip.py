@@ -82,13 +82,8 @@ class Chip:
 
         return len(end_points) - len(unique_end_points)
 
-<<<<<<< HEAD
-    def cost_calculation(self):
-        """ Using the cost formula C = n + 300 * k, it returns the calculated costs. """
-=======
     def calculate_cost(self):
-        """ Using the error formula C = n + 300 * k, it returns the calculated error. """
->>>>>>> 43ff323d975ad50b2bb095839a347feead65a1e7
+        """ Using the cost formula C = n + 300 * k, it returns the calculated error. """
         return len(self.occupied_segments) + 300 * self.calculate_intersections()
     
     def output(self, filenumber):
