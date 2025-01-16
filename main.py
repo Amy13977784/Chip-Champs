@@ -1,6 +1,6 @@
 # Visualisation of Chip & Circuit problem.
 # running the code will give the current solution and the amount of error for that particular
-# solution.
+# solution. It also displays what coordinates belong to which connection/net.
 #
 # Authors: Merel, Amy, Kyra
 
