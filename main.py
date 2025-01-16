@@ -22,6 +22,6 @@ if __name__ == '__main__':
         print(f'The costs for this solution: {cost}')
 
         # save = True: a csv file containing the output is created.
-        my_chip.output_file(i, chip_number, netlist, cost, save=False)
+        my_chip.output_file(i, chip_number, netlist, cost, save=True)
 
 

@@ -17,10 +17,10 @@ class Chip:
     Method output_file creates the an csv_file containing the results from the solution."""
     
     def __init__(self, chip_number, netlist):
-        """This method initiates the occupied segments list of that contain the segments used by
+        """ This method initiates the occupied segments list of that contain the segments used by
          the connections. It also creates a dictionary with the gates (key = number of gate, value =
          Gate class object) and a list of connections (coordinates of the 2 gates that need to 
-         be connected). It also creates the bounds of the grid (self.x_max, self.y_max, self.z_max)."""
+         be connected). It also creates the bounds of the grid (self.x_max, self.y_max, self.z_max). """
         
         self.occupied_segments = []
 
@@ -32,7 +32,7 @@ class Chip:
         self.z_max = 7
 
     def gates_dict(self, chip_number):
-        """Reads in the coordinates of a certain chip. It returns a dictionary in which
+        """ Reads in the coordinates of a certain chip. It returns a dictionary in which
          the number of the gate is a key and a Gate class object is the value. """
 
         gates = {}
@@ -48,10 +48,10 @@ class Chip:
         return gates
 
     def connections_list(self, chip_number, netlist):
-        """Reads in the connections (gates to be connected). By looking for the keys with the 
+        """ Reads in the connections (gates to be connected). By looking for the keys with the 
         number of the start and end gate in the gates dictionary, we can obtain the starting
-         and ending coordinates of the connections, use them to create a Connection class instance, 
-         and put those instances in a list. This list is returned."""   
+        and ending coordinates of the connections, use them to create a Connection class instance, 
+        and put those instances in a list. This list is returned. """   
 
         connections = []
 
@@ -69,7 +69,7 @@ class Chip:
         return connections
 
     def plot_chip(self):
-        """class that plots the grid, gates and connections (made by the algorithm) in a 3D plot. """
+        """ Plots the grid, gates and connections (made by the algorithm) in a 3D plot. """
         
         plt.axes(projection='3d')
     
@@ -104,9 +104,10 @@ class Chip:
         plt.show()
 
     def calculate_intersections(self):
-        """Check if segment ends occurs mulitple times in the occupied segments list. In other words,
+        """ Check if segment ends occurs mulitple times in the occupied segments list. In other words,
         check if certain point in the grid are used twice or more. Function returns the amount of
-        intersections."""
+        intersections. """
+        
         end_points = []
         for segment in self.occupied_segments:
 
@@ -119,12 +120,12 @@ class Chip:
         return len(end_points) - len(unique_end_points)
 
     def calculate_cost(self):
-        """Using the error formula C = n + 300 * k, it returns the cost of the current solution. """
+        """ Using the cost formula C = n + 300 * k, it returns the cost of the current solution. """
         return len(self.occupied_segments) + 300 * self.calculate_intersections()
     
     def output_file(self, file_number, chip_number, netlist, cost, save=True):
-        """Creates an output file, in which the coordinates of every connection, what chip, 
-        and the error for the solution is shown."""
+        """ Creates an output file, in which the coordinates of every connection, what chip, 
+        and the error for the solution is shown. """
 
         # create dataframe 
         df_output = pd.DataFrame(columns = ['net', 'wires'])
@@ -134,21 +135,21 @@ class Chip:
             # recreating the netlist
             for gate_number_key, gate in self.gates.items():
 
-                # retrives the number of the gate that resembles the start and end coordinate (gate)
+                # retrieves the number of the gate that resembles the start and end coordinate (gate)
                 if gate.coor == connection.start_location:
                     start_gate = gate_number_key
                 elif gate.coor == connection.end_location:
                     end_gate = gate_number_key
 
             # row in df in following format: (start gate, end gate) [coordinates in connection]
-            row = pd.DataFrame({'net': [(start_gate, end_gate)], 'wires': [connection.coor_list]})
-            df_output = pd.concat([df_output, row])
+            df_output.loc[len(df_output)] = [(start_gate, end_gate), connection.coor_list]
 
         # last row shows which chip, which netlist, and the cost of the solution 
-        end_row = pd.DataFrame({'net': [f'chip_{chip_number}_net_{netlist}'], 'wires': [cost]})
-        df_output = pd.concat([df_output, end_row])
+        df_output.loc[len(df_output)] = [f'chip_{chip_number}_net_{netlist}', cost]
         
-        print(df_output)
+        df_output.set_index('net', inplace=True)
+        
+        print(df_output, '\n')
     	
         # if wanting to save output to csv.file
         if save:
@@ -157,5 +158,5 @@ class Chip:
             if not os.path.isdir("output"):
                 os.makedirs("output")
             
-            df_output.to_csv(f'output/output_{file_number}.csv', index=False)
+            df_output.to_csv(f'output/output_{file_number}.csv')
 

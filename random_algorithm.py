@@ -11,33 +11,34 @@ class Random_algorithm:
     method make_step lets a connection take a step on a given axes in the correct direction"""
 
     def __init__(self, chip):
-        """Initiates the chip on which te algorithm needs to be implemented in self.chip, and all 
+        """ Initiates the chip on which te algorithm needs to be implemented in self.chip, and all 
          the already occupied segment in self.occupied_segments. """
         self.chip = chip
         self.occupied_segments = chip.occupied_segments
         self.validity = []
 
     def all_connections(self):
-        """Loops over every connection to let them form. """
+        """ Loops over every connection to let them form. """
         for connection in self.chip.connections:
             self.connection = connection
             self.make_connection()
         
-        if all(valid_connection == True for valid_connection in self.validity):
+        # checks if all connections are finished and end at the end gate
+        if len(self.validity) == len(self.chip.connections) and all(valid_connection == True for valid_connection in self.validity):
             print('\nSolution valid! :) :) :)')
         else:
             print('\nSolution not valid :(')    
 
     def make_connection(self):
-        """Form a connection until it has reached the end gate by taking steps along a random axis
+        """ Form a connection until it has reached the end gate by taking steps along a random axis
         (either vertical(x), horizontal(y) or up/down(z)). If gridsegment already in use, step will not 
-        be 'saved' and thus a different axis is chosen in the next loop."""
+        be 'saved' and thus a different axis is chosen in the next loop. """
 
         self.current_location = self.connection.start_location
         counter = 0
 
         # while current location is not the end location, and there have been less than 200 steps taken
-        while self.connection.check_end() == False and counter < 200:
+        while self.connection.check_end() == False and counter < 500:
             counter += 1
 
             # if there are no possible steps, then stop the algorithm 
@@ -62,27 +63,19 @@ class Random_algorithm:
 
     def make_step(self, axis):
             """ Let's the connection take a step according to the end location. It returns the coordinates
-            of the new step."""
-            
+            of the new step. """
             new_location = list(self.current_location)
 
             max_borders = [self.chip.x_max, self.chip.y_max, self.chip.z_max]
 
-            # checks if the location is on the border of the chip
+            # prevents the connection from going outside of the borders
             if self.current_location[axis] == 0:
                 new_location[axis] += 1
 
             elif self.current_location[axis] == max_borders[axis]:
                 new_location[axis] -= 1
 
-            # if the current value x/y value is bigger than the desired x/y value: -1
-            elif self.current_location[axis] > self.connection.end_location[axis]:
-                new_location[axis] -= 1
-
-            # if the current x/y value is smaller: +1
-            elif self.current_location[axis] < self.connection.end_location[axis]:
-                new_location[axis] += 1
-            
+            # randomly chooses which way to move on the axis
             else:
                 new_location[axis] += random.choice([-1, 1])
 
@@ -90,7 +83,7 @@ class Random_algorithm:
     
 
     def check_occupied_segment(self, coor_start, coor_end):
-        """Method that checks if a step on a certain gridsegment can be taken, by checking if that
+        """ Method that checks if a step on a certain gridsegment can be taken, by checking if that
          certain segment is already in self.occupied or not. Returns either True or False. """
         if (coor_start, coor_end) in self.occupied_segments or (coor_end, coor_start) in self.occupied_segments:
             return True
@@ -99,7 +92,7 @@ class Random_algorithm:
     
 
     def check_possible_steps(self):
-        """ Check if there are any steps available from the current location."""
+        """ Check if there are any steps available from the current location. """
      
         possible_steps = [
         (self.current_location[0] + 1, self.current_location[1], self.current_location[2]),  # x + 1
