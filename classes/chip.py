@@ -123,7 +123,7 @@ class Chip:
         """ Using the cost formula C = n + 300 * k, it returns the cost of the current solution. """
         return len(self.occupied_segments) + 300 * self.calculate_intersections()
     
-    def output_file(self, file_number, chip_number, netlist, cost, save=True):
+    def output_file(self, file_number, chip_number, netlist, cost, validity, save=True):
         """ Creates an output file, in which the coordinates of every connection, what chip, 
         and the error for the solution is shown. """
 
@@ -145,10 +145,10 @@ class Chip:
             df_output.loc[len(df_output)] = [(start_gate, end_gate), connection.coor_list]
 
         # last row shows which chip, which netlist, and the cost of the solution 
-        df_output.loc[len(df_output)] = [f'chip_{chip_number}_net_{netlist}', cost]
+        df_output.loc[len(df_output)] = [f'chip_{chip_number}_net_{netlist}', [validity, cost]]
         
         df_output.set_index('net', inplace=True)
-        
+
         print(df_output, '\n')
     	
         # if wanting to save output to csv.file

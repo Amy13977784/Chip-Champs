@@ -1,14 +1,15 @@
 import random
 
 class Random_algorithm:
-    """Class that implements the connections between the gates via a random algorithm.
-     method __init__ creates the chip and all the occupied segments from the wires on the chip.
-     method all_connection calls the make_connection function on all the connections from the 
-     netlist (chip.connections).
+    """ Class that implements the connections between the gates via a random algorithm.
+    method __init__ creates the chip and all the occupied segments from the wires on the chip.
+    method all_connection calls the make_connection function on all the connections from the 
+    netlist (chip.connections).
     method make_connection forms connections by letting them take steps (using make_step function) 
     along a random axis.
-    method check_occupied_segment checks if a certain step can be made (if segment is free).
-    method make_step lets a connection take a step on a given axes in the correct direction"""
+    method make_step lets a connection take a step on a given axes in the correct direction.
+    method check_occupied_segment checks if a certain step can be made (if segment is free). 
+    method check_possible_steps checks if there are any open segments around the current location. """
 
     def __init__(self, chip):
         """ Initiates the chip on which te algorithm needs to be implemented in self.chip, and all 
@@ -26,8 +27,10 @@ class Random_algorithm:
         # checks if all connections are finished and end at the end gate
         if len(self.validity) == len(self.chip.connections) and all(valid_connection == True for valid_connection in self.validity):
             print('\nSolution valid! :) :) :)')
+            return 'Valid'
         else:
-            print('\nSolution not valid :(')    
+            print('\nSolution not valid :(')
+            return 'Invalid'
 
     def make_connection(self):
         """ Form a connection until it has reached the end gate by taking steps along a random axis
@@ -38,7 +41,7 @@ class Random_algorithm:
         counter = 0
 
         # while current location is not the end location, and there have been less than 200 steps taken
-        while self.connection.check_end() == False and counter < 500:
+        while not self.connection.check_end() and counter < 1000:
             counter += 1
 
             # if there are no possible steps, then stop the algorithm 
