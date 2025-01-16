@@ -1,9 +1,12 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import os
 
 from classes import connection, gate
 
 class Chip:
+    """Class that implements a chip and all its properties (gates, grid, connections).
+     method __init__  """
     def __init__(self, chip_number, netlist):
 
         self.occupied_segments = []
@@ -90,7 +93,7 @@ class Chip:
         """ Using the error formula C = n + 300 * k, it returns the calculated error. """
         return len(self.occupied_segments) + 300 * self.calculate_intersections()
     
-    def output_file(self, file_number, chip_number, netlist, save=True):
+    def output_file(self, file_number, chip_number, netlist, cost, save=True):
         df_output = pd.DataFrame(columns = ['net', 'wires'])
 
         for connection in self.connections:
@@ -104,11 +107,13 @@ class Chip:
             row = pd.DataFrame({'net': [(start_gate, end_gate)], 'wires': [connection.coor_list]})
             df_output = pd.concat([df_output, row])
 
-        end_row = pd.DataFrame({'net': [f'chip_{chip_number}_net_{netlist}'], 'wires': [file_number]})
+        end_row = pd.DataFrame({'net': [f'chip_{chip_number}_net_{netlist}'], 'wires': [cost]})
         df_output = pd.concat([df_output, end_row])
         
         print(df_output)
 
         if save:
+            if not os.path.isdir("output"):
+                os.makedirs("output")
             df_output.to_csv(f'output/output_{file_number}.csv', index=False)
 
