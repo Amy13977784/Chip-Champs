@@ -1,6 +1,7 @@
 # Visualisation of Chip & Circuit problem.
 # running the code will give the current solution and the amount of error for that particular
-# solution. It also displays what coordinates belong to which connection/net.
+# solution. It also displays what coordinates belong to which connection/net. 
+# In addition to this output a csv.file of this output can be created (set save to True).
 #
 # Authors: Merel, Amy, Kyra
 
@@ -19,6 +20,8 @@ if __name__ == '__main__':
         my_chip.plot_chip()
         cost = my_chip.calculate_cost()
         print(f'The costs for this solution: {cost}')
+
+        # save = True: a csv file containing the output is created.
         my_chip.output_file(i, chip_number, netlist, cost, save=False)
 
 
