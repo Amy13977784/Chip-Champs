@@ -6,6 +6,16 @@ To do voor taakverdeling voor individueel plan:
 - Visualisatie van kosten per oplossing maken
 - Functie schrijven zodat je een oplossing / output als input kan geven en er een chip en visualisatie uit krijgen
 
+Amy:
+- A* algoritme
+- f = g + h functies
+
+Kyra:
+- Simulated annealing algoritme
+
+Merel:
+- 
+
 A* pathfinding algorithm functions and objects:
 open list (nodes to be explored)
 closed list (nodes that have been explored and to which the algorithm will not return to)
