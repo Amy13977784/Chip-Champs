@@ -4,3 +4,11 @@ path finding algorithm:
 
 
 connections loop: van meest moeilijk naar minst moeilijk
+
+
+To do voor taakverdeling voor individueel plan:
+- path finding algorithm implementeren: welke functies horen daarbij, welke stappen moet het algoritme nemen
+- iemand die de stappen programmeerd?
+- de anderen maken functies die nodig zijn voor de nodige stappen?
+- andere algoritmes proberen uit te werken
+- 
