@@ -3,8 +3,18 @@ To do voor taakverdeling voor individueel plan:
 - iemand die f = g + h functies maakt
 - andere algoritmes proberen uit te werken: e.g. simulated annealing
 - connections loop: van meest moeilijk naar minst moeilijk --> functie schrijven om die volgorde te bepalen waarin connecties gelegd worden
-- Visualisatie van kosten per oplossing maken
+- Visualisatie van kosten van alle oplossingen maken
 - Functie schrijven zodat je een oplossing / output als input kan geven en er een chip en visualisatie uit krijgen
+
+Amy:
+- A* algoritme
+- f = g + h functies
+
+Kyra:
+- Simulated annealing algoritme
+
+Merel:
+- 
 
 A* pathfinding algorithm functions and objects:
 open list (nodes to be explored)
