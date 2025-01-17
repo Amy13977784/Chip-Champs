@@ -15,7 +15,7 @@ f = g + h (cost of a node/coordinate) --> kiest elke keer de node met de laagste
 g functie vinden (distance between current node and start node)
 h fucntie vinden (heuristiek: estimated distance between current and end node)
 
-pseudo code A* pathfinding algorithm:
+pseudo code A* pathfinding algorithm: https://medium.com/@nicholas.w.swift/easy-a-star-pathfinding-7e6689c7f7b2
 1) Initialize the open and closed list (they contain 0 nodes/coordinates at this point)
 2) add the start node to the open list (f value can be put in as 0)
 3) loop until endnode/location is reached --> while open list is not empty (no nodes are to be further explored)
@@ -28,9 +28,5 @@ pseudo code A* pathfinding algorithm:
       - Create the  f, g, and h values for the child and calculate f.
       - if childs' position is in the open list nodes positions: 
           - if child's g value is higher than the open list' node g value: continue to beginning of the loop.
-      - if not in open list: add child to open list
+      - if not in open list: add child to open list    
 
-        
-
-Link met goede uitleg van A* algoritme:
-https://medium.com/@nicholas.w.swift/easy-a-star-pathfinding-7e6689c7f7b2
