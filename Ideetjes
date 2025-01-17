@@ -3,7 +3,7 @@ path finding algorithm:
 - heuristiek: segmenten bezet of niet/kruisingen
 
 
-connections loop: van meest moeilijk naar minst moeilijk
+connections loop: van meest moeilijk naar minst moeilijk --> functie schrijven om die volgorde te bepalen?
 
 
 To do voor taakverdeling voor individueel plan:
