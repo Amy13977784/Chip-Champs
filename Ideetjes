@@ -14,36 +14,6 @@ Kyra:
 - Simulated annealing algoritme
 
 Merel:
-- 
-
-A* pathfinding algorithm functions and objects:
-open list (nodes to be explored)
-closed list (nodes that have been explored and to which the algorithm will not return to)
-f = g + h (cost of a node/coordinate) --> kiest elke keer de node met de laagste som van kosten en heuristiek.
-g functie vinden (distance between current node and start node)
-h fucntie vinden (heuristiek: estimated distance between current and end node)
-backtracking functie om geselecteerde nodes voor de path te krijgen
-
-Pseudocode A* pathfinding algorithm: 
-Initialize an empty path list
-add the start node to the open list 
-f value of this node can be equal to 0
-loop until end node/location is reached → while open list is not empty:
-get the current node (first node in open list)
-Equal to the node with the lowest f value)
-remove current node from open list and add to closed list
-add node to path list
-if current node equals the end node: found path! 
-return path list
-generate list of child nodes
-the adjoining nodes (nodes directly besides the current node)
- for each child in the children list:
-if child on the closed list or not walkable from current node (already occupied by other connection)
- continue to the beginning of the loop (next child)
-Create the  f, g, and h values for the child and calculate f.
-if childs' position is in the open list nodes positions: 
-if child's g value is higher than the open list' node g value
-continue to beginning of the loop.
-if not in open list: add child to open list  
-
-
+- cost visualisatie
+- output --> input functie
+- connections volgorde functie
