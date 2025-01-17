@@ -61,7 +61,7 @@ class Random_algorithm:
                 self.connection.add_coor(new_location)
                 self.current_location = new_location
         
-        self.validity.append(self.current_location == self.connection.end_location)
+        self.validity.append(self.connection.check_end())
         
 
     def make_step(self, axis):
