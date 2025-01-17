@@ -1,25 +1,31 @@
-*OPDRACHT* Voor deze milestone is het daarom de taak om een algoritme te implementeren dat willekeurige oplossingen genereert en daarmee resultaten produceert. 
-In het ideale geval is dit een uniforme steekproef uit de oplossingsruimte. Waarschijnlijk lukt dat niet helemaal, omdat er bijvoorbeeld een
-vooroordeel (bias) in het willekeurige proces zit, of omdat je concessies moet doen omwille van bijvoorbeeld tijd of geheugen. Daarom vragen
-we je om op één kantje met maximaal 400 woorden de resultaten te laten zien, toe te lichten wat de resultaten betekenen en waarom deze afwijken 
-of zelfs af moeten wijken van een uniforme steekproef.
+Voor deze baseline hebben we een random algoritme geïmplementeerd die een aantal keer wordt gerund, waardoor er meerdere 
+oplossingen gegenereerd worden. Dit algoritme werkt op een chip die bestaat uit een grid met 7 lagen, vaste gates en 
+verbindingen tussen gates. 
 
-Voor deze baseline hebben we een random algoritme geimplementeerd dat - zoals de naam al zegt - willekeurige oplossingen genereert en daarmee resultaten produceert.
-We hebben een grid met 7 lagen geïmplementeerd en binnen deze grid liggen er verschillende gates. De netlists geven aan welke gates met elkaar geconnect moeten worden. 
-Ons algoritme begint daarom in een specifieke gate en kiest bij elke stap een willekeurige kant om een stap te nemen om zo, hopelijk, een connectie te kunnen maken met de chip(s)
-volgens de netlist. Als we dit volledig random zouden laten werken, dan kwamen er vrijwel geen oplossingen uit, omdat het algoritme niet uit de while loop kon komen (door alle
-mogelijke stappen in deze 3D-grid). Daarom hebben we wel wat beperkingen opgelegd zodat het algortime toch nog tot een oplossing komt. 
+Het algoritme maakt de verbindingen door vanaf de begin-gate stappen te zetten in een willekeurige richting totdat 
+de eind-gate is bereikt of er geen stappen meer mogelijk zijn. Voor elke stap kiest het algoritme eerst willekeurig een 
+as (x, y of z) en vervolgens wordt er langs die as een willekeurige stap genomen (-1 of +1). Hierbij wordt rekening gehouden 
+met de grenzen van het grid. Voordat de stap wordt gemaakt, checkt het algoritme of de gekozen stap nog mogelijk is. Er wordt 
+gekeken of dat specifieke gridsegment nog beschikbaar is en of het niet over een andere gate loopt. Als het een geldige stap 
+is, wordt deze stap toegevoegd aan een lijst van ‘occupied segments’ en begint het algoritme weer opnieuw voor de volgende stap. 
 
-Tijdens elke iteratie kiest het algoritme willekeurig een richting (x, y of z-richting). Vervolgens bepaalt hij of het een stap in de positieve of negatieve richting is. 
-Hierbij wordt rekening gehouden met grenzen van het grid. Het algoritme checkt of dit segment nog beschikbaar is. Daarnaast controleert het of de bestemming niet een gate is,
-tenzij het de eindpoort van deze verbinding is. Als het een geldige stap is, wordt deze stap toegevoegd aan occupied segments en de huidige coordinaten worden geupdate. 
-
-Ons Random algoritme is niet 100% random. Bij het kiezen van de richting, hebben we het algoritme meegegeven om meer prioriteit te geven aan stappen die dichter bij 
-de eindgate komen. Als de huidige locatie een lager coördinaat heeft dan de eindpoort, is de kans groter dat de stap in de positieve richting plaatsvindt (en vice versa).
-Daarnaast kan het niet 100% een random stap nemen, omdat het rekening moet houden met al bezette segmenten en de locaties van de gates. Mocht het algoritme geen geldige stappen 
-meer kunnen zetten, dan stopt het algoritme voor dit experiment. 
+De output die gegenereerd wordt bestaat uit een dataframe, waarin voor elke connectie een lijst met de bezette coördinaten 
+wordt gegeven. Daarnaast wordt er onderaan de dataframe aangegeven welke chip en welke netlijst zijn gebruikt, of de oplossing 
+valide is en wat de kosten voor de oplossing zijn. 
 
 We kunnen de prestaties van dit algoritme meten door het aantal succesvol voltooide pogingen en de kosten te vergelijken. 
+Echter is het aantal valide oplossingen met een random algoritme erg schaars voor deze case. Willekeurige stappen zetten 
+in een grid kan ervoor zorgen dat connecties snel vast komen te zitten. Hiermee wordt bedoeld dat alle gridsegmenten die 
+een bepaald coördinaat omringen vol zitten en dat connecties nie meer verder kunnen bewegen. Dit zal ervoor zorgen dat het 
+algoritme vast komt te zitten in de loop. Hierom hebben we geïmplementeerd dat het algoritme stopt met stappen zetten 
+wanneer dit probleem zich voordoet. 
+
+Een uniforme steekproef is niet mogelijk met dit algoritme door de beperking van de case (gridsegmenten mogen maar één 
+keer worden afgelegd). Deze zorgt ervoor dat het algoritme niet volledig random is. Het kan namelijk na het zetten van 
+één of meerdere stappen, die stappen niet opnieuw herhalen of, in andere woorden, random selecteren. Er is dus geen 
+uniforme kans dat een gridsegment gekozen wordt.
+
+
 
 
 
