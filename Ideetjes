@@ -12,3 +12,28 @@ To do voor taakverdeling voor individueel plan:
 - de anderen maken functies die nodig zijn voor de nodige stappen?
 - andere algoritmes proberen uit te werken
 - 
+
+A* pathfinding algorithm functions and objects:
+open list (nodes to be explored)
+closed list (nodes that have been explored and to which the algorithm will not return to)
+f = g + h (cost of a node/coordinate)
+
+pseudo code A* pathfinding algorithm:
+1) Initialize the open and closed list (they contain 0 nodes/coordinates at this point)
+2) add the start node to the open list (f value can be put in as 0)
+3) loop until endnode/location is reached --> while open list is not empty (no nodes are to be further explored)
+  - get the current node (Equal to the node with the lowest f value)
+  - remove current node from open list and add to closed list
+  - if current node equals the end node: found path! --> backtrack through selected nodes to get the path.
+  - generate child nodes: children of the current node equal to the adjoining nodes (nodes directly besides the current node)
+  - for each child in the children:
+      - if child on the closed list: continue to the beginning of the loop
+      - Create the  f, g, and h values for the child and calculate f.
+      - if childs' position is in the open list nodes positions: 
+          - if child's g value is higher than the open list' node g value: continue to beginning of the loop.
+      - if not in open list: add child to open list
+
+        
+
+Link met goede uitleg van A* algoritme:
+https://medium.com/@nicholas.w.swift/easy-a-star-pathfinding-7e6689c7f7b2
