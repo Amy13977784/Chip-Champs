@@ -16,7 +16,9 @@ To do voor taakverdeling voor individueel plan:
 A* pathfinding algorithm functions and objects:
 open list (nodes to be explored)
 closed list (nodes that have been explored and to which the algorithm will not return to)
-f = g + h (cost of a node/coordinate)
+f = g + h (cost of a node/coordinate) --> kiest elke keer de node met de laagste som van kosten en heuristiek.
+g functie vinden (distance between current node and start node)
+h fucntie vinden (heuristiek: estimated distance between current and end node)
 
 pseudo code A* pathfinding algorithm:
 1) Initialize the open and closed list (they contain 0 nodes/coordinates at this point)
