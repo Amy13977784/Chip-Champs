@@ -6,22 +6,34 @@
 # Authors: Merel, Amy, Kyra
 
 from classes import chip
-import algorithms.random_algorithm as random_algorithm
+from algorithms import random_algorithm, breadth_first
+
         
 if __name__ == '__main__':
     chip_number = 0
     netlist = 1
 
-    for i in range(5):        
+    for i in range(1):
         my_chip = chip.Chip(chip_number, netlist)
 
-        validity = random_algorithm.Random_algorithm(my_chip).all_connections()
+        # ----- If the connections have to be ordered by gate or Manhattan distance -----
+        my_chip.connection_order_by_gate()
+        # my_chip.connection_order_by_distance()
+
+        # ----- Random algorithm -----
+        # validity = random_algorithm.Random_algorithm(my_chip).all_connections()
+
+        # ----- Breadth first algorithm -----
+        breadth_first.BreadthFirst(my_chip).all_connections()
 
         my_chip.plot_chip()
         cost = my_chip.calculate_cost()
         print(f'The costs for this solution: {cost}')
 
-        # save = True: a csv file containing the output is created.
-        my_chip.output_file(i, chip_number, netlist, cost, validity, save=True)
+        # output file: (chip_number, netlist, cost, algorithm, iteration, validity), only add validity for the random algorithm
+        my_chip.output_file(chip_number, netlist, cost, 'random', i)
+
+    # --- if we want to plot a solution from an earlier saved file ---
+    # chip.Chip(chip_number, netlist).plot_solution(0)
 
 

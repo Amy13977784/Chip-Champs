@@ -6,7 +6,7 @@ class Connection:
     algorithm to the connection. 
     Method check_end checks if the connection has reached its end_location."""
 
-    def __init__(self, start_location, end_location):
+    def __init__(self, start_location, end_location, gates):
         """Implements the starting location of the connections (the first gates, chip_a) in self.location,
         and the end destination (chip_b). It also implements all the already occuppied segment in the
         self.occupied_segments list."""
@@ -14,6 +14,7 @@ class Connection:
         # tuple coordinates
         self.start_location = start_location
         self.end_location = end_location
+        self.gates = gates
 
         # add start coordinate to list
         self.coor_list = [self.start_location]
