@@ -19,8 +19,8 @@ class Astar:
     def all_connections(self):
         """ Loops over every connection to let them form. """
         for connection in self.chip.connections:
-            self.start_node = Node(connection.start_location)
-            self.end_node = Node(connection.end_location)
+            self.start_node = Node(connection.start_location, None)
+            self.end_node = Node(connection.end_location, None)
             self.connection = connection
             self.make_connection()
     
@@ -38,16 +38,16 @@ class Astar:
 
             self.open_list.pop(self.open_list.index(current_node))
             self.closed_list.append(current_node)
-            self.connection.add_coor(current_node.location)
 
             self.chip.occupied_segments.append((current_node.location, old_node.location))
-            print(current_node.location)
-
-            self.open_list = []
 
             if current_node.location == self.end_node.location:
-                print('path found!')
-            
+                current = current_node
+                while current.parent != None:
+                    self.connection.add_coor(current.location)
+                    current = current.parent
+                return print(f'path found! {self.connection.coor_list}')
+
             # generate list of child nodes:
             else: 
                 children = []
@@ -55,7 +55,7 @@ class Astar:
                 # adjoining nodes
                 for direction in [(1,0,0), (-1,0,0), (0,1,0), (0,-1,0), (0,0,1), (0,0,-1)]:
                     child_node_location = (current_node.location[0] + direction[0], current_node.location[1] + direction[1], current_node.location[2] + direction[2])
-                    children.append(Node(child_node_location))
+                    children.append(Node(child_node_location, current_node))
 
                 for child in children:
 
@@ -89,12 +89,9 @@ class Astar:
     def distance_h(self, node):
         ''' Returns the estimated distance between the current node and the end node.'''
 
-        x = self.end_node.location[0] - node.location[0]
-        y = self.end_node.location[1] - node.location[1]
-        z = self.end_node.location[2] - node.location[2]
-
-        # pythagorean theorem
-        return x**2 + y**2 + z**2
+        return abs(node.location[0] - self.end_node.location[0]) + \
+           abs(node.location[1] - self.end_node.location[1]) + \
+           abs(node.location[2] - self.end_node.location[2])
     
     def cost_f(self, g, h):
         ''' Returns the cost the node.'''
@@ -103,12 +100,13 @@ class Astar:
 
 class Node:
     ''' '''
-    def __init__(self, location):
+    def __init__(self, location, parent=None):
         '''location is a coordinate (x,y,z)'''
 
         self.location = location
         self.g = 0
         self.h = 0
         self.f = 0
+        self.parent = parent
 
 
