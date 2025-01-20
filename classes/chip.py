@@ -109,11 +109,13 @@ class Chip:
         intersections. """
         
         end_points = []
-        for segment in self.occupied_segments:
+        gates = [gate.coor for gate in self.gates.values()]
+
+        for _, end in self.occupied_segments:
 
             # check if the segment end is not a gate/destination
-            if list(segment[1]) not in self.gates.values():
-                end_points.append(segment[1])
+            if end not in gates:
+                end_points.append(end)
 
         unique_end_points = set(end_points)
 
