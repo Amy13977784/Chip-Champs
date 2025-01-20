@@ -1,3 +1,6 @@
+import copy
+from operator import attrgetter
+
 class Astar:
     '''Class implements the A* algorithm to form a connection between a starting point (start_coor)
     and an ending point (end_coor).
@@ -10,8 +13,6 @@ class Astar:
     def __init__(self, chip):
 
         self.chip = chip
-        self.occupied_segments = chip.occupied_segments
-
         self.open_list = []
         self.closed_list = []
 
@@ -24,18 +25,25 @@ class Astar:
             self.make_connection()
     
     def make_connection(self):
-
         self.open_list.append(self.start_node)
+        current_node = copy.deepcopy(self.start_node)
 
         # while the end node has not been reached
-        while len(self.open_list) > 0:
-            
+        while self.open_list:
+
+            old_node = current_node
+
             # get current node --> node with the lowest f value
-            current_node = min(self.open_list, key=lambda node: node.f)
+            current_node = min(self.open_list, key=attrgetter('f'))
 
             self.open_list.pop(self.open_list.index(current_node))
             self.closed_list.append(current_node)
-            self.connection.add_coor(current_node)
+            self.connection.add_coor(current_node.location)
+
+            self.chip.occupied_segments.append((current_node.location, old_node.location))
+            print(current_node.location)
+
+            self.open_list = []
 
             if current_node.location == self.end_node.location:
                 print('path found!')
@@ -46,8 +54,8 @@ class Astar:
 
                 # adjoining nodes
                 for direction in [(1,0,0), (-1,0,0), (0,1,0), (0,-1,0), (0,0,1), (0,0,-1)]:
-                    child_node = current_node.location + direction
-                    children.append(Node(child_node))
+                    child_node_location = (current_node.location[0] + direction[0], current_node.location[1] + direction[1], current_node.location[2] + direction[2])
+                    children.append(Node(child_node_location))
 
                 for child in children:
 
@@ -60,7 +68,7 @@ class Astar:
                         continue
 
                     # check if gridsegment from current node to child node is not occupied
-                    if (child.location, current_node.location) in self.occupied_segments or (current_node.location, child.location) in self.occupied_segments:
+                    if (child.location, current_node.location) in self.chip.occupied_segments or (current_node.location, child.location) in self.chip.occupied_segments:
                         continue
 
                     child.g = self.distance_g(child)
@@ -71,7 +79,6 @@ class Astar:
                         continue
                     else: 
                         self.open_list.append(child)
-
 
     def distance_g(self, node):
         '''Returnst the distance from the current node to the start node. '''
@@ -84,7 +91,7 @@ class Astar:
 
         x = self.end_node.location[0] - node.location[0]
         y = self.end_node.location[1] - node.location[1]
-        z = self.end_node.location[2] - node.location[0]
+        z = self.end_node.location[2] - node.location[2]
 
         # pythagorean theorem
         return x**2 + y**2 + z**2
