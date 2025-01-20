@@ -1,5 +1,6 @@
 import copy
 from operator import attrgetter
+import random
 
 class Astar:
     '''Class implements the A* algorithm to form a connection between a starting point (start_coor)
@@ -13,11 +14,10 @@ class Astar:
     def __init__(self, chip):
 
         self.chip = chip
-        self.open_list = []
-        self.closed_list = []
 
     def all_connections(self):
         """ Loops over every connection to let them form. """
+    
         for connection in self.chip.connections:
             self.start_node = Node(connection.start_location, None)
             self.end_node = Node(connection.end_location, None)
@@ -25,13 +25,14 @@ class Astar:
             self.make_connection()
     
     def make_connection(self):
+        self.open_list = []
+        self.closed_list = []
+
         self.open_list.append(self.start_node)
         current_node = copy.deepcopy(self.start_node)
 
         # while the end node has not been reached
         while self.open_list:
-
-            old_node = current_node
 
             # get current node --> node with the lowest f value
             current_node = min(self.open_list, key=attrgetter('f'))
@@ -39,14 +40,21 @@ class Astar:
             self.open_list.pop(self.open_list.index(current_node))
             self.closed_list.append(current_node)
 
-            self.chip.occupied_segments.append((current_node.location, old_node.location))
-
             if current_node.location == self.end_node.location:
                 current = current_node
                 while current.parent != None:
+
+                    # add coordinade to coordinate list of connection
                     self.connection.add_coor(current.location)
+
+                    # add backtracked step to occupied segments lsit
+                    self.chip.occupied_segments.append((current.parent.location, current.location))
+
                     current = current.parent
-                return print(f'path found! {self.connection.coor_list}')
+
+                # add starting coordinate to list
+                self.connection.add_coor(self.start_node.location)
+                return print(f'path found! :) :) :) {self.connection.coor_list}')
 
             # generate list of child nodes:
             else: 
@@ -65,10 +73,12 @@ class Astar:
                     
                     # check if child is on closed list
                     if any(child.location == closed_node.location for closed_node in self.closed_list):
+                        ('closed list')
                         continue
 
                     # check if gridsegment from current node to child node is not occupied
                     if (child.location, current_node.location) in self.chip.occupied_segments or (current_node.location, child.location) in self.chip.occupied_segments:
+                        print('occupied!')
                         continue
 
                     child.g = self.distance_g(child)
@@ -89,9 +99,8 @@ class Astar:
     def distance_h(self, node):
         ''' Returns the estimated distance between the current node and the end node.'''
 
-        return abs(node.location[0] - self.end_node.location[0]) + \
-           abs(node.location[1] - self.end_node.location[1]) + \
-           abs(node.location[2] - self.end_node.location[2])
+        # manhattan distance
+        return abs(node.location[0] - self.end_node.location[0]) + abs(node.location[1] - self.end_node.location[1]) + abs(node.location[2] - self.end_node.location[2])
     
     def cost_f(self, g, h):
         ''' Returns the cost the node.'''
