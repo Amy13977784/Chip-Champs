@@ -6,7 +6,7 @@
 # Authors: Merel, Amy, Kyra
 
 from classes import chip
-import random_algorithm
+import algorithms.random_algorithm as random_algorithm
         
 if __name__ == '__main__':
     chip_number = 0
