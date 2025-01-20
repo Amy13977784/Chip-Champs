@@ -1,6 +1,5 @@
 import copy
 from operator import attrgetter
-import random
 
 class Astar:
     '''Class implements the A* algorithm to form a connection between a starting point (start_coor)
@@ -25,20 +24,20 @@ class Astar:
             self.make_connection()
     
     def make_connection(self):
-        self.open_list = []
-        self.closed_list = []
+        open_list = []
+        closed_list = []
 
-        self.open_list.append(self.start_node)
+        open_list.append(self.start_node)
         current_node = copy.deepcopy(self.start_node)
 
         # while the end node has not been reached
-        while self.open_list:
+        while open_list:
 
             # get current node --> node with the lowest f value
-            current_node = min(self.open_list, key=attrgetter('f'))
+            current_node = min(open_list, key=attrgetter('f'))
 
-            self.open_list.pop(self.open_list.index(current_node))
-            self.closed_list.append(current_node)
+            open_list.pop(open_list.index(current_node))
+            closed_list.append(current_node)
 
             if current_node.location == self.end_node.location:
                 current = current_node
@@ -48,13 +47,15 @@ class Astar:
                     self.connection.add_coor(current.location)
 
                     # add backtracked step to occupied segments lsit
-                    self.chip.occupied_segments.append((current.parent.location, current.location))
+                    self.chip.occupied_segments.append((current.location, current.parent.location))
 
                     current = current.parent
 
                 # add starting coordinate to list
                 self.connection.add_coor(self.start_node.location)
+            
                 return print(f'path found! :) :) :) {self.connection.coor_list}')
+
 
             # generate list of child nodes:
             else: 
@@ -65,33 +66,35 @@ class Astar:
                     child_node_location = (current_node.location[0] + direction[0], current_node.location[1] + direction[1], current_node.location[2] + direction[2])
                     children.append(Node(child_node_location, current_node))
 
+                counter = 0
                 for child in children:
+                    counter += 1
+                    
 
                     # check if child node is within chip grid
                     if child.location[0] > self.chip.x_max or child.location[0] < 0 or child.location[1] > self.chip.y_max or child.location[1] < 0 or child.location[2] > self.chip.z_max or child.location[2] < 0:
                         continue
                     
                     # check if child is on closed list
-                    if any(child.location == closed_node.location for closed_node in self.closed_list):
-                        ('closed list')
+                    if any(child.location == closed_node.location for closed_node in closed_list):
                         continue
 
                     # check if gridsegment from current node to child node is not occupied
                     if (child.location, current_node.location) in self.chip.occupied_segments or (current_node.location, child.location) in self.chip.occupied_segments:
-                        print('occupied!')
                         continue
 
-                    child.g = self.distance_g(child)
-                    child.h = self.distance_h(child)
-                    child.f = self.cost_f(child.g, child.h)
-
-                    if any(child.location == open_node.location and child.g > open_node.g for open_node in self.open_list):
-                        continue
+                    # if any(child.location == open_node.location and child.g > open_node.g for open_node in open_list):
+                    #     continue
+        
                     else: 
-                        self.open_list.append(child)
+                        child.g = self.distance_g(child)
+                        child.h = self.distance_h(child)
+                        child.f = self.cost_f(child.g, child.h)
+                        open_list.append(child)
 
+        
     def distance_g(self, node):
-        '''Returnst the distance from the current node to the start node. '''
+        '''Returnst the distance from the current node to the start node.'''
 
         # manhattan distance
         return abs(node.location[0] - self.start_node.location[0]) + abs(node.location[1] - self.start_node.location[1]) + abs(node.location[2] - self.start_node.location[2])
