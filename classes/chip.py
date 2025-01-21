@@ -208,11 +208,11 @@ class Chip:
         # saves the dataframe into a csv file
         df_output.to_csv(f'output/output_chip_{self.chip_number}_net_{self.netlist}_{algorithm}_{file_number}.csv')
 
-    def plot_solution(self, filenumber):
+    def plot_solution(self, filenumber, algorithm):
         """
         Gets an output file of a solution as input, creates the occupied segments list and 
         """
-        file_path = f'output/output_chip_{self.chip_number}_net_{self.netlist}_{filenumber}.csv'
+        file_path = f'output/output_chip_{self.chip_number}_net_{self.netlist}_{algorithm}_{filenumber}.csv'
         
         try:
             df = pd.read_csv(file_path, index_col='net')
