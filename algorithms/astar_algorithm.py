@@ -74,8 +74,16 @@ class Astar:
 
                 for child in children:
                     
-                    # check if child node will cause a valid step
-                    if self.valid_child(current_node.location, child.location, self.connection) == False:
+                    # check if child node is within chip grid
+                    if child.location[0] > self.chip.x_max or child.location[0] < 0 or child.location[1] > self.chip.y_max or child.location[1] < 0 or child.location[2] > self.chip.z_max or child.location[2] < 0:
+                        continue
+                    
+                    # check if child is on closed list
+                    elif any(child.location == closed_node.location for closed_node in closed_list):
+                        continue
+
+                    # check if gridsegment from current node to child node is not occupied
+                    elif (child.location, current_node.location) in self.chip.occupied_segments or (current_node.location, child.location) in self.chip.occupied_segments:
                         continue
                     
                     else:
@@ -113,27 +121,6 @@ class Astar:
 
         return g + h
     
-    def valid_child(self, current, child, connection):
-        """ Checks if a child node is a valid step to be taken, by checking if that segment is 
-        not yet occupied, not out of bounds, not to a different gate and not a step backwards. """
-        # checks if the segment is already occupied
-        segment_occupied = (current, child) in self.chip.occupied_segments or \
-                        (current, child) in self.chip.occupied_segments
-
-        # checks if child node is out of bounds
-        out_of_bounds = any(coor < 0 for coor in child) or child[0] > self.chip.x_max or \
-                        child[1] > self.chip.y_max or child[2] > self.chip.z_max
-
-        # checks if child node is not any of the other gates that is not the end node
-        valid_end = child == connection.end_location or \
-                    all(gate.coor != child for gate in self.chip.gates.values())
-
-        # combines conditions
-        if not segment_occupied and not out_of_bounds and valid_end:
-            return True
-
-        return False
-
 class Node:
     '''Class that creates an instance of a node. A node has an location (x,y,z coordinate), a
      g value, h value and f value, and a parent node. '''
