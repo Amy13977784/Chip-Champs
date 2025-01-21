@@ -78,10 +78,6 @@ class Astar:
                     # check if gridsegment from current node to child node is not occupied
                     elif (child.location, current_node.location) in self.chip.occupied_segments or (current_node.location, child.location) in self.chip.occupied_segments:
                         continue
-                    
-                    # # no crossing of wires
-                    # elif any(child.location == gridsegment[1] for gridsegment in self.chip.occupied_segments):
-                    #     continue
 
                     # no wires ontop of gates
                     elif any(child.location == gate.coor for gate in self.chip.gates.values()) and child.location != self.end_node.location:
@@ -102,7 +98,7 @@ class Astar:
             
                         else: 
                             open_list.append(child)
-                            
+
         return print('No path found :(')
 
     def distance_g(self, node):
