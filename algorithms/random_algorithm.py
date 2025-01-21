@@ -57,7 +57,7 @@ class Random_algorithm:
 
             # If segment still free, updates its current location
             if not self.check_occupied_segment(self.current_location, new_location):
-                self.occupied_segments.append((self.current_location, new_location))
+                self.occupied_segments.add((self.current_location, new_location))
                 self.connection.add_coor(new_location)
                 self.current_location = new_location
         

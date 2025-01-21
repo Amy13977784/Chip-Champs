@@ -102,5 +102,5 @@ class BreadthFirst:
             # adds all the used segments in the found route to the chip's occupied segments list
             for index in range(len(shortest_route.coor_list)):
                 if index != len(shortest_route.coor_list) - 1:
-                    self.chip.occupied_segments.append((shortest_route.coor_list[index], shortest_route.coor_list[index + 1]))
+                    self.chip.occupied_segments.add((shortest_route.coor_list[index], shortest_route.coor_list[index + 1]))
             

@@ -6,19 +6,19 @@ import os
 from classes import connection, gate
 
 class Chip:
-    """Class that implements a chip and all its properties (gates, grid, connections).
+    """ Class that implements a chip and all its properties (gates, grid, connections).
     Method __init__ creates self.occupied_segments, self.gates, self.connections, self.x_max, 
       self.y_max, and self.z_max.
-    Method gates_dict creates a dictionary in the form; gate numberss: Gate class instance.
+    Method gates_dict creates a dictionary in the form; gate numbers: Gate class instance.
     Method connections_list creates a list. Every elements contains a Connection class instance.
     Method plot_chip, plots the elements of the chip.
     Method calculate_intersections calculated how many wires cross in the solution provided by the
     algorithm.
     Method calculate cost uses a formula to return the cost of the solution.
-    Method output_file creates the an csv_file containing the results from the solution."""
+    Method output_file creates the an csv_file containing the results from the solution. """
     
     def __init__(self, chip_number, netlist):
-        """ This method initiates the occupied segments list of that contain the segments used by
+        """ This method initiates the occupied segments list that will contain the segments used by
          the connections. It also creates a dictionary with the gates (key = number of gate, value =
          Gate class object) and a list of connections (coordinates of the 2 gates that need to 
          be connected). It also creates the bounds of the grid (self.x_max, self.y_max, self.z_max). """
@@ -26,7 +26,7 @@ class Chip:
         self.chip_number = chip_number
         self.netlist = netlist
         
-        self.occupied_segments = []
+        self.occupied_segments = set()
 
         self.gates = self.gates_dict(chip_number)
         self.connections = self.connections_list(chip_number, netlist)
@@ -90,6 +90,8 @@ class Chip:
         
         sorted_connections.sort(key=lambda x: x[1], reverse=True)
         self.connections = [self.connections[index] for index,_ in sorted_connections]
+
+        print(sorted_connections)
 
     def connection_order_by_distance(self):
         
@@ -169,7 +171,7 @@ class Chip:
         """ Using the cost formula C = n + 300 * k, it returns the cost of the current solution. """
         return len(self.occupied_segments) + 300 * self.calculate_intersections()
     
-    def output_file(self, chip_number, netlist, cost, algorithm, file_number, validity='valid'):
+    def output_file(self, cost, algorithm, file_number, validity='valid'):
         """ Creates an output file, which contains the coordinates of every connection, which chip and 
         netlist, and the cost of the solution. """
 
@@ -183,7 +185,7 @@ class Chip:
 
         df_output.set_index('net', inplace=True)
 
-        connections_path = f'data/chip_{chip_number}/netlist_{netlist}.csv'
+        connections_path = f'data/chip_{self.chip_number}/netlist_{self.netlist}.csv'
         df_connections = pd.read_csv(connections_path)
         df_connections['gates'] = None
 
@@ -195,7 +197,7 @@ class Chip:
         df_output = df_output.reindex(df_connections.index)
 
         # last row shows which chip, which netlist, if the solution is valid and the cost of the solution 
-        df_output.loc[f'chip_{chip_number}_net_{netlist}'] = [[validity, cost]]
+        df_output.loc[f'chip_{self.chip_number}_net_{self.netlist}'] = [[validity, cost]]
 
         print(df_output, '\n')
     	
@@ -204,7 +206,7 @@ class Chip:
             os.makedirs("output")
         
         # saves the dataframe into a csv file
-        df_output.to_csv(f'output/output_chip_{chip_number}_net_{netlist}_{algorithm}_{file_number}.csv')
+        df_output.to_csv(f'output/output_chip_{self.chip_number}_net_{self.netlist}_{algorithm}_{file_number}.csv')
 
     def plot_solution(self, filenumber):
         """
