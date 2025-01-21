@@ -117,7 +117,7 @@ class Chip:
             plt.plot([0, self.x_max], y, 0, color='black', linewidth=0.5)
 
         #colors = ['blue', 'green', 'magenta', 'yellow', 'chocolate', 'purple', 'orange', 'lime', 'gray', 'cyan']
-        colors = get_cmap('tab10')
+        colors = get_cmap('tab20')
 
         # connections
         for connection_index, connection in enumerate(self.connections):
@@ -126,7 +126,7 @@ class Chip:
                     plt.plot((connection.coor_list[index][0], connection.coor_list[index + 1][0]), \
                             (connection.coor_list[index][1], connection.coor_list[index + 1][1]), \
                             (connection.coor_list[index][2], connection.coor_list[index + 1][2]), \
-                                linewidth = 3, color = colors(connection_index / 9))
+                                linewidth = 1, color = colors(connection_index / 19))
 
 
         # get the current axis
