@@ -126,7 +126,7 @@ class Chip:
                     plt.plot((connection.coor_list[index][0], connection.coor_list[index + 1][0]), \
                             (connection.coor_list[index][1], connection.coor_list[index + 1][1]), \
                             (connection.coor_list[index][2], connection.coor_list[index + 1][2]), \
-                                linewidth = 1, color = colors(connection_index / 19))
+                                linewidth = 2, color = colors(connection_index / 19))
 
 
         # get the current axis
