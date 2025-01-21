@@ -39,6 +39,7 @@ class Random_algorithm:
 
         self.current_location = self.connection.start_location
         counter = 0
+        self.connection.add_coor(self.current_location)
 
         # while current location is not the end location, and there have been less than 200 steps taken
         while not self.connection.check_end() and counter < 1000:
