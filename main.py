@@ -6,12 +6,12 @@
 # Authors: Merel, Amy, Kyra
 
 from classes import chip
-from algorithms import random_algorithm, breadth_first
+from algorithms import random_algorithm, breadth_first, astar_algorithm
 
         
 if __name__ == '__main__':
     chip_number = 0
-    netlist = 1
+    netlist = 2
 
     for i in range(5):
         my_chip = chip.Chip(chip_number, netlist)
@@ -21,10 +21,13 @@ if __name__ == '__main__':
         # my_chip.connection_order_by_distance()
 
         # ----- Random algorithm -----
-        validity = random_algorithm.Random_algorithm(my_chip).all_connections()
+        # validity = random_algorithm.Random_algorithm(my_chip).all_connections()
 
         # ----- Breadth first algorithm -----
         # breadth_first.BreadthFirst(my_chip).all_connections()
+
+        # ----- A* algorithm -----
+        # astar_algorithm.Astar(my_chip)
 
         my_chip.plot_chip()
         cost = my_chip.calculate_cost()
@@ -33,7 +36,7 @@ if __name__ == '__main__':
         # output file: (cost, algorithm, iteration, validity), only add validity for the random algorithm
         my_chip.output_file(cost, 'breadthfirst', i)
 
-    # --- if we want to plot a solution from an earlier saved file ---
-    # chip.Chip(chip_number, netlist).plot_solution(0)
+    # ----- if we want to plot a solution from an earlier saved file -----
+    # chip.Chip(chip_number, netlist).plot_solution(0, 'breadthfirst')
 
 
