@@ -40,6 +40,7 @@ class Astar:
 
             if current_node.location == self.end_node.location:
                 current = current_node
+
                 while current.parent != None:
 
                     # add coordinade to coordinate list of connection
@@ -52,6 +53,8 @@ class Astar:
 
                 # add starting coordinate to list
                 self.connection.add_coor(self.start_node.location)
+
+                self.connection.coor_list.reverse()
                 return print(f'path found! :) :) :) {self.connection.coor_list}')
 
             # generate list of child nodes:
