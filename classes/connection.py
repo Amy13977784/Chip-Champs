@@ -17,7 +17,7 @@ class Connection:
         self.gates = gates
 
         # add start coordinate to list
-        self.coor_list = [self.start_location]
+        self.coor_list = []
 
     def add_coor(self, coor):
         """Adds a coordinate (a taken step) to the coordinate list (route of the wire)."""
