@@ -8,7 +8,9 @@ class Astar:
     Method make_connection is the A* algorithm.
     Method distance_g calculates the g value for a node.
     Method distance_h calculates the h value for a node. 
-    Method cost_f calculates the f values for a node. '''
+    Method cost_f calculates the f values for a node. 
+    Method valid_child checks is a node can be used in the path or not'''
+
     def __init__(self, chip):
         '''Imports the chip in self.chip '''
         self.chip = chip
@@ -23,6 +25,9 @@ class Astar:
             self.make_connection()
     
     def make_connection(self):
+        '''Makes a connection according to the A* algorithm. It will try to make the shortest route
+        possible while complying to certain restrictions. This method returns the a list of coordinates
+        that belong to this connection/path. I also updates the coor_list of the connection instance.'''
         open_list = []
         closed_list = []
 
@@ -41,12 +46,13 @@ class Astar:
             if current_node.location == self.end_node.location:
                 current = current_node
 
+                # while there is a parent node/until the starting node has been reached
                 while current.parent != None:
 
                     # add coordinade to coordinate list of connection
                     self.connection.add_coor(current.location)
 
-                    # add backtracked step to occupied segments lsit
+                    # add backtracked step to occupied segments
                     self.chip.occupied_segments.add((current.location, current.parent.location))
 
                     current = current.parent
@@ -66,24 +72,10 @@ class Astar:
                     child_node_location = (current_node.location[0] + direction[0], current_node.location[1] + direction[1], current_node.location[2] + direction[2])
                     children.append(Node(child_node_location, current_node))
 
-                counter = 0
                 for child in children:
-                    counter += 1
                     
-                    # check if child node is within chip grid
-                    if child.location[0] > self.chip.x_max or child.location[0] < 0 or child.location[1] > self.chip.y_max or child.location[1] < 0 or child.location[2] > self.chip.z_max or child.location[2] < 0:
-                        continue
-                    
-                    # check if child is on closed list
-                    elif any(child.location == closed_node.location for closed_node in closed_list):
-                        continue
-
-                    # check if gridsegment from current node to child node is not occupied
-                    elif (child.location, current_node.location) in self.chip.occupied_segments or (current_node.location, child.location) in self.chip.occupied_segments:
-                        continue
-
-                    # no wires ontop of gates
-                    elif any(child.location == gate.coor for gate in self.chip.gates.values()) and child.location != self.end_node.location:
+                    # check if child node will cause a valid step
+                    if self.valid_child(current_node.location, child.location, self.connection) == False:
                         continue
                     
                     else:
@@ -121,36 +113,32 @@ class Astar:
 
         return g + h
     
-    def valid_step(self, coor_start, coor_end, connection):
-        """ 
-        Checks if a next step on a certain gridsegment can be taken, by checking if that segment is 
-        not yet occupied, not out of bounds, not to a different gate and not a step backwards. 
-        """
+    def valid_child(self, current, child, connection):
+        """ Checks if a child node is a valid step to be taken, by checking if that segment is 
+        not yet occupied, not out of bounds, not to a different gate and not a step backwards. """
         # checks if the segment is already occupied
-        segment_occupied = (coor_start, coor_end) in self.chip.occupied_segments or \
-                        (coor_end, coor_start) in self.chip.occupied_segments
+        segment_occupied = (current, child) in self.chip.occupied_segments or \
+                        (current, child) in self.chip.occupied_segments
 
-        # checks if coordinates are out of bounds
-        out_of_bounds = any(coor < 0 for coor in coor_end) or coor_end[0] > self.chip.x_max or \
-                        coor_end[1] > self.chip.y_max or coor_end[2] > self.chip.z_max
+        # checks if child node is out of bounds
+        out_of_bounds = any(coor < 0 for coor in child) or child[0] > self.chip.x_max or \
+                        child[1] > self.chip.y_max or child[2] > self.chip.z_max
 
-        # checks if coor_end is not any of the other gates
-        valid_end = coor_end == connection.end_location or \
-                    all(gate.coor != coor_end for gate in self.chip.gates.values())
-
-        # checks if coor_end is not a step backwards
-        not_previous_step = len(connection.coor_list) < 2 or coor_end != connection.coor_list[-2]
+        # checks if child node is not any of the other gates that is not the end node
+        valid_end = child == connection.end_location or \
+                    all(gate.coor != child for gate in self.chip.gates.values())
 
         # combines conditions
-        if not segment_occupied and not out_of_bounds and valid_end and not_previous_step:
+        if not segment_occupied and not out_of_bounds and valid_end:
             return True
 
         return False
 
 class Node:
-    ''' '''
+    '''Class that creates an instance of a node. A node has an location (x,y,z coordinate), a
+     g value, h value and f value, and a parent node. '''
     def __init__(self, location, parent=None):
-        '''location is a coordinate (x,y,z)'''
+        '''Creates instances of all the properties of a node.'''
 
         self.location = location
         self.g = 0
