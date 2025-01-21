@@ -187,12 +187,12 @@ class Chip:
 
         connections_path = f'data/chip_{self.chip_number}/netlist_{self.netlist}.csv'
         df_connections = pd.read_csv(connections_path)
-        df_connections['gates'] = None
+        df_connections['net'] = None
 
         for index, con in df_connections.iterrows():
-            df_connections.at[index, 'gates'] = (con['chip_a'], con['chip_b'])
+            df_connections.at[index, 'net'] = (con['chip_a'], con['chip_b'])
 
-        df_connections.set_index('gates', inplace=True)
+        df_connections.set_index('net', inplace=True)
 
         df_output = df_output.reindex(df_connections.index)
 
@@ -208,14 +208,15 @@ class Chip:
         # saves the dataframe into a csv file
         df_output.to_csv(f'output/output_chip_{self.chip_number}_net_{self.netlist}_{algorithm}_{file_number}.csv')
 
-    def plot_solution(self, filenumber, algorithm):
+    def plot_solution(self, file_number, algorithm):
         """
         Gets an output file of a solution as input, creates the occupied segments list and 
         """
-        file_path = f'output/output_chip_{self.chip_number}_net_{self.netlist}_{algorithm}_{filenumber}.csv'
+        file_path = f'output/output_chip_{self.chip_number}_net_{self.netlist}_{algorithm}_{file_number}.csv'
         
         try:
             df = pd.read_csv(file_path, index_col='net')
+            print(df)
 
             for index, coordinate_list in enumerate(df.iloc[:-1].iterrows()):
                 coordinates = eval(coordinate_list[1]['wires'])
