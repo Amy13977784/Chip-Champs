@@ -102,6 +102,7 @@ class Astar:
             
                         else: 
                             open_list.append(child)
+                            
         return print('No path found :(')
 
     def distance_g(self, node):
