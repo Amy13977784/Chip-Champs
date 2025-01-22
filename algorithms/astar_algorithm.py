@@ -85,7 +85,11 @@ class Astar:
                     # check if gridsegment from current node to child node is not occupied
                     elif (child.location, current_node.location) in self.chip.occupied_segments or (current_node.location, child.location) in self.chip.occupied_segments:
                         continue
-                    
+
+                    # check if child node is not a gate, except if it the end_node
+                    elif any(child.location == gate.coor for gate in self.chip.gates.values()) and child.location != self.end_node.location:
+                        continue
+
                     else:
                         child.g = self.distance_g(child)
                         child.h = self.distance_h(child)
@@ -121,6 +125,8 @@ class Astar:
 
         return g + h
     
+
+
 class Node:
     '''Class that creates an instance of a node. A node has an location (x,y,z coordinate), a
      g value, h value and f value, and a parent node. '''
