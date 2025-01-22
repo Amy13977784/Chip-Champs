@@ -91,8 +91,6 @@ class Chip:
         sorted_connections.sort(key=lambda x: x[1], reverse=True)
         self.connections = [self.connections[index] for index,_ in sorted_connections]
 
-        print(sorted_connections)
-
     def connection_order_by_distance(self):
         
         sorted_connections = []
@@ -116,7 +114,6 @@ class Chip:
         for y in range(1, self.y_max):
             plt.plot([0, self.x_max], y, 0, color='black', linewidth=0.5)
 
-        #colors = ['blue', 'green', 'magenta', 'yellow', 'chocolate', 'purple', 'orange', 'lime', 'gray', 'cyan']
         colors = get_cmap('tab20')
 
         # connections
@@ -145,7 +142,9 @@ class Chip:
         # set grid bounds
         plt.xlim(0, self.x_max)
         plt.ylim(0, self.y_max)
-        ax.set_zlim(0, self.z_max)
+
+        if all(end[2] == 0 for _, end in self.occupied_segments):
+            ax.set_zlim(0, self.z_max)
 
         plt.show()
 

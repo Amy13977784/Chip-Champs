@@ -57,7 +57,7 @@ class Random_algorithm:
             new_location = self.make_step(axis)
 
             # If segment still free, updates its current location
-            if not self.check_occupied_segment(self.current_location, new_location):
+            if self.valid_step(self.current_location, new_location):
                 self.occupied_segments.add((self.current_location, new_location))
                 self.connection.add_coor(new_location)
                 self.current_location = new_location
@@ -84,15 +84,30 @@ class Random_algorithm:
                 new_location[axis] += random.choice([-1, 1])
 
             return tuple(new_location)
-    
 
-    def check_occupied_segment(self, coor_start, coor_end):
-        """ Method that checks if a step on a certain gridsegment can be taken, by checking if that
-         certain segment is already in self.occupied or not. Returns either True or False. """
-        if (coor_start, coor_end) in self.occupied_segments or (coor_end, coor_start) in self.occupied_segments:
+        
+    def valid_step(self, coor_start, coor_end):
+        """ 
+        Checks if a next step on a certain gridsegment can be taken, by checking if that segment is 
+        not yet occupied, not out of bounds, not to a different gate and not a step backwards. 
+        """
+        # checks if the segment is already occupied
+        segment_occupied = (coor_start, coor_end) in self.chip.occupied_segments or \
+                        (coor_end, coor_start) in self.chip.occupied_segments
+
+        # checks if coordinates are out of bounds
+        out_of_bounds = any(coor < 0 for coor in coor_end) or coor_end[0] > self.chip.x_max or \
+                        coor_end[1] > self.chip.y_max or coor_end[2] > self.chip.z_max
+
+        # checks if coor_end is not any of the other gates
+        valid_end = coor_end == self.connection.end_location or \
+                    all(gate.coor != coor_end for gate in self.chip.gates.values())
+
+        # combines conditions
+        if not segment_occupied and not out_of_bounds and valid_end:
             return True
-        elif coor_end != self.connection.end_location and any(Gate.coor == coor_end for Gate in self.chip.gates.values()):
-            return True
+
+        return False
     
 
     def check_possible_steps(self):

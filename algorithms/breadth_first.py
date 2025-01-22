@@ -41,12 +41,24 @@ class BreadthFirst:
 
         return False
 
+    def select_children(self, children, connection):
+        paires = []
+        for child in children:
+            distance = abs(connection.end_location[0] - child[0]) + abs(connection.end_location[1] - child[1])
+            paires.append((child, distance))
+        
+        sorted_items = sorted(paires, key=lambda x: x[1])
+        keys_list = [child for child,_ in sorted_items]
+
+        return keys_list[:2]
+
 
     def next_steps(self, connection):
         """ Creates all valid possible next steps and adds them to the list of routes. """
 
         # all possible next steps in format (axis, step) with axis: 0=x, 1=y & 2=z
         possible_steps = [(0, 1), (0, -1), (1, 1), (1, -1), (2, 1), (2, -1)]
+        children = []
 
         # shuffles the list so the next steps are added in different order, this can give different solutions
         random.shuffle(possible_steps)
@@ -61,8 +73,18 @@ class BreadthFirst:
 
             # if the next step is valid, adds this step to the current route and adds it to the list of routes
             if self.valid_step(start_location, tuple(end_location), connection):
+                children.append(end_location)
+                
+        if len(children) < 4:
+            for child in children:
                 new_route = copy.deepcopy(connection)
-                new_route.add_coor(tuple(end_location))
+                new_route.add_coor(tuple(child))
+                self.routes.append(new_route)
+        else:
+            selected_children = self.select_children(children, connection)
+            for child in selected_children:
+                new_route = copy.deepcopy(connection)
+                new_route.add_coor(tuple(child))
                 self.routes.append(new_route)
 
 
@@ -72,7 +94,7 @@ class BreadthFirst:
         self.routes = []
 
         # instigate routes with first possible steps from the start gate
-        self.next_steps(con.Connection(start_location, end_location, gates))
+        self.next_steps(con.Connection(start_location, end_location, gates, add_start=True))
 
         while self.routes:
 
