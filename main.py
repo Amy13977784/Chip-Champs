@@ -6,7 +6,7 @@
 # Authors: Merel, Amy, Kyra
 
 from classes import chip
-from algorithms import random_algorithm, breadth_first, astar_algorithm
+from algorithms import random_algorithm, breadth_first, astar_algorithm, sim_annealing_algorithm
 
         
 if __name__ == '__main__':
@@ -20,6 +20,7 @@ if __name__ == '__main__':
         my_chip.connection_order_by_gate()
         # my_chip.connection_order_by_distance()
 
+        # ----- Choose the algorithm -----
         # ----- Random algorithm -----
         # validity = random_algorithm.Random_algorithm(my_chip).all_connections()
 
@@ -27,14 +28,31 @@ if __name__ == '__main__':
         # breadth_first.BreadthFirst(my_chip).all_connections()
 
         # ----- A* algorithm -----
-        astar_algorithm.Astar(my_chip).all_connections()
+        #astar_algorithm.Astar(my_chip).all_connections()
 
-        my_chip.plot_chip()
-        cost = my_chip.calculate_cost()
+        # ---- Simulated annealing algorithm ---- 
+        # load a presaved solution (from A*?)
+        my_chip.load_solution(file_number=1, algorithm="astar")
+
+        sa = sim_annealing_algorithm.simulated_annealing(
+        chip=my_chip,
+        temperature=1000,
+        cooling_rate=0.99,
+        min_temperature=1)
+    
+        best_solution, cost = sa.run(iterations=1000, perturbation_method="reroute_connection")
+
+        #my_chip.plot_chip()
+        #cost = my_chip.calculate_cost()
         print(f'The costs for this solution: {cost}')
 
         # output file: (cost, algorithm, iteration, validity), only add validity for the random algorithm
-        my_chip.output_file(cost, 'astar', i)
+        
+        # output file for simulated annealing
+        my_chip.output_file(cost, algorithm='simulated_annealing', file_number=i)
+
+        # output file for A*
+        # my_chip.output_file(cost, 'astar', i)
 
     # ----- if we want to plot a solution from an earlier saved file -----
     # chip.Chip(chip_number, netlist).plot_solution(0, 'breadthfirst')

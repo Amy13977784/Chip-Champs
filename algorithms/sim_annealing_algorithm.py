@@ -1,46 +1,85 @@
 import copy
 import random
 import math
+import pandas as pd 
+import matplotlib as plt
 
 from classes import connection, gate, chip
 from random_algorithm import Random_algorithm
+from astar_algorithm import Astar
 
 class simulated_annealing:
     """ This class implements the simulated annealing algorithm. """
     
     def __init__(self, chip, temperature, cooling_rate, min_temperature):
         self.chip = chip  # chip on which the algorithm is applied
-        self.temperature = temperature  # initial temperature 
-        self.cooling_rate = cooling_rate  # factor at which the temperature is lowered every iteration
+        self.initial_temp = temperature  # starting temperature 
+        self.current_temperature = temperature # current temperature
+        self.cooling_rate = cooling_rate  # alpha : factor at which the temperature is lowered every iteration
         self.min_temperature = min_temperature  # termination temperature
 
         # characteristics of the initial / current solution 
-        self.current_solution = chip.occupied_segments.copy()  
+        if not chip.occupied_segments:
+            print("Occupied segments is empty")
+        else:
+          self.current_solution = chip.occupied_segments.copy()  
+       
         self.best_solution = self.current_solution
         self.current_cost = chip.calculate_cost()
         self.best_cost = self.current_cost
 
+
+    def update_temperature(self):
+        """
+        This function implements an exponential cooling scheme.
+        """
+        self.current_temperature = self.current_temperature * self.cooling_rate
+
+
+    def accept_solution(self, new_cost):
+        """
+        Checks whether this new solution is a better solution and is then accepted. 
+        If it is a worse solution, then use the acceptation probability to make a decision on whether to accept 
+        or reject the new solution. This is based on the current temperature. 
+
+        Returns true if the new solution is accepted. 
+        """
+
+        # Calculate cost difference (= diff in energy)
+        delta_cost = new_cost - self.current_cost
+
+        # If the new solution is better, always accept 
+        if delta_cost < 0:
+            return True
+
+        # If the energy is >0 (so worse cost), use accepting probability
+        # Higher temperature increases the chance of accepting worse solutions
+        acceptance_probability = math.exp(-delta_cost / self.current_temperature)
+        return random.random() < acceptance_probability
+
+
     def pertubation(self, method = 'reroute_connection'):
         """ 
-        This method executes a pertubation on a current solution. There are a couple of possible 
-        pertubations. It can be specified which one you want. This method returns a new solution. 
+        This method introduces a pertubation to a current solution. There are a couple of possible 
+        pertubations. It can be specified which one you want. 
         """
 
         if method == "reroute_connection":
             return self.reroute_connection()
-        elif method == "swap":
-            return self.swap_connections()
-        elif method == "reroute":
-            return self.reroute_connection()
 
-    def reroute_connection(self):
+        elif method == "swap_segments":
+            return self.swap_segments()
+
+
+    def reroute_connection(self, max_attempts = 5):
         """ Removes a random connection from the current solution and chooses a different path 
-        for this conncection."""
+        for this conncection using the A* algorithm."""
 
         # if there are no steps taken yet 
         if not self.current_solution:
             return self.current_solution
         
+        # Copy the current solution (such that you can adapt it)
         new_solution = self.current_solution.copy()
         
         # choose a random connection from the current solution
@@ -52,36 +91,125 @@ class simulated_annealing:
             if segment in new_solution:
                 new_solution.remove(segment)
 
-        # apply the random algorithm to generate a new path for this connection
-        random_alg = Random_algorithm(self.chip)
-        random_alg.connection = connection
-        random_alg.make_connection()
+        for attempt in range(max_attempts):
 
-        # add the new path of the connection to the new solution
-        new_path = connection.segments
-        for segment in new_path:
-            if segment not in new_solution:
-                new_solution.append(segment)
+            # use A* algorithm to find a new connection
+            astar_alg = Astar(self.chip)
+            astar_alg.connection = connection
+            astar_alg.start_node = Node(connection.start_location, None)
+            astar_alg.end_node = Node(connection.end_location, None)
 
-        return new_solution
-    
-    def swap_connections(self):
-        """ This method swaps two random connections in the current solution and returns this as a new solution. """
+            astar_alg.make_connection()
+            new_path = connection.segments
 
-        # you need at least 2 connections 
-        if len(self.chip.connections) < 2:
-            return self.current_solution
+            # Check if the new path is valid 
+            if all(self.is_segment_free(segment) for segment in new_path):
+               
+                # add this path to the solution
+                for segment in new_path:
+                    new_solution.append(segment)
+
+                return new_solution  
+            
+        # If all attempts for a new path don't succeed, return the current solution
+        return self.current_solution
+
+
+    def swap_segments(self):
+        """ Randomly swaps two segments in the current solution and returns a new solution. """
+       
+        # You need at least two segments to be able to swap 
+        if len(self.current_solution) < 2:
+            return self.current_solution  
         
         new_solution = self.current_solution.copy()
-        connection1, connection2 = random.sample(self.chip.connections, 2)  # randomly choose 2 connections
 
-        # swap the start and end locations from the connections 
-        connection1.start_location, connection2.start_location = connection2.start_location, connection1.start_location
-        connection1.end_location, connection2.end_location = connection2.end_location, connection1.end_location
+        # Randomly select two segments 
+        segment1, segment2 = random.sample(range(len(new_solution)), 2)
+
+        # Swap the segments 
+        new_solution[segment1], new_solution[segment2] = new_solution[segment2], new_solution[segment1]
 
         return new_solution
 
+    def is_segment_free(self, segment):
+        """Checks if a segment is free (not occupied by other segments or gates)."""
+        start, end = segment
+
+        # Check if segment is already occupied
+        if (start, end) in self.chip.occupied_segments or (end, start) in self.chip.occupied_segments:
+            return False
+
+        # Check if the segment ends in a gate that is not part of the connection
+        if any(Gate.coor == end for Gate in self.chip.gates.values()):
+            return False
+
+        return True
 
 
+    def calculate_cost(self, solution):
+        self.chip.occupied_segments = solution
+        return self.chip.calculate_cost()
+    
+
+    def plot_temp(self, df_data):
+        plt.plot(df_data["iteration"], df_data["temperature"], label="Temperature", color="blue")
+        plt.title("Temperature per iteration")
+        plt.xlabel("Iteration")
+        plt.ylabel("Temperature")
+        plt.grid(True)
+        plt.legend()
+        plt.show()
+    
+
+    def plot_costs(self, df_data):
+        plt.plot(df_data["iteration"], df_data["current_cost"], label="Current costs", color="orange")
+        plt.plot(df_data["iteration"], df_data["best_cost"], label="Best costs", color="red")
+        plt.title("Costs per iteration")
+        plt.xlabel("Iteration")
+        plt.ylabel("Cost")
+        plt.grid(True)
+        plt.legend()
+        plt.show()
+
+
+    def run(self, iterations=1000, perturbation_method="reroute_connection"):
         
+        logging_data = []
         
+        for iteration in range(iterations):
+            if self.current_temperature < self.min_temperature:
+                break
+
+            # introduce the pertubation and calculate its associated cost
+            new_solution = self.perturbation(method = perturbation_method)
+            new_cost = self.calculate_cost(new_solution)
+
+            # Decide whether to accpet the new solution
+            if self.accept_solution(new_cost):
+                self.current_solution = new_solution
+                self.current_cost = new_cost
+
+                # Update best soltuion if the new solution is better
+                if new_cost < self.best_cost:
+                    self.best_solution = new_solution
+                    self.best_cost = new_cost
+
+            logging_data.append({
+            "iteration": iteration,
+            "temperature": self.current_temperature,
+            "current_cost": self.current_cost,
+            "best_cost": self.best_cost,
+            })
+            
+            # Update the temperature 
+            self.update_temperature()
+
+        df_data = pd.DataFrame(logging_data)
+        # df_data.to_csv("simulated_annealing_log.csv", index=False)
+
+        self.plot_temp(df_data)
+        self.plot_costs(df_data)
+
+        return self.best_solution, self.best_cost
+

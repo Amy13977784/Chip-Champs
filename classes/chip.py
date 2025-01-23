@@ -209,7 +209,7 @@ class Chip:
 
     def plot_solution(self, file_number, algorithm):
         """
-        Gets an output file of a solution as input, creates the occupied segments list and 
+        Gets an output file of a solution as input, creates the occupied segments list and plots corresponding solution. 
         """
         file_path = f'output/output_chip_{self.chip_number}_net_{self.netlist}_{algorithm}_{file_number}.csv'
         
@@ -225,4 +225,32 @@ class Chip:
 
         except:
             print('File not found')
+
+    def load_solution(self, file_number, algorithm):
+        """
+        Gets an output file of a solution as input, creates the occupied_segments list and connections. 
+        """
+        
+        file_path = f'output/output_chip_{self.chip_number}_net_{self.netlist}_{algorithm}_{file_number}.csv'
+        
+        try:
+            df = pd.read_csv(file_path, index_col='net')
+
+             # Reset the occupied segments to ensure only the segments form the new solution are reflected 
+            self.occupied_segments.clear() 
+
+            for index, (net, row) in enumerate(df.iloc[:-1].iterrows()):
+                coordinates = eval(row['wires'])
+                self.connections[index].coor_list = coordinates
+
+                # Add segments to occupied_segments
+                for i in range(len(coordinates) - 1):
+                    segment = (tuple(coordinates[i]), tuple(coordinates[i + 1]))
+                    self.occupied_segments.add(segment)
+
+        except:
+            print('File not found')
+
             
+            
+                
