@@ -1,12 +1,10 @@
-import copy
 import random
 import math
+import copy
 import pandas as pd 
 import matplotlib as plt
 
-from classes import connection, gate, chip
-from random_algorithm import Random_algorithm
-from astar_algorithm import Astar
+from algorithms import astar_algorithm 
 
 class simulated_annealing:
     """ This class implements the simulated annealing algorithm. """
@@ -22,7 +20,7 @@ class simulated_annealing:
         if not chip.occupied_segments:
             print("Occupied segments is empty")
         else:
-          self.current_solution = chip.occupied_segments.copy()  
+          self.current_solution = copy.deepcopy(chip.occupied_segments)
        
         self.best_solution = self.current_solution
         self.current_cost = chip.calculate_cost()
@@ -74,10 +72,6 @@ class simulated_annealing:
     def reroute_connection(self, max_attempts = 5):
         """ Removes a random connection from the current solution and chooses a different path 
         for this conncection using the A* algorithm."""
-
-        # if there are no steps taken yet 
-        if not self.current_solution:
-            return self.current_solution
         
         # Copy the current solution (such that you can adapt it)
         new_solution = self.current_solution.copy()
@@ -86,28 +80,36 @@ class simulated_annealing:
         connection =  random.choice(self.chip.connections)
 
         # remove the current path from this chosen connection from current solution
-        old_path = connection.segments
-        for segment in old_path:
-            if segment in new_solution:
-                new_solution.remove(segment)
+        old_path = connection.coor_list
+
+        for coor in old_path:
+            if coor in new_solution:
+                new_solution.remove(coor)
 
         for attempt in range(max_attempts):
 
             # use A* algorithm to find a new connection
-            astar_alg = Astar(self.chip)
+            astar_alg = astar_algorithm.Astar(self.chip)
             astar_alg.connection = connection
-            astar_alg.start_node = Node(connection.start_location, None)
-            astar_alg.end_node = Node(connection.end_location, None)
+            astar_alg.start_node = astar_algorithm.Node(connection.start_location, None)
+            astar_alg.end_node = astar_algorithm.Node(connection.end_location, None)
 
             astar_alg.make_connection()
-            new_path = connection.segments
+            new_path = connection.coor_list # of astar_algorithm.connection.coor_list ?
 
-            # Check if the new path is valid 
-            if all(self.is_segment_free(segment) for segment in new_path):
-               
-                # add this path to the solution
-                for segment in new_path:
-                    new_solution.append(segment)
+            path_valid = True
+
+            for i in range(len(new_path) - 1):
+                segment = (new_path[i], new_path[i + 1])
+                if not self.is_segment_free(segment, connection.end_location):
+                    path_valid = False
+                    break
+
+            if path_valid:
+
+                # Add this path to the solution
+                for coor in new_path:
+                    new_solution.append(coor)
 
                 return new_solution  
             
@@ -144,15 +146,19 @@ class simulated_annealing:
         return new_solution
 
 
-    def is_segment_free(self, segment):
+    def is_segment_free(self, segment, connection_end_location):
         """Checks if a segment is free (not occupied by other segments or gates)."""
         start, end = segment
 
-        # Check if segment is already occupied
+        # If the segment is already occupied, then this segment is not available 
         if (start, end) in self.chip.occupied_segments or (end, start) in self.chip.occupied_segments:
             return False
 
-        # Check if the segment ends in a gate that is not part of the connection
+        # It is allowed for the end coordinate of this segment to end in its end-gate of the connection 
+        if end == connection_end_location:
+            return True
+
+        # Check if the segment's end-coordinate ends in a gate that is not the end gate of this connection 
         if any(Gate.coor == end for Gate in self.chip.gates.values()):
             return False
 
@@ -193,16 +199,16 @@ class simulated_annealing:
             if self.current_temperature < self.min_temperature:
                 break
 
-            # introduce the pertubation and calculate its associated cost
+            # Introduce the pertubation and calculate its associated cost
             new_solution = self.perturbation(method = perturbation_method)
             new_cost = self.calculate_cost(new_solution)
 
-            # Decide whether to accpet the new solution
+            # Decide whether to accept the new solution
             if self.accept_solution(new_cost):
                 self.current_solution = new_solution
                 self.current_cost = new_cost
 
-                # Update best soltuion if the new solution is better
+                # Update best solution if the new solution is better
                 if new_cost < self.best_cost:
                     self.best_solution = new_solution
                     self.best_cost = new_cost
