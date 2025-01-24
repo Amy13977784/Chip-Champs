@@ -72,36 +72,6 @@ class Chip:
             connections.append(connection.Connection(start_location, end_location, gates))
 
         return connections
-    
-    def connection_order_by_gate(self):
-        
-        gate_count = {}
-        sorted_connections = []
-
-        for connection in self.connections:
-            for gate in connection.gates:
-                if gate not in gate_count:
-                    gate_count[gate] = 0
-                gate_count[gate] += 1
-
-        for index, connection in enumerate(self.connections):
-            score = gate_count[connection.gates[0]] + gate_count[connection.gates[1]]
-            sorted_connections.append((index, score))
-        
-        sorted_connections.sort(key=lambda x: x[1], reverse=True)
-        self.connections = [self.connections[index] for index,_ in sorted_connections]
-
-    def connection_order_by_distance(self):
-        
-        sorted_connections = []
-
-        for index, connection in enumerate(self.connections):
-            distance = abs(connection.end_location[0] - connection.start_location[0]) + \
-                abs(connection.end_location[1] - connection.start_location[1])
-            sorted_connections.append((index, distance))
-        
-        sorted_connections.sort(key=lambda x: x[1])
-        self.connections = [self.connections[con[0]] for con in sorted_connections]
 
     def plot_chip(self):
         """ Plots the grid, gates and connections (made by the algorithm) in a 3D plot. """
@@ -143,7 +113,7 @@ class Chip:
         plt.xlim(0, self.x_max)
         plt.ylim(0, self.y_max)
 
-        if all(end[2] == 0 for _, end in self.occupied_segments):
+        if all(end_z == 0 for _, (_, _, end_z) in self.occupied_segments):
             ax.set_zlim(0, self.z_max)
 
         plt.show()
@@ -170,35 +140,29 @@ class Chip:
         """ Using the cost formula C = n + 300 * k, it returns the cost of the current solution. """
         return len(self.occupied_segments) + 300 * self.calculate_intersections()
     
-    def output_file(self, cost, algorithm, file_number, validity='valid'):
-        """ Creates an output file, which contains the coordinates of every connection, which chip and 
-        netlist, and the cost of the solution. """
+    def create_output_file(self, cost, algorithm, file_number, validity='valid'):
+        """ 
+        Creates the output file, which contains the coordinates of every connection, which chip and 
+        netlist, and the cost of the solution. The order of the connections corresponds to the netlist,
+        regardless of the order in which the connections are made.
+        """
+ 
+        # output df with each connection on a row with format: (start gate, end gate) [coordinates in connection]
+        df_output = pd.DataFrame([(connection.gates, connection.coor_list) for connection in self.connections], \
+        columns=['net', 'wires']).set_index('net')
 
-        # creates dataframe 
-        df_output = pd.DataFrame(columns = ['net', 'wires'])
-    	
-        for connection in self.connections:
+        # creates a df of the netlist to align the order of the connections with
+        netlist_path = f'data/chip_{self.chip_number}/netlist_{self.netlist}.csv'
+        df_netlist = pd.read_csv(netlist_path)
         
-            # row in df in following format: (start gate, end gate) [coordinates in connection]
-            df_output.loc[len(df_output)] = [connection.gates, connection.coor_list]
+        # creates a 'net' column in the same format as the output df: (start gate, end gate)
+        df_netlist['net'] = list(zip(df_netlist['chip_a'], df_netlist['chip_b']))
 
-        df_output.set_index('net', inplace=True)
+        # reorders the connections of the output df to the order of the netlist
+        df_output = df_output.reindex(df_netlist['net'])
 
-        connections_path = f'data/chip_{self.chip_number}/netlist_{self.netlist}.csv'
-        df_connections = pd.read_csv(connections_path)
-        df_connections['net'] = None
-
-        for index, con in df_connections.iterrows():
-            df_connections.at[index, 'net'] = (con['chip_a'], con['chip_b'])
-
-        df_connections.set_index('net', inplace=True)
-
-        df_output = df_output.reindex(df_connections.index)
-
-        # last row shows which chip, which netlist, if the solution is valid and the cost of the solution 
+        # adds last row  whith informational data 
         df_output.loc[f'chip_{self.chip_number}_net_{self.netlist}'] = [[validity, cost]]
-
-        print(df_output, '\n')
     	
         # creates output folder if it does not exist yet
         if not os.path.isdir("output"):
@@ -209,16 +173,17 @@ class Chip:
 
     def plot_solution(self, file_number, algorithm):
         """
-        Gets an output file of a solution as input, creates the occupied segments list and plots corresponding solution. 
+        Gets the details of a solutions and tries to find the file. If a file is found, adds the coordinates lists
+        to the connections and plots the chip. 
         """
         file_path = f'output/output_chip_{self.chip_number}_net_{self.netlist}_{algorithm}_{file_number}.csv'
         
         try:
             df = pd.read_csv(file_path, index_col='net')
-            print(df)
 
-            for index, coordinate_list in enumerate(df.iloc[:-1].iterrows()):
-                coordinates = eval(coordinate_list[1]['wires'])
+            # excludes the last row, which only contains informational data
+            for index, (_, coordinate_list) in enumerate(df.iloc[:-1].iterrows()):
+                coordinates = eval(coordinate_list['wires'])
                 self.connections[index].coor_list = coordinates
 
             self.plot_chip()
