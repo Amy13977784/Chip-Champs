@@ -56,19 +56,6 @@ class simulated_annealing:
         return random.random() < acceptance_probability
 
 
-    def pertubation(self, method = 'reroute_connection'):
-        """ 
-        This method introduces a pertubation to a current solution. There are a couple of possible 
-        pertubations. It can be specified which one you want. 
-        """
-
-        if method == "reroute_connection":
-            return self.reroute_connection()
-
-        elif method == "swap_segments":
-            return self.swap_segments()
-
-
     def reroute_connection(self, max_attempts = 5):
         """ Removes a random connection from the current solution and chooses a different path 
         for this conncection using the A* algorithm."""
@@ -115,35 +102,6 @@ class simulated_annealing:
             
         # If all attempts for a new path don't succeed, return the current solution
         return self.current_solution
-
-
-    def swap_segments(self):
-        """ Randomly swaps two segments in the current solution and returns a new solution. """
-       
-        # Choose a random connection 
-        connection = random.choice(self.chip.connections)
-
-        # You need at least two segments in this connection to make the swap 
-        if len(connection.segments) < 2:
-            return self.current_solution
-
-        new_solution = self.current_solution.copy()
-
-        # Choose a segment from a connection 
-        segment_index = random.randint(0, len(connection.segments) - 2)
-
-        # Change this segment with the segment next to it 
-        connection.segments[segment_index], connection.segments[segment_index + 1] = (
-            connection.segments[segment_index + 1],
-            connection.segments[segment_index],
-        )
-
-        # Remove the old segments and add the new ones 
-        for segment in connection.segments:
-            if segment not in new_solution:
-                new_solution.append(segment)
-
-        return new_solution
 
 
     def is_segment_free(self, segment, connection_end_location):
@@ -200,7 +158,7 @@ class simulated_annealing:
                 break
 
             # Introduce the pertubation and calculate its associated cost
-            new_solution = self.perturbation(method = perturbation_method)
+            new_solution = self.reroute_connection() 
             new_cost = self.calculate_cost(new_solution)
 
             # Decide whether to accept the new solution
