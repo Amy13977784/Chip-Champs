@@ -29,17 +29,17 @@ class Astar:
         '''Makes a connection according to the A* algorithm. It will try to make the shortest route
         possible while complying to certain restrictions. This method returns the a list of coordinates
         that belong to this connection/path. I also updates the coor_list of the connection instance.'''
+        
         open_list = []
         self.closed_list = []
 
+        # # all nodes that surround gates in a list
         # self.adjoining_gates = []
         # for gate in self.chip.gates.values():
         #     for direction in [(1,0,0), (-1,0,0), (0,1,0), (0,-1,0), (0,0,1), (0,0,-1)]:
         #         self.adjoining_gates.append((gate.coor[0] + direction[0], gate.coor[1] + direction[1], gate.coor[2] + direction[2]))
 
-
         open_list.append(self.start_node)
-        self.current_node = copy.deepcopy(self.start_node)
 
         # while the end node has not been reached
         while open_list:
@@ -53,20 +53,19 @@ class Astar:
             if self.current_node.location == self.end_node.location:
                 current = self.current_node
 
-                # while there is a parent node/until the starting node has been reached
+                # until the starting node has been reached (its parent None)
                 while current.parent != None:
 
                     # add coordinade to coordinate list of connection
                     self.connection.add_coor(current.location)
 
-                    # add backtracked step to occupied segments
                     self.chip.occupied_segments.add((current.location, current.parent.location))
-
                     current = current.parent
 
                 # add starting coordinate to list
                 self.connection.add_coor(self.start_node.location)
 
+                # put list in corrrect order
                 self.connection.coor_list.reverse()
                 return print(f'path found! :) :) :) {self.connection.coor_list}')
 
@@ -157,6 +156,7 @@ class Astar:
 class Node:
     '''Class that creates an instance of a node. A node has an location (x,y,z coordinate), a
      g value, h value and f value, and a parent node. '''
+    
     def __init__(self, location, parent=None):
         '''Creates instances of all the properties of a node.'''
 
