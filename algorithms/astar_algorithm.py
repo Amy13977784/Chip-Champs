@@ -9,7 +9,8 @@ class Astar:
     Method distance_g calculates the g value for a node.
     Method distance_h calculates the h value for a node. 
     Method cost_f calculates the f values for a node. 
-    Method valid_child checks is a node can be used in the path or not'''
+    Method valid_child checks if a child can be put into the open list
+    Method penalties adds to a child nodes' f value according to certain restrictions'''
 
     def __init__(self, chip):
         '''Imports the chip in self.chip '''
@@ -28,38 +29,43 @@ class Astar:
         '''Makes a connection according to the A* algorithm. It will try to make the shortest route
         possible while complying to certain restrictions. This method returns the a list of coordinates
         that belong to this connection/path. I also updates the coor_list of the connection instance.'''
+        
         open_list = []
-        closed_list = []
+        self.closed_list = []
+
+        # # all nodes that surround gates in a list
+        # self.adjoining_gates = []
+        # for gate in self.chip.gates.values():
+        #     for direction in [(1,0,0), (-1,0,0), (0,1,0), (0,-1,0), (0,0,1), (0,0,-1)]:
+        #         self.adjoining_gates.append((gate.coor[0] + direction[0], gate.coor[1] + direction[1], gate.coor[2] + direction[2]))
 
         open_list.append(self.start_node)
-        current_node = copy.deepcopy(self.start_node)
 
         # while the end node has not been reached
         while open_list:
 
             # get current node --> node with the lowest f value
-            current_node = min(open_list, key=attrgetter('f'))
+            self.current_node = min(open_list, key=attrgetter('f'))
 
-            open_list.pop(open_list.index(current_node))
-            closed_list.append(current_node)
+            open_list.pop(open_list.index(self.current_node))
+            self.closed_list.append(self.current_node)
 
-            if current_node.location == self.end_node.location:
-                current = current_node
+            if self.current_node.location == self.end_node.location:
+                current = self.current_node
 
-                # while there is a parent node/until the starting node has been reached
+                # until the starting node has been reached (its parent None)
                 while current.parent != None:
 
                     # add coordinade to coordinate list of connection
                     self.connection.add_coor(current.location)
 
-                    # add backtracked step to occupied segments
                     self.chip.occupied_segments.add((current.location, current.parent.location))
-
                     current = current.parent
 
                 # add starting coordinate to list
                 self.connection.add_coor(self.start_node.location)
 
+                # put list in corrrect order
                 self.connection.coor_list.reverse()
                 return print(f'path found! :) :) :) {self.connection.coor_list}')
 
@@ -69,42 +75,28 @@ class Astar:
 
                 # adjoining nodes
                 for direction in [(1,0,0), (-1,0,0), (0,1,0), (0,-1,0), (0,0,1), (0,0,-1)]:
-                    child_node_location = (current_node.location[0] + direction[0], current_node.location[1] + direction[1], current_node.location[2] + direction[2])
-                    children.append(Node(child_node_location, current_node))
+                    child_node_location = (self.current_node.location[0] + direction[0], self.current_node.location[1] + direction[1], self.current_node.location[2] + direction[2])
+                    children.append(Node(child_node_location, self.current_node))
 
                 for child in children:
                     
-                    # check if child node is within chip grid
-                    if child.location[0] > self.chip.x_max or child.location[0] < 0 or child.location[1] > self.chip.y_max or child.location[1] < 0 or child.location[2] > self.chip.z_max or child.location[2] < 0:
-                        continue
-                    
-                    # check if child is on closed list
-                    elif any(child.location == closed_node.location for closed_node in closed_list):
-                        continue
-
-                    # check if gridsegment from current node to child node is not occupied
-                    elif (child.location, current_node.location) in self.chip.occupied_segments or (current_node.location, child.location) in self.chip.occupied_segments:
-                        continue
-
-                    # check if child node is not a gate, except if it the end_node
-                    elif any(child.location == gate.coor for gate in self.chip.gates.values()) and child.location != self.end_node.location:
+                    # function to check if child is a valid step:
+                    if self.valid_child(child) == False:
                         continue
 
                     else:
                         child.g = self.distance_g(child)
                         child.h = self.distance_h(child)
                         child.f = self.cost_f(child.g, child.h)
-
-                        # give child node extra penalty if it will cause a crossing of wires
-                        if any(child.location == gridsegment[1] for gridsegment in self.chip.occupied_segments):
-                            child.f += 10
                     
                         # check if already in open list
                         if any(child.location == open_node.location and child.g > open_node.g for open_node in open_list):
                             continue
-            
-                        else: 
-                            open_list.append(child)
+
+                        # give child node necassary penalties
+                        self.penalties(child)
+
+                        open_list.append(child)
 
         return print('No path found :(')
 
@@ -125,11 +117,46 @@ class Astar:
 
         return g + h
     
+    def valid_child(self, child):
+        '''Checks if child node can be used in path according to restrictions --> If it can
+        be added to the open list. '''
+
+        # check if child node is within chip grid
+        if child.location[0] > self.chip.x_max or child.location[0] < 0 or child.location[1] > self.chip.y_max or child.location[1] < 0 or child.location[2] > self.chip.z_max or child.location[2] < 0:
+            return False
+        
+        # check if child is on closed list
+        elif any(child.location == closed_node.location for closed_node in self.closed_list):
+            return False
+
+        # check if gridsegment from current node to child node is not occupied
+        elif (child.location, self.current_node.location) in self.chip.occupied_segments or (self.current_node.location, child.location) in self.chip.occupied_segments:
+            return False
+
+        # check if child node is not a gate, except if it the end_node
+        elif any(child.location == gate.coor for gate in self.chip.gates.values()) and child.location != self.end_node.location:
+            return False
+    
+    def penalties(self, child):
+        '''Gives childs' f value necassery penalties such as if it will create an intersection of
+         wires, and penalties that come with every layer.'''
+
+        # give child node extra penalty if it will cause a crossing of wires
+        if any(child.location == gridsegment[1] for gridsegment in self.chip.occupied_segments):
+            child.f += 10
+
+        # make higher layers less expensive
+        # extra_cost = 7
+        # for layer in range(7):
+        #     if child.location[2] == layer:
+        #         child.f += extra_cost
+        #     extra_cost -= 1
 
 
 class Node:
     '''Class that creates an instance of a node. A node has an location (x,y,z coordinate), a
      g value, h value and f value, and a parent node. '''
+    
     def __init__(self, location, parent=None):
         '''Creates instances of all the properties of a node.'''
 
