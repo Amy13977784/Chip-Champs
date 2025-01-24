@@ -66,9 +66,10 @@ class simulated_annealing:
         # choose a random connection from the current solution
         connection =  random.choice(self.chip.connections)
 
-        # remove the current path from this chosen connection from current solution
+        # these are the coordinates that form the connection 
         old_path = connection.coor_list
 
+        # remove the coordinates for this connection 
         for coor in old_path:
             if coor in new_solution:
                 new_solution.remove(coor)
@@ -90,6 +91,8 @@ class simulated_annealing:
                 segment = (new_path[i], new_path[i + 1])
                 if not self.is_segment_free(segment, connection.end_location):
                     path_valid = False
+
+                    # if the path is not valid, then try to make a new (valid) connection with A*
                     break
 
             if path_valid:
@@ -105,7 +108,8 @@ class simulated_annealing:
 
 
     def is_segment_free(self, segment, connection_end_location):
-        """Checks if a segment is free (not occupied by other segments or gates)."""
+        """Checks if a segment is free (not occupied by other segments or gates (unless end gate))."""
+
         start, end = segment
 
         # If the segment is already occupied, then this segment is not available 
@@ -149,7 +153,7 @@ class simulated_annealing:
         plt.show()
 
 
-    def run(self, iterations=1000, perturbation_method="reroute_connection"):
+    def run(self, iterations=1000):
         
         logging_data = []
         
