@@ -8,8 +8,7 @@ class Astar:
     Method make_connection is the A* algorithm.
     Method distance_g calculates the g value for a node.
     Method distance_h calculates the h value for a node. 
-    Method cost_f calculates the f values for a node. 
-    Method valid_child checks is a node can be used in the path or not'''
+    Method cost_f calculates the f values for a node. '''
 
     def __init__(self, chip):
         '''Imports the chip in self.chip '''
@@ -30,6 +29,12 @@ class Astar:
         that belong to this connection/path. I also updates the coor_list of the connection instance.'''
         open_list = []
         closed_list = []
+
+        adjoining_gates = []
+        for gate in self.chip.gates.values():
+            for direction in [(1,0,0), (-1,0,0), (0,1,0), (0,-1,0), (0,0,1), (0,0,-1)]:
+                adjoining_gates.append((gate.coor[0] + direction[0], gate.coor[1] + direction[1], gate.coor[2] + direction[2]))
+
 
         open_list.append(self.start_node)
         current_node = copy.deepcopy(self.start_node)
@@ -94,15 +99,27 @@ class Astar:
                         child.g = self.distance_g(child)
                         child.h = self.distance_h(child)
                         child.f = self.cost_f(child.g, child.h)
-
-                        # give child node extra penalty if it will cause a crossing of wires
-                        if any(child.location == gridsegment[1] for gridsegment in self.chip.occupied_segments):
-                            child.f += 10
                     
                         # check if already in open list
                         if any(child.location == open_node.location and child.g > open_node.g for open_node in open_list):
                             continue
-            
+
+                        # give child node extra penalty if it will cause a crossing of wires
+                        if any(child.location == gridsegment[1] for gridsegment in self.chip.occupied_segments):
+                            child.f += 10 
+
+                        # make higher layers less expensive
+                        # extra_cost = 70
+                        # for layer in range(7):
+                        #     if child.location[2] == layer:
+                        #         child.f += extra_cost
+                        #     extra_cost -= 10
+
+                        # # make nodes surrounding gates more expensive --> slechter!
+                        # for node in adjoining_gates: 
+                        #     if child.location == node:
+                        #         child.f += child.f * 0.1
+
                         else: 
                             open_list.append(child)
 
