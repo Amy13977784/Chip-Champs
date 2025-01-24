@@ -69,9 +69,8 @@ class simulated_annealing:
         # these are the coordinates that form the connection 
         old_path = connection.coor_list
 
-        # remove the coordinates for this connection 
-        for coor in old_path:
-            if coor in new_solution:
+        for segment in zip(old_path, old_path[1:]):
+            if segment in new_solution:
                 new_solution.remove(coor)
 
         for attempt in range(max_attempts):
@@ -83,7 +82,7 @@ class simulated_annealing:
             astar_alg.end_node = astar_algorithm.Node(connection.end_location, None)
 
             astar_alg.make_connection()
-            new_path = connection.coor_list # of astar_algorithm.connection.coor_list ?
+            new_path = connection.coor_list 
 
             path_valid = True
 
@@ -98,8 +97,8 @@ class simulated_annealing:
             if path_valid:
 
                 # Add this path to the solution
-                for coor in new_path:
-                    new_solution.append(coor)
+                for segment in zip(new_path, new_path[1:]):
+                    new_solution.add(segment)
 
                 return new_solution  
             
