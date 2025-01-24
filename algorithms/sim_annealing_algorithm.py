@@ -118,19 +118,31 @@ class simulated_annealing:
     def swap_segments(self):
         """ Randomly swaps two segments in the current solution and returns a new solution. """
        
-        # You need at least two segments to be able to swap 
-        if len(self.current_solution) < 2:
-            return self.current_solution  
-        
+        # Choose a random connection 
+        connection = random.choice(self.chip.connections)
+
+        # You need at least two segments in this connection to make the swap 
+        if len(connection.segments) < 2:
+            return self.current_solution
+
         new_solution = self.current_solution.copy()
 
-        # Randomly select two segments 
-        segment1, segment2 = random.sample(range(len(new_solution)), 2)
+        # Choose a segment from a connection 
+        segment_index = random.randint(0, len(connection.segments) - 2)
 
-        # Swap the segments 
-        new_solution[segment1], new_solution[segment2] = new_solution[segment2], new_solution[segment1]
+        # Change this segment with the segment next to it 
+        connection.segments[segment_index], connection.segments[segment_index + 1] = (
+            connection.segments[segment_index + 1],
+            connection.segments[segment_index],
+        )
+
+        # Remove the old segments and add the new ones 
+        for segment in connection.segments:
+            if segment not in new_solution:
+                new_solution.append(segment)
 
         return new_solution
+
 
     def is_segment_free(self, segment):
         """Checks if a segment is free (not occupied by other segments or gates)."""
