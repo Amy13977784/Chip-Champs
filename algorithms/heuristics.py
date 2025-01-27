@@ -1,3 +1,5 @@
+import math
+
 class Heuristics:
     """
     Class orders the connections in the connections list by different heuristics.
@@ -55,3 +57,37 @@ class Heuristics:
             scored_connections.append((index, distance))
         
         self.sort_and_return(scored_connections, reversed = long_first)
+
+    def order_by_location(self, edges_first=False):
+        scored_connections = []
+
+        center_x = self.chip.max_x / 2
+        center_y = self.chip.max_y / 2
+
+        for index, connection in enumerate(self.connections):
+            x_start, y_start, _ = connection.start_location
+            x_end, y_end, _ = connection.end_location
+            
+            score_start = math.sqrt((x_start - center_x) ** 2 + (y_start - center_y) ** 2)
+            score_end = math.sqrt((x_end - center_x) ** 2 + (y_end - center_y) ** 2)
+
+            total_score = score_start + score_end
+
+            scored_connections.append((index, total_score))
+                
+        self.sort_and_return(scored_connections, reversed = edges_first)
+
+
+
+
+
+    
+    
+    # Compute the "proximity score" for each connection
+        gate1, gate2 = connection
+        loc1 = gate_locations[gate1]
+        # Average distance of both gates to the center
+        distance = abs(loc1[0] - center_x) + abs(loc1[1] - center_y)
+
+
+
