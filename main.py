@@ -5,56 +5,82 @@
 #
 # Authors: Merel, Amy, Kyra
 
+import sys
 from classes import chip
-from algorithms import random_algorithm, breadth_first, astar_algorithm, sim_annealing_algorithm
+from algorithms import random_algorithm, breadth_first, astar_algorithm, sim_annealing_algorithm, heuristics
 
         
 if __name__ == '__main__':
     chip_number = 0
-    netlist = 3
+    netlist = 2
 
-    for i in range(1):
-        my_chip = chip.Chip(chip_number, netlist)
+    # choose from 'order by gate', 'order by distance', 'order by location' or None
+    heuristic = 'order by gate'
 
-        # ----- If the connections have to be ordered by gate or Manhattan distance -----
-        my_chip.connection_order_by_gate()
-        # my_chip.connection_order_by_distance()
+    # choose from 'random', 'breadt first', 'astar' or 'sim annealing'
+    algorithm = 'astar'
 
-        # ----- Choose the algorithm -----
-        # ----- Random algorithm -----
-        # validity = random_algorithm.Random_algorithm(my_chip).all_connections()
+    # choose True or False
+    output_file = True
+    plot_chip = True
 
-        # ----- Breadth first algorithm -----
-        # breadth_first.BreadthFirst(my_chip).all_connections()
+    plot_solution = False
 
-        # ----- A* algorithm -----
-        #astar_algorithm.Astar(my_chip).all_connections()
 
-        # ---- Simulated annealing algorithm ---- 
-        # load a presaved solution (from A*?)
-        my_chip.load_solution(file_number=1, algorithm="astar")
+    # ----- if we want to plot a solution from an earlier saved file -----
+    
+    if plot_solution == True:
+        chip.Chip(chip_number, netlist).plot_solution(0, algorithm)
+        sys.exit()
+    
+
+    my_chip = chip.Chip(chip_number, netlist)
+
+
+    # ----- If the connections have to be ordered by gate or Manhattan distance -----
+    if heuristic == 'order by gate':
+        heuristics.Heuristics(my_chip).order_by_gate()
+
+    elif heuristic == 'order by distance':
+        heuristics.Heuristics(my_chip).order_by_distance()
+
+    elif heuristic == 'order by location':
+        heuristics.Heuristics(my_chip).order_by_location()
+
+    
+    if algorithm == 'random':
+        validity = random_algorithm.Random_algorithm(my_chip).all_connections()
+
+    elif algorithm == 'breadth first':
+        breadth_first.BreadthFirst(my_chip).all_connections()
+
+    elif algorithm == 'astar':
+        astar_algorithm.Astar(my_chip).all_connections()
+
+    elif algorithm == 'sim annealing':
+        
+        # load a presaved solution (from A*)
+        my_chip.load_solution(file_number=0, algorithm="astar")
 
         sa = sim_annealing_algorithm.simulated_annealing(
         chip=my_chip,
         temperature=1000,
         cooling_rate=0.99,
         min_temperature=1)
-    
-        best_solution, cost = sa.run(iterations=1000, perturbation_method="reroute_connection")
 
-        #my_chip.plot_chip()
-        #cost = my_chip.calculate_cost()
-        print(f'The costs for this solution: {cost}')
+        best_solution = sa.run(iterations=1000, perturbation_method="reroute_connection")
 
-        # output file: (cost, algorithm, iteration, validity), only add validity for the random algorithm
-        
-        # output file for simulated annealing
-        my_chip.output_file(cost, algorithm='simulated_annealing', file_number=i)
-
-        # output file for A*
-        # my_chip.output_file(cost, 'astar', i)
-
-    # ----- if we want to plot a solution from an earlier saved file -----
-    # chip.Chip(chip_number, netlist).plot_solution(0, 'breadthfirst')
+    else:
+        print('No algorithm applied')
+        sys.exit()
 
 
+    cost = my_chip.calculate_cost()
+    print(f'The costs for this solution: {cost}')
+
+
+    if output_file == True:
+        my_chip.create_output_file(cost, algorithm=algorithm)
+
+    if plot_chip == True:
+        my_chip.plot_chip()

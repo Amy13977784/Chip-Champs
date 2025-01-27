@@ -76,18 +76,3 @@ class Heuristics:
             scored_connections.append((index, total_score))
                 
         self.sort_and_return(scored_connections, reversed = edges_first)
-
-
-
-
-
-    
-    
-    # Compute the "proximity score" for each connection
-        gate1, gate2 = connection
-        loc1 = gate_locations[gate1]
-        # Average distance of both gates to the center
-        distance = abs(loc1[0] - center_x) + abs(loc1[1] - center_y)
-
-
-
