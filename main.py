@@ -1,9 +1,7 @@
-# Visualisation of Chip & Circuit problem.
-# running the code will give the current solution and the amount of error for that particular
-# solution. It also displays what coordinates belong to which connection/net. 
-# In addition to this a csv.file of this output can be created (set save to True).
-#
+# Chips & Circuits
 # Authors: Merel, Amy, Kyra
+
+# short explanantion
 
 import sys
 from classes import chip
@@ -12,49 +10,61 @@ from algorithms import random_algorithm, breadth_first, astar_algorithm, sim_ann
         
 if __name__ == '__main__':
 
-    # ----- Adjust the following variables -----
+    ### ----- Adjust the following variables ----- ###
 
+    # select chip = 1, 2 or 3 and netlist = 0, 1, 2, 3, 4, 5, 6, 7, 8 or 9
     chip_number = 0
     netlist = 2
 
-    # heuristics that change the order in which the connections will be made
-    # choose from 'order by gate', 'order by distance', 'order by location' or None
-    heuristic = 'order by gate'
+    # heuristics that change the order in which the connections will be made, select which connections have to be made first
+    # choose from 'most connected gates', 'shortest distance', 'longest distance', 'center connections', 'edge connections' or None
+    heuristic = 'most connected gates'
 
     # algorithms that can be used to make the connections
     # choose from 'random', 'breadt first', 'astar' or 'sim annealing'
     algorithm = 'astar'
 
+    # adjust to whether you want to create an output file and plot the solution
     # choose True or False
     output_file = True
-    plot_chip = True
+    plot_solution = True
 
+    # if you don't want to create a chip and connections, but want to plot a previous solution from a file
+    # choose True or False and also adjust the chip_number, netlist and algorithm to which are used in the solution
     plot_solution = False
 
-    # ----- end of adjustable variables -----
+
+    ### ----- end of adjustable variables ----- ###
 
 
-    # ----- if we want to plot a solution from an earlier saved file -----
-    
+    # plots a solution from an earlier saved file
     if plot_solution == True:
         chip.Chip(chip_number, netlist).plot_solution(0, algorithm)
         sys.exit()
     
 
+    # creates the chip
     my_chip = chip.Chip(chip_number, netlist)
 
 
-    # ----- If the connections have to be ordered by gate or Manhattan distance -----
-    if heuristic == 'order by gate':
+    # applies a heuristic to the order in which the connections are made
+    if heuristic == 'most connected gates':
         heuristics.Heuristics(my_chip).order_by_gate()
 
-    elif heuristic == 'order by distance':
+    elif heuristic == 'shortest distance':
         heuristics.Heuristics(my_chip).order_by_distance()
 
-    elif heuristic == 'order by location':
+    elif heuristic == 'longest distance':
+        heuristics.Heuristics(my_chip).order_by_distance(long_first = True)
+
+    elif heuristic == 'center connections':
         heuristics.Heuristics(my_chip).order_by_location()
 
+    elif heuristic == 'edge connections':
+        heuristics.Heuristics(my_chip).order_by_location(edged_first = True)
     
+
+    # applies an algorithm to make the connections
     if algorithm == 'random':
         validity = random_algorithm.Random_algorithm(my_chip).all_connections()
 
@@ -62,7 +72,8 @@ if __name__ == '__main__':
         breadth_first.BreadthFirst(my_chip).all_connections()
 
     elif algorithm == 'astar':
-        astar_algorithm.Astar(my_chip).all_connections()
+        heuristics = ['layers', 'intersections', 'gates']
+        astar_algorithm.Astar(my_chip, (heuristics[0], heuristics[1])).all_connections()
 
     elif algorithm == 'sim annealing':
         
@@ -82,6 +93,7 @@ if __name__ == '__main__':
         sys.exit()
 
 
+    # calculates the cost of the current solution
     cost = my_chip.calculate_cost()
     print(f'The costs for this solution: {cost}')
 
@@ -89,5 +101,5 @@ if __name__ == '__main__':
     if output_file == True:
         my_chip.create_output_file(cost, algorithm=algorithm)
 
-    if plot_chip == True:
+    if plot_solution == True:
         my_chip.plot_chip()
