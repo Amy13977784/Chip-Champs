@@ -146,7 +146,7 @@ class Astar:
         if 'intersections' in penalties:
             # give child node extra penalty if it will cause a crossing of wires
             if any(child.location == gridsegment[1] for gridsegment in self.chip.occupied_segments):
-                child.f *= 2
+                child.f += 20
 
         if 'layers' in penalties:
             # make higher layers less expensive
@@ -161,7 +161,7 @@ class Astar:
                 for direction in self.directions:
                     possible_gate_location = (child.location[0] + direction[0], child.location[1] + direction[1], child.location[2] + direction[2])
                     if any(possible_gate_location == gate.coor for gate in self.chip.gates.values()) and possible_gate_location != self.end_node.location:
-                        child.f *= 1.5
+                        child.f += 10
 
 class Node:
     '''Class that creates an instance of a node. A node has an location (x,y,z coordinate), a
