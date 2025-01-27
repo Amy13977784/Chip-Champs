@@ -25,7 +25,7 @@ if __name__ == '__main__':
 
                 # heuristics that change the order in which the connections will be made, select which connections have to be made first
                 # choose from 'most connected gates', 'shortest distance', 'longest distance', 'center connections', 'edge connections' or None
-                heuristic = 'most connected gates'
+                heuristic = None
 
                 # algorithms that can be used to make the connections
                 # choose from 'random', 'breadt first', 'astar' or 'sim annealing'
@@ -33,8 +33,8 @@ if __name__ == '__main__':
 
                 # adjust to whether you want to create an output file and plot the solution
                 # choose True or False
-                output_file = True
-                plot_solution = True
+                output_file = False
+                plot_solution = False
 
                 # if you don't want to create a chip and connections, but want to plot a previous solution from a file
                 # choose True or False and also adjust the chip_number, netlist and algorithm to which are used in the solution
@@ -45,9 +45,9 @@ if __name__ == '__main__':
 
 
                 # plots a solution from an earlier saved file
-                # if plot_solution == True:
-                #     chip.Chip(chip_number, netlist).plot_solution(0, algorithm)
-                #     sys.exit()
+                if plot_solution == True:
+                    chip.Chip(chip_number, netlist).plot_solution(0, algorithm)
+                    sys.exit()
                 
 
                 # creates the chip
@@ -105,7 +105,7 @@ if __name__ == '__main__':
 
 
                 if output_file == True:
-                    my_chip.create_output_file(cost, algorithm=algorithm)
+                    my_chip.create_output_file(cost, algorithm, penalty1, penalty2)
 
                 if plot_solution == True:
                     my_chip.plot_chip()

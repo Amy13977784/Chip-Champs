@@ -143,7 +143,7 @@ class Chip:
         """ Using the cost formula C = n + 300 * k, it returns the cost of the current solution. """
         return len(self.occupied_segments) + 300 * self.calculate_intersections()
     
-    def create_output_file(self, cost, algorithm, file_number=0, validity='valid'):
+    def create_output_file(self, cost, algorithm, penalty1, penalty2, validity='valid'):
         """ 
         Creates the output file, which contains the coordinates of every connection, which chip and 
         netlist, and the cost of the solution. The order of the connections corresponds to the netlist,
@@ -165,14 +165,14 @@ class Chip:
         df_output = df_output.reindex(df_netlist['net'])
 
         # adds last row  whith informational data 
-        df_output.loc[f'chip_{self.chip_number}_net_{self.netlist}'] = [[validity, cost]]
+        df_output.loc[f'chip_{self.chip_number}_net_{self.netlist}'] = [[validity, cost, (penalty1, penalty2)]]
     	
         # creates output folder if it does not exist yet
         if not os.path.isdir("output"):
             os.makedirs("output")
         
         # saves the dataframe into a csv file
-        df_output.to_csv(f'output/output_chip_{self.chip_number}_net_{self.netlist}_{algorithm}_{file_number}.csv')
+        df_output.to_csv(f'output/output_chip_{self.chip_number}_net_{self.netlist}_{algorithm}_{penalty1}_{penalty2}.csv')
 
     def plot_solution(self, file_number, algorithm):
         """
