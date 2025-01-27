@@ -11,12 +11,17 @@ from algorithms import random_algorithm, breadth_first, astar_algorithm, sim_ann
 
         
 if __name__ == '__main__':
+
+    # ----- Adjust the following variables -----
+
     chip_number = 0
     netlist = 2
 
+    # heuristics that change the order in which the connections will be made
     # choose from 'order by gate', 'order by distance', 'order by location' or None
     heuristic = 'order by gate'
 
+    # algorithms that can be used to make the connections
     # choose from 'random', 'breadt first', 'astar' or 'sim annealing'
     algorithm = 'astar'
 
@@ -25,6 +30,8 @@ if __name__ == '__main__':
     plot_chip = True
 
     plot_solution = False
+
+    # ----- end of adjustable variables -----
 
 
     # ----- if we want to plot a solution from an earlier saved file -----
@@ -68,7 +75,7 @@ if __name__ == '__main__':
         cooling_rate=0.99,
         min_temperature=1)
 
-        best_solution = sa.run(iterations=1000, perturbation_method="reroute_connection")
+        best_solution = sa.run(iterations=1000)
 
     else:
         print('No algorithm applied')
