@@ -15,7 +15,8 @@ class Astar:
     def __init__(self, chip, heuristics):
         '''Imports the chip in self.chip '''
         self.chip = chip
-        self.heuristics = heuristics
+        self.penalties = heuristics
+        self.directions = [(1,0,0), (-1,0,0), (0,1,0), (0,-1,0), (0,0,1), (0,0,-1)]
 
     def all_connections(self):
         """ Loops over every connection to let them form."""
@@ -37,7 +38,7 @@ class Astar:
         # # all nodes that surround gates in a list
         self.adjoining_gates = []
         for gate in self.chip.gates.values():
-            for direction in [(1,0,0), (-1,0,0), (0,1,0), (0,-1,0), (0,0,1), (0,0,-1)]:
+            for direction in self.directions:
                 self.adjoining_gates.append((gate.coor[0] + direction[0], gate.coor[1] + direction[1], gate.coor[2] + direction[2]))
 
         open_list.append(self.start_node)
@@ -95,7 +96,7 @@ class Astar:
                             continue
 
                         # give child node necassary penalties
-                        self.heuristics(child, self.heuristics)
+                        self.heuristics(child, self.penalties)
 
                         open_list.append(child)
 
@@ -138,17 +139,16 @@ class Astar:
         elif any(child.location == gate.coor for gate in self.chip.gates.values()) and child.location != self.end_node.location:
             return False
     
-    def heuristics(self, child, heuristic):
+    def heuristics(self, child, penalties):
         '''Gives childs' f value necassery penalties such as if it will create an intersection of
          wires, and penalties that come with every layer.'''
 
-        if 'intersections' in heuristic:
+        if 'intersections' in penalties:
             # give child node extra penalty if it will cause a crossing of wires
             if any(child.location == gridsegment[1] for gridsegment in self.chip.occupied_segments):
-                # child.f += child.f * 1
-                return False
+                child.f += child.f * 1
 
-        if 'layers' in heuristic:
+        if 'layers' in penalties:
             # make higher layers less expensive
             extra_cost = 7
             for layer in range(7):
@@ -156,8 +156,12 @@ class Astar:
                     child.f += extra_cost
                 extra_cost -= 1
 
-        if 'gates' in heuristic:
-            pass
+        if 'gates' in penalties:
+            if child.location in self.adjoining_gates:
+                for direction in self.directions:
+                    possible_gate_location = (child.location[0] + direction[0], child.location[1] + direction[1], child.location[2] + direction[2])
+                    if any(possible_gate_location == gate.coor for gate in self.chip.gates.values()) and possible_gate_location != self.end_node.location:
+                        child.f += 10
 
 class Node:
     '''Class that creates an instance of a node. A node has an location (x,y,z coordinate), a
