@@ -2,18 +2,27 @@ import random
 import math
 import copy
 import pandas as pd 
-import matplotlib as plt
+import matplotlib.pyplot as plt
 
 from algorithms import astar_algorithm 
 
 class simulated_annealing:
-    """ This class implements the simulated annealing algorithm. """
+    """ This class implements the simulated annealing algorithm. 
+    Method __init__ initiates the chip. 
+    Method update_temperature calculates the new temperature after an iteration. 
+    Method accept_solution determines whether to accept or reject a new solution. 
+    Method reroute_connection chooses a random connection from current solution and reroutes it using A*.  
+    Method is_segment_free checks if a segment is free such that you can make a valid new connection. 
+    Method calculate_cost calculates the costs for a solution. 
+    Method plot_temp plots the iterations against the temperature. 
+    Method plot_costs plots the iterations against the costs. 
+    Method run runs the simulated annealing algorithm. """
     
     def __init__(self, chip, temperature, cooling_rate, min_temperature):
         self.chip = chip  # chip on which the algorithm is applied
         self.initial_temp = temperature  # starting temperature 
         self.current_temperature = temperature # current temperature
-        self.cooling_rate = cooling_rate  # alpha : factor at which the temperature is lowered every iteration
+        self.cooling_rate = cooling_rate  # alpha: factor at which the temperature is lowered every iteration
         self.min_temperature = min_temperature  # termination temperature
 
         # characteristics of the initial / current solution 
@@ -26,13 +35,11 @@ class simulated_annealing:
         self.current_cost = chip.calculate_cost()
         self.best_cost = self.current_cost
 
-
     def update_temperature(self):
         """
         This function implements an exponential cooling scheme.
         """
         self.current_temperature = self.current_temperature * self.cooling_rate
-
 
     def accept_solution(self, new_cost):
         """
@@ -54,7 +61,6 @@ class simulated_annealing:
         # Higher temperature increases the chance of accepting worse solutions
         acceptance_probability = math.exp(-delta_cost / self.current_temperature)
         return random.random() < acceptance_probability
-
 
     def reroute_connection(self, max_attempts = 5):
         """ Removes a random connection from the current solution and chooses a different path 
@@ -105,7 +111,6 @@ class simulated_annealing:
         # If all attempts for a new path don't succeed, return the current solution
         return self.current_solution
 
-
     def is_segment_free(self, segment, connection_end_location):
         """Checks if a segment is free (not occupied by other segments or gates (unless end gate))."""
 
@@ -125,12 +130,10 @@ class simulated_annealing:
 
         return True
 
-
     def calculate_cost(self, solution):
         self.chip.occupied_segments = solution
         return self.chip.calculate_cost()
     
-
     def plot_temp(self, df_data):
         plt.plot(df_data["iteration"], df_data["temperature"], label="Temperature", color="blue")
         plt.title("Temperature per iteration")
@@ -139,7 +142,6 @@ class simulated_annealing:
         plt.grid(True)
         plt.legend()
         plt.show()
-    
 
     def plot_costs(self, df_data):
         plt.plot(df_data["iteration"], df_data["current_cost"], label="Current costs", color="orange")
@@ -150,7 +152,6 @@ class simulated_annealing:
         plt.grid(True)
         plt.legend()
         plt.show()
-
 
     def run(self, iterations=1000):
         
@@ -190,5 +191,5 @@ class simulated_annealing:
         self.plot_temp(df_data)
         self.plot_costs(df_data)
 
-        return self.best_solution, self.best_cost
+        return self.best_solution
 
