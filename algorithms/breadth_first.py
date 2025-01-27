@@ -133,7 +133,7 @@ class BreadthFirst:
             self.chip.connections[index] = shortest_route
 
             # adds all the used segments in the found route to the chip's occupied segments list
-            for start, end in zip(shortest_route.coor_list, shortest_route.coor_list[1:]):
-                self.chip.occupied_segments.add((start, end))
+            for segment in zip(shortest_route.coor_list, shortest_route.coor_list[1:]):
+                self.chip.occupied_segments.add(segment)
 
             

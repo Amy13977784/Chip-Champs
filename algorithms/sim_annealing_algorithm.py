@@ -71,7 +71,7 @@ class simulated_annealing:
 
         for segment in zip(old_path, old_path[1:]):
             if segment in new_solution:
-                new_solution.remove(coor)
+                new_solution.remove(segment)
 
         for attempt in range(max_attempts):
 
@@ -98,7 +98,7 @@ class simulated_annealing:
 
                 # Add this path to the solution
                 for segment in zip(new_path, new_path[1:]):
-                    new_solution.add(segment)
+                    new_solution.add(segment)  # is new_solution een set of een lijst? anders append gebruiken
 
                 return new_solution  
             

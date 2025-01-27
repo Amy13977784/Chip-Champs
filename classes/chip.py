@@ -140,7 +140,7 @@ class Chip:
         """ Using the cost formula C = n + 300 * k, it returns the cost of the current solution. """
         return len(self.occupied_segments) + 300 * self.calculate_intersections()
     
-    def create_output_file(self, cost, algorithm, file_number, validity='valid'):
+    def create_output_file(self, cost, algorithm, file_number=0, validity='valid'):
         """ 
         Creates the output file, which contains the coordinates of every connection, which chip and 
         netlist, and the cost of the solution. The order of the connections corresponds to the netlist,
