@@ -120,18 +120,21 @@ class Chip:
 
     def calculate_intersections(self):
         """ Check if segment ends occurs mulitple times in the occupied segments list. In other words,
-        check if certain point in the grid are used twice or more. Function returns the amount of
-        intersections. """
+        check if certain point in the grid are used twice or more. Also keeps track of coordinates where
+        an intersections occurs. Function returns the amount of intersections. """
         
         end_points = []
+        intersection_coors = [] 
         gates_coordinates = [gate.coor for gate in self.gates.values()]
 
         for _, end_coordinates in self.occupied_segments:
 
             # check if the segment end is not a gate/destination
             if end_coordinates not in gates_coordinates:
+                if end_coordinates in end_points:
+                    intersection_coors.append(end_coordinates)
                 end_points.append(end_coordinates)
-
+                
         unique_end_points = set(end_points)
 
         return len(end_points) - len(unique_end_points)
