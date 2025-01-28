@@ -185,13 +185,13 @@ class Chip:
         df_output.to_csv(f'output/output_chip_{self.chip_number}_net_{self.netlist}_{algorithm}_{penalty1}_{penalty2}.csv')
 
 
-    def load_solution(self, file_number, algorithm, plot=False):
+    def load_solution(self, file_number, algorithm, penalty1, penalty2, plot=False):
         """
         Gets the details of a solutions and tries to find the file. If a file is found, adds the coordinates lists
         to the connections and plots the chip. 
         """
         file_path = f'output/output_chip_{self.chip_number}_net_{self.netlist}_{algorithm}_{penalty1}_{penalty2}.csv'
-                
+
         try:
             df = pd.read_csv(file_path, index_col='net')
         except:
