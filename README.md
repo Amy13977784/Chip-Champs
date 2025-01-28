@@ -4,7 +4,7 @@ Chips or integrated circuits, can be found on all kinds of computers. They are c
 
 # Aan de slag
 
-De code is volledig geschreven in Python 3.7.
+De code is volledig geschreven in Python 3.10.
 
 Onze oplossinging voor het Chips & circuits probleem kan worden aangeroepen met:
 
