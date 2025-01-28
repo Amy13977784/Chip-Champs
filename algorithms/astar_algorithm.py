@@ -30,8 +30,8 @@ class Astar:
 
         for connection in self.chip.connections:
             if connection.coor_list == []:
-                return False
-        return True
+                return 'invalid'
+        return 'valid'
     
     def make_connection(self):
         '''Makes a connection according to the A* algorithm. It will try to make the shortest route
