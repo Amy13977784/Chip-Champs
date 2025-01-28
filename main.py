@@ -6,7 +6,7 @@
 import sys
 import argparse
 from classes import chip
-from algorithms import random_algorithm, breadth_first, astar_algorithm, sim_annealing_algorithm, heuristics
+from algorithms import random_algorithm, breadth_first, astar_algorithm, sim_annealing2, heuristics
 
 
 def get_input(prompt, valid_values, input_message):
@@ -128,13 +128,20 @@ if __name__ == '__main__':
         # load a presaved solution (from A*)
         my_chip.load_solution(algorithm='astar')
 
-        sa = sim_annealing_algorithm.simulated_annealing(
-        chip=my_chip,
-        temperature=1000,
-        cooling_rate=0.99,
-        min_temperature=1)
+        penalties = astar_heuristics[args.netlist]['penalties']
+        penalty1 = penalties[0] if len(penalties) > 0 else None
+        penalty2 = penalties[1] if len(penalties) > 1 else None
 
-        best_solution = sa.run(iterations=1000)
+        sa = sim_annealing2.simulated_annealing(
+        chip = my_chip,
+        temperature = 1000,
+        cooling_rate = 0.99,
+        min_temperature = 1,
+        penalty1 = penalty1, 
+        penalty2 = penalty2
+        )
+
+        best_solution = sa.run(iterations = 1000)
 
 
     # calculates the cost of the current solution
