@@ -1,4 +1,4 @@
-# Chip-Champs
+# Chip-Champs: Chips & Circuits
 Chips met gelegde circuits komen in allerlei computers voor. Ze zijn zeer geschikt voor verschillende functies en zijn daarom erg handig om te gebruiken voor verschillende praktijken. Deze chips bestaan uit een kleine siliconen plaat waarop bepaalde connecties tussen gates zijn gelegd. Deze verbindingen moeten zo efficient mogelijk gelegd worden. Dit houdt in dat ze zo kort mogelijk moeten zijn, niet over elkaar heen kunnen lopen, en elkaar zo min mogelijk moeten kruisen. Het leggen van deze connecties, waarbij rekening wordt gehouden met de genoemde restricties is wat deze case zo moeillijk maakt. Hoe groter de chips, hoe meer gates, hoe meer connecties, en dus ook hoe moeilijker de case.
 
 # Aan de slag
