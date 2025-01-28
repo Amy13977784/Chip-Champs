@@ -1,9 +1,9 @@
-Netlist 1:
-2:
-3:
+Netlist 1: No heuristics --> 20
+2: order by distance, intersections (5) --> 41
+3: order by dstance, intersections (5) --> 56
 4:
-5:
-6:
-7: order by location, intersections (5) + gates(4)
-8: order by distance, intersections (5)
-9: order by distance, intersections (6)
+5: order by location, order by distance, intersections (8), gates (4) --> 2031
+6: order by location, order by distance, intersections (5), gates (4) --> 15.427
+7: order by location, intersections (5) + gates(4) --> 25.304
+8: order by distance, intersections (5) --> 28.140
+9: order by distance, intersections (6) --> 45.583
