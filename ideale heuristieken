@@ -6,4 +6,4 @@ Netlist 1:
 6:
 7: order by location, intersections (5)
 8: order by distance, intersections (5)
-9:
+9: order by distance
