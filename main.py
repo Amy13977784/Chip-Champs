@@ -11,7 +11,7 @@ from algorithms import random_algorithm, breadth_first, astar_algorithm, sim_ann
 if __name__ == '__main__':
 
     # loop over every netlist
-    for chipnumber, netlistnumber in [(2, 9)]:
+    for chipnumber, netlistnumber in [(2, 7)]:
 
         # loop over every combination of heuristiks (penatlies for nodes)
         for penalty1, penalty2 in [('-', 'intersections')]:
@@ -23,7 +23,7 @@ if __name__ == '__main__':
 
             # heuristics that change the order in which the connections will be made, select which connections have to be made first
             # choose from 'order by gates', 'order by distance', 'order by location' or None
-            heuristic = 'order by distance'
+            heuristic = 'order by location'
 
             # algorithms that can be used to make the connections
             # choose from 'random', 'breadt first', 'astar' or 'sim annealing'
