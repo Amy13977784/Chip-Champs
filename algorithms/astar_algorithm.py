@@ -27,6 +27,11 @@ class Astar:
             self.end_node = Node(connection.end_location, None)
             self.connection = connection
             self.make_connection()
+
+        for connection in self.chip.connections:
+            if connection.coor_list == []:
+                return 'invalid'
+        return 'valid'
     
     def make_connection(self):
         '''Makes a connection according to the A* algorithm. It will try to make the shortest route
