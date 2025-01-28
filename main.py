@@ -11,10 +11,10 @@ from algorithms import random_algorithm, breadth_first, astar_algorithm, sim_ann
 if __name__ == '__main__':
 
     # loop over every netlist
-    for chipnumber, netlistnumber in [(2, 8)]:
+    for chipnumber, netlistnumber in [(1, 4)]:
 
         # loop over every combination of heuristiks (penatlies for nodes)
-        for penalty1, penalty2 in [('-', 'intersections')]:
+        for penalty1, penalty2 in [('intersections', 'gates')]:
             ### ----- Adjust the following variables ----- ###
 
             # select chip = 1, 2 or 3 and netlist = 0, 1, 2, 3, 4, 5, 6, 7, 8 or 9
@@ -32,7 +32,7 @@ if __name__ == '__main__':
             # adjust to whether you want to create an output file and plot the solution
             # choose True or False
             output_file = True
-            plot_solution = False
+            plot_chip = False
 
             # if you don't want to create a chip and connections, but want to plot a previous solution from a file
             # choose True or False and also adjust the chip_number, netlist and algorithm to which are used in the solution
@@ -50,6 +50,7 @@ if __name__ == '__main__':
 
             # creates the chip
             my_chip = chip.Chip(chip_number, netlist)
+            heuristics.Heuristics(my_chip).order_by_gate()
 
             # applies a heuristic to the order in which the connections are made
             if heuristic == 'order by gates':
@@ -67,10 +68,10 @@ if __name__ == '__main__':
                 validity = random_algorithm.Random_algorithm(my_chip).all_connections()
 
             elif algorithm == 'breadth first':
-                breadth_first.BreadthFirst(my_chip).all_connections()
+                validity = breadth_first.BreadthFirst(my_chip).all_connections()
 
             elif algorithm == 'astar':
-                astar_algorithm.Astar(my_chip, [penalty1, penalty2]).all_connections()
+                validity = astar_algorithm.Astar(my_chip, [penalty1, penalty2]).all_connections()
 
             elif algorithm == 'sim annealing':
                 
@@ -96,9 +97,9 @@ if __name__ == '__main__':
 
 
             if output_file == True:
-                my_chip.create_output_file(cost, algorithm, penalty1, penalty2)
+                my_chip.create_output_file(cost, algorithm, penalty1, penalty2, validity)
 
-            if plot_solution == True:
+            if plot_chip == True:
                 my_chip.plot_chip()
 
             # astar penalties prints
