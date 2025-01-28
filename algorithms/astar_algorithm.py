@@ -147,7 +147,7 @@ class Astar:
         if 'intersections' in penalties:
             # give child node extra penalty if it will cause a crossing of wires (except it it is an end node)
             if any(child.location == gridsegment[1] for gridsegment in self.chip.occupied_segments) and child.location != self.end_node.location:
-                child.f += 10
+                child.f += 6
 
         if 'layers' in penalties:
             # make higher layers less expensive
