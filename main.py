@@ -11,10 +11,10 @@ from algorithms import random_algorithm, breadth_first, astar_algorithm, sim_ann
 if __name__ == '__main__':
 
     # loop over every netlist
-    for chipnumber, netlistnumber in [(0, 2)]:
+    for chipnumber, netlistnumber in [(2, 9)]:
 
         # loop over every combination of heuristiks (penatlies for nodes)
-        for penalty1, penalty2 in [('layers', 'intersections'), ('layers', 'gates'), ('layers', 'layers'), ('intersections', 'gates'), ('intersections', 'intersections'), ('gates', 'gates')]:
+        for penalty1, penalty2 in [('-', 'intersections')]:
             ### ----- Adjust the following variables ----- ###
 
             # select chip = 1, 2 or 3 and netlist = 0, 1, 2, 3, 4, 5, 6, 7, 8 or 9
@@ -23,7 +23,7 @@ if __name__ == '__main__':
 
             # heuristics that change the order in which the connections will be made, select which connections have to be made first
             # choose from 'order by gates', 'order by distance', 'order by location' or None
-            heuristic = None
+            heuristic = 'order by distance'
 
             # algorithms that can be used to make the connections
             # choose from 'random', 'breadt first', 'astar' or 'sim annealing'
@@ -44,7 +44,7 @@ if __name__ == '__main__':
 
             # plots a solution from an earlier saved file
             if plot_solution == True:
-                chip.Chip(chip_number, netlist).plot_solution(0, algorithm)
+                chip.Chip(chip_number, netlist).load_solution(algorithm, penalty1, penalty2, plot=True)
                 sys.exit()
             
 
