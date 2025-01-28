@@ -20,8 +20,9 @@ class Astar:
 
     def all_connections(self):
         """ Loops over every connection to let them form."""
-    
+        self.counter = 0
         for connection in self.chip.connections:
+            self.counter += 1
             self.start_node = Node(connection.start_location, None)
             self.end_node = Node(connection.end_location, None)
             self.connection = connection
@@ -69,7 +70,7 @@ class Astar:
 
                 # put list in corrrect order
                 self.connection.coor_list.reverse()
-                return print(f'path found! :) :) :) {self.connection.coor_list}')
+                return print(f'path {self.counter}/{len(self.chip.connections)} found! :) :) :) {self.connection.coor_list}')
 
             # generate list of child nodes:
             else: 
@@ -144,9 +145,9 @@ class Astar:
          wires, and penalties that come with every layer.'''
 
         if 'intersections' in penalties:
-            # give child node extra penalty if it will cause a crossing of wires
+            # give child node extra penalty if it will cause a crossing of wires (except it it is an end node)
             if any(child.location == gridsegment[1] for gridsegment in self.chip.occupied_segments) and child.location != self.end_node.location:
-                child.f += 100
+                child.f += 10
 
         if 'layers' in penalties:
             # make higher layers less expensive
