@@ -24,63 +24,82 @@ class simulated_annealing:
         self.current_temperature = temperature # current temperature
         self.cooling_rate = cooling_rate  # alpha: factor at which the temperature is lowered every iteration
         self.min_temperature = min_temperature  # termination temperature
-        self.penalties = [penalty1, penalty2]
+        self.penalties = [penalty1, penalty2]  # initiates the penalties needed for the A* algorithm to run 
 
-        # characteristics of the initial / current solution 
         if not chip.occupied_segments:
-            print("Occupied segments is empty")
+            print("Occupied segments is empty...")
         else:
           self.current_solution = copy.deepcopy(chip.occupied_segments)
        
-        self.best_solution = self.current_solution
+        self.best_solution = self.current_solution  
         self.current_cost = chip.calculate_cost()
         self.best_cost = self.current_cost
 
     def update_temperature(self):
-        """
-        This function implements an exponential cooling scheme.
-        """
+        """ This function implements an exponential cooling scheme: T_new = alpha * T_current """
         self.current_temperature = self.current_temperature * self.cooling_rate
 
     def accept_solution(self, new_cost):
-        """
-        Checks whether this new solution is a better solution and is then accepted. 
-        If it is a worse solution, then use the acceptation probability to make a decision on whether to accept 
-        or reject the new solution. This is based on the current temperature. 
+        """ Checks whether a new solution after the perturbation has lower costs than the current solution. If so, 
+        this new solution is accepted as the new current solution. If not, then use the acceptation 
+        probability to decide whether to accept or reject this worse solution. A higher temperature increases the 
+        chance of accepting a worse solutions. This method returns true if the new solution is accepted. """
 
-        Returns true if the new solution is accepted. 
-        """
-
-        # Calculate cost difference (= diff in energy)
+        # Calculate the cost difference (= diff in energy)
         delta_cost = new_cost - self.current_cost
 
         # If the new solution is better, always accept 
         if delta_cost < 0:
             return True
 
-        # If the energy is >0 (so worse cost), use accepting probability
-        # Higher temperature increases the chance of accepting worse solutions
+        # If delta_cost is >0 (so worse cost), use acceptance probability
         acceptance_probability = math.exp(-delta_cost / self.current_temperature)
         return random.random() < acceptance_probability
 
-    def random_layers(self, point, connection, new_solution):
-        layers_to_add = random.randint(1, self.chip.z_max - point[2])
+    def random_layers(self, point, connection, new_solution, max_retries = 5):
+        """ This method helps to reroute the start of a path where an intersection occurs. It generate 
+        a random number of vertical steps to avoid intersections. The method needs a starting point: a 
+        coordinate for where to start the vertical movement. Furthermore, it needs the current connection that is 
+        being rerouted and the new_solution such that the coordinates can be modified."""
 
-        steps_up = []
+        for attempt in range(max_retries):
+            print(f"Attempt {attempt+1}/{max_retries} for vertical reroute.") 
 
-        for layer in range(1, layers_to_add + 1):
-            new_coor = (point[0], point[1], point[2] + layer)
-            steps_up.append(new_coor)
+            # Randomly pick a number of layers to go upwards 
+            layers_to_add = random.randint(1, self.chip.z_max - point[2])
 
-        for step in zip(steps_up, steps_up[1:]):
-            if step in new_solution:
-                return None
+            steps_up = []
 
-        connection.start_location = steps_up[-1]
+            # Add the coordinates of only this new vertical path to the list 
+            for layer in range(1, layers_to_add + 1):
+                new_coor = (point[0], point[1], point[2] + layer)
+                steps_up.append(new_coor)
 
-        return steps_up
+            print(f"Generated vertical path: {steps_up}")    
+
+            valid_path = True 
+
+            # Validate the vertical steps (check if they are in occupied segments). If not valid, go to next iteration
+            for step in zip(steps_up, steps_up[1:]):
+                if step in new_solution:
+                    valid_path = False 
+                    print(f"Step {step} is occupied.")
+                    break 
+            
+            if valid_path:
+                # Set a new start location for the A* to run from 
+                connection.start_location = steps_up[-1]
+                print(f"Vertical path valid: {steps_up}") 
+                return steps_up
+       
+        print("All vertical path attempts failed.")
+        return None
     
     def reroute_from_start(self, connection, old_path, new_solution):
+        """ Reroute the connection from the start coordinate of the current connection. The input requires an 
+        old_path that holds the original path coordinates of the connection."""
+       
+        # Remove the old path from the connection 
         for segment in zip(old_path, old_path[1:]):
             if segment in new_solution:
                 new_solution.remove(segment)
@@ -139,7 +158,10 @@ class simulated_annealing:
             steps_up = self.reroute_from_intersection(connection, old_path, new_solution, intersection)
 
         if steps_up == None:
+            print("Failed to reroute vertically.")
             return None
+        
+        print(f"Steps up successfully added: {steps_up}") 
 
         # use A* algorithm to find a new connection
         astar_alg = astar_algorithm.Astar(self.chip, penalties)
@@ -154,6 +176,7 @@ class simulated_annealing:
         connection.start_location = old_path[0]
 
         if not connection.coor_list:
+            print("A* failed to find a path.")
             return None
         
         new_path = steps_up + connection.coor_list 
@@ -199,6 +222,7 @@ class simulated_annealing:
             new_solution = self.reroute_connection(self.penalties)
 
             if new_solution == None:
+                print("Reroute failed, skipping iteration")
                 continue
             
             print(f"Current costs: {self.current_cost}")

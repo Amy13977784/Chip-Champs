@@ -59,6 +59,7 @@ class Astar:
             self.closed_list.append(self.current_node)
 
             if self.current_node.location == self.end_node.location:
+                print("End node reached!")
                 current = self.current_node
 
                 # until the starting node has been reached (its parent None)
