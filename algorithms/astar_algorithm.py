@@ -145,8 +145,8 @@ class Astar:
 
         if 'intersections' in penalties:
             # give child node extra penalty if it will cause a crossing of wires
-            if any(child.location == gridsegment[1] for gridsegment in self.chip.occupied_segments):
-                child.f += 20
+            if any(child.location == gridsegment[1] for gridsegment in self.chip.occupied_segments) and child.location != self.end_node.location:
+                child.f += 100
 
         if 'layers' in penalties:
             # make higher layers less expensive
@@ -157,9 +157,15 @@ class Astar:
                 extra_cost -= 1
 
         if 'gates' in penalties:
+            # gives nodes surrounding end gates extra penalty
+            # if child location is a node that surrounds a gate
             if child.location in self.adjoining_gates:
+
+                # look where the gate is
                 for direction in self.directions:
                     possible_gate_location = (child.location[0] + direction[0], child.location[1] + direction[1], child.location[2] + direction[2])
+                    
+                    # when gate is found and its location is not equal to end_node: extra penalty
                     if any(possible_gate_location == gate.coor for gate in self.chip.gates.values()) and possible_gate_location != self.end_node.location:
                         child.f += 10
 
