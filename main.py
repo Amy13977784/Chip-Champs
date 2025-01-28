@@ -78,7 +78,7 @@ if __name__ == '__main__':
                     '4': {'connection_order': ['order by location'], 'penalties': ['intersections']},
                     '5': {'connection_order': ['order by location', 'order by distance'], 'penalties': ['gates', 'intersections', 8]},
                     '6': {'connection_order': ['order by location', 'order by distance'], 'penalties': ['intersections', 'gates']},
-                    '7': {'connection_order': ['order by location'], 'penalties': ['intersections', 'gates']},
+                    '7': {'connection_order': ['order by distance'], 'penalties': ['intersections', 'gates']},
                     '8': {'connection_order': ['order by distance'], 'penalties': ['intersections']},
                     '9': {'connection_order': ['order by distance'], 'penalties': ['intersections', 6]}}
 
