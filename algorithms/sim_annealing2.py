@@ -74,7 +74,7 @@ class simulated_annealing:
         for step in zip(steps_up, steps_up[1:]):
             if step in new_solution:
                 return None
-            
+
         connection.start_location = steps_up[-1]
 
         return steps_up
@@ -116,6 +116,8 @@ class simulated_annealing:
         # Copy the current solution (such that you can adapt it)
         new_solution = self.current_solution.copy()
         
+        self.chip.calculate_intersections()
+
         # choose a random connection from the current solution
         intersection =  random.choice(self.chip.intersection_coors)
 
@@ -128,6 +130,7 @@ class simulated_annealing:
         old_path = connection.coor_list
 
         pertubation = random.choice(['from start', 'from intersection'])
+        print(pertubation)
 
         if pertubation == 'from start':
             steps_up = self.reroute_from_start(connection, old_path, new_solution)
@@ -138,7 +141,7 @@ class simulated_annealing:
             return None
 
         # use A* algorithm to find a new connection
-        astar_alg = astar_algorithm.Astar(self.chip)
+        astar_alg = astar_algorithm.Astar(self.chip, None)
         astar_alg.connection = connection
         astar_alg.start_node = astar_algorithm.Node(connection.start_location, None)
         astar_alg.end_node = astar_algorithm.Node(connection.end_location, None)

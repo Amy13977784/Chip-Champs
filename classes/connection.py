@@ -1,35 +1,35 @@
 class Connection:
-    """Class creates a connection by implementing their starting location (chip a) and
-    their einding location (chip b), and a list of coordinates that the wire occupies.
-    Method __init__ implements self.location, self.end_location and self.coor_llsit.
-    Method add_coor adds a coordinate to self.coor_list --> adds a step decided by the 
-    algorithm to the connection. 
-    Method check_end checks if the connection has reached its end_location."""
+    """ 
+    Class that contains all coordinates of the route from the start_location to the end_location 
+    found by an algorithm.
+    Method __init__ contains self.start_location, self.end_location, self_gates and self.coor_list.
+    Method add_coor adds a coordinate to self.coor_list, adding a step to the connection. 
+    Method check_end checks if the connection has reached its end_location. 
+    """
 
     def __init__(self, start_location, end_location, gates, add_start=False):
-        """Implements the starting location of the connections (the first gates, chip_a) in self.location,
-        and the end destination (chip_b). It also implements all the already occuppied segment in the
-        self.occupied_segments list."""
 
-        # tuple coordinates
+        # tuples of coordinates
         self.start_location = start_location
         self.end_location = end_location
+
+        # gate numbers in format: (start_gate, end_gate)
         self.gates = gates
 
-        # add start coordinate to list
+        # will contain all the coordinates of the connection
         self.coor_list = []
 
+        # will add the coordinates of the start_location to the coordinates list
         if add_start:
             self.add_coor(start_location)
 
-    def add_coor(self, coor):
-        """Adds a coordinate (a taken step) to the coordinate list (route of the wire)."""
-        self.coor_list.append(coor)
+    def add_coor(self, coordinate):
+        """ Adds a coordinate (a taken step) to the coordinate list (route of the connection). """
+        self.coor_list.append(coordinate)
 
     def check_end(self):
-        """Checks if the last coordinate in the list corresponds to the end location, if yes:
-        the wire has reached its goal/end location --> returns True, if not: wire still has
-        to take steps --> returns False."""
+        """ Checks if the last coordinate in the list corresponds to the end location. Returns 
+        True if the connection has reached its end location, returns False otherwise. """
         return self.coor_list[-1] == self.end_location
 
 

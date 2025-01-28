@@ -61,8 +61,8 @@ class Heuristics:
     def order_by_location(self, edges_first=False):
         scored_connections = []
 
-        center_x = self.chip.max_x / 2
-        center_y = self.chip.max_y / 2
+        center_x = self.chip.x_max / 2
+        center_y = self.chip.y_max / 2
 
         for index, connection in enumerate(self.connections):
             x_start, y_start, _ = connection.start_location
