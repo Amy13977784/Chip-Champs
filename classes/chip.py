@@ -153,7 +153,7 @@ class Chip:
         return len(self.occupied_segments) + 300 * self.calculate_intersections()
     
 
-    def create_output_file(self, cost, algorithm, penalty1, penalty2, validity='valid'):
+    def create_output_file(self, cost, algorithm, validity='valid'):
         """ 
         Creates the output file, which contains the coordinates of every connection, which chip and 
         netlist, and the cost of the solution. The order of the connections corresponds to the netlist,
@@ -175,22 +175,22 @@ class Chip:
         df_output = df_output.reindex(df_netlist['net'])
 
         # adds last row with informational data 
-        df_output.loc[f'chip_{self.chip_number}_net_{self.netlist}'] = [[validity, cost, (penalty1, penalty2)]]
+        df_output.loc[f'chip_{self.chip_number}_net_{self.netlist}'] = [[validity, cost]]
     	
         # creates output folder if it does not exist yet
         if not os.path.isdir("output"):
             os.makedirs("output")
         
         # saves the dataframe into a csv file
-        df_output.to_csv(f'output/output_chip_{self.chip_number}_net_{self.netlist}_{algorithm}_{penalty1}_{penalty2}.csv')
+        df_output.to_csv(f'output/output_chip_{self.chip_number}_net_{self.netlist}_{algorithm}.csv')
 
 
-    def load_solution(self, algorithm, penalty1, penalty2, plot=False):
+    def load_solution(self, algorithm, plot=False):
         """
         Gets the details of a solutions and tries to find the file. If a file is found, adds the coordinates lists
         to the connections and plots the chip. 
         """
-        file_path = f'output/output_chip_{self.chip_number}_net_{self.netlist}_{algorithm}_{penalty1}_{penalty2}.csv'
+        file_path = f'output/output_chip_{self.chip_number}_net_{self.netlist}_{algorithm}.csv'
                 
         try:
             df = pd.read_csv(file_path, index_col='net')

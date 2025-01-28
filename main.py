@@ -4,54 +4,98 @@
 # short explanantion
 
 import sys
+import argparse
 from classes import chip
-from algorithms import random_algorithm, breadth_first, astar_algorithm, sim_annealing2, heuristics
+from algorithms import random_algorithm, breadth_first, astar_algorithm, sim_annealing_algorithm, heuristics
+
+
+def get_input(prompt, valid_values, input_message):
+    while True:
+        print(f"\n{input_message}")
+        user_input = input(prompt).strip().lower()
+
+        if user_input in valid_values:
+            return user_input
+
+def set_argument_parser():
+    # Create the parser
+    parser = argparse.ArgumentParser(description='Arguments')
+    
+    # Define all the arguments
+    parser.add_argument('--solution', type=str, help='Creating or loading a solution')
+    parser.add_argument('--chip_number', type=str, help='Chip number (0, 1 or 2)')
+    parser.add_argument('--netlist', type=str, help='Netlist number (integer from 1-9)')
+    parser.add_argument('--algorithm', type=str, help='Which algorithm to use to make the connections (random, breadth_first, astar, sim annealing)')
+    parser.add_argument('--plot_chip', type=str, help='Whether to plot the solution (True or False)')
+
+    # If arguments are not provided in the command line, ask for them interactively
+    args = parser.parse_args()
+
+    if any(arg == None for arg in vars(args).values()):
+        print('\nEnter the following variables. If you want to stop at any point, use a keyboard interruption.')
+    
+        try: 
+            if args.solution is None:
+                args.solution = get_input('Enter if you are creating or loading a solution: ',
+                    valid_values=['loading', 'creating'], input_message='Choose loading or creating.')
+
+            if args.chip_number is None:
+                args.chip_number = get_input('Enter the chip number: ',
+                    valid_values=['0', '1', '2'], input_message='Choose 0, 1 or 2 and enter only the number.')
+
+            if args.netlist is None:
+                netlist_options = {'0': ['1', '2', '3'], '1': ['4', '5', '6'], '2': ['7', '8', '9']}
+                args.netlist = get_input(f'Enter the netlist: ', valid_values=netlist_options[args.chip_number],
+                    input_message=f"With chip {args.chip_number} you can only choose netlists {', '.join(netlist_options[args.chip_number])}.")
+
+            if args.algorithm is None:
+                args.algorithm = get_input('Enter which algorithm to make the connections with: ',
+                    valid_values=['random', 'breadth_first', 'astar', 'sim annealing'],
+                    input_message='Choose from: random, breadth first, astar or sim annealing.')
+
+            if args.plot_chip is None:
+                args.plot_chip = get_input('Enter if you want to plot the solution: ',
+                    valid_values=['true', 'false'], input_message='Choose true or false.')
+            
+            args.plot_chip = args.plot_chip == 'true'
+
+        except KeyboardInterrupt:
+            print("\nInput interrupted. Exiting...")
+            exit()
+
+    print('\nArguments received:')
+    for arg, value in vars(args).items():
+        print(f'{arg}: {value}')
+    
+    return args
 
         
 if __name__ == '__main__':
 
-    # loop over every netlist
-    for chipnumber, netlistnumber in [(1, 4)]:
+    astar_heuristics = {'1': {'connection_order': [], 'penalties': []},
+                    '2': {'connection_order': ['order by distance'], 'penalties': ['intersections']},
+                    '3': {'connection_order': ['order by distance'], 'penalties': ['intersections']},
+                    '4': {'connection_order': ['order by location'], 'penalties': ['intersections']},
+                    '5': {'connection_order': ['order by location', 'order by distance'], 'penalties': ['gates', 'intersections', 8]},
+                    '6': {'connection_order': ['order by location', 'order by distance'], 'penalties': ['intersections', 'gates']},
+                    '7': {'connection_order': ['order by location'], 'penalties': ['intersections', 'gates']},
+                    '8': {'connection_order': ['order by distance'], 'penalties': ['intersections']},
+                    '9': {'connection_order': ['order by distance'], 'penalties': ['intersections', 6]}}
 
-        # loop over every combination of heuristiks (penatlies for nodes)
-        for penalty1, penalty2 in [('intersections', 'intersections')]:
-            ### ----- Adjust the following variables ----- ###
-
-            # select chip = 1, 2 or 3 and netlist = 0, 1, 2, 3, 4, 5, 6, 7, 8 or 9
-            chip_number = chipnumber
-            netlist = netlistnumber
-
-            # heuristics that change the order in which the connections will be made, select which connections have to be made first
-            # choose from 'order by gates', 'order by distance', 'order by location' or None
-            heuristic = None
-
-            # algorithms that can be used to make the connections
-            # choose from 'random', 'breadt first', 'astar' or 'sim annealing'
-            algorithm = 'sim annealing'
-
-            # adjust to whether you want to create an output file and plot the solution
-            # choose True or False
-            output_file = True
-            plot_chip = False
-
-            # if you don't want to create a chip and connections, but want to plot a previous solution from a file
-            # choose True or False and also adjust the chip_number, netlist and algorithm to which are used in the solution
-            plot_solution = False
+    args = set_argument_parser()
 
 
-            ### ----- end of adjustable variables ----- ###
+    # creates the chip
+    my_chip = chip.Chip(args.chip_number, args.netlist)
 
+    # plots a solution from an earlier saved file
+    if args.solution == 'loading':
+        my_chip.load_solution(args.algorithm, plot=args.plot_chip)
+        sys.exit()
 
-            # plots a solution from an earlier saved file
-            if plot_solution == True:
-                chip.Chip(chip_number, netlist).load_solution(algorithm, penalty1, penalty2, plot=True)
-                sys.exit()
+    if args.algorithm == 'astar':
+        for heuristic in astar_heuristics[args.netlist]['connection_order']:
             
-
-            # creates the chip
-            my_chip = chip.Chip(chip_number, netlist)
-            heuristics.Heuristics(my_chip).order_by_gate()
-
             # applies a heuristic to the order in which the connections are made
             if heuristic == 'order by gates':
                 heuristics.Heuristics(my_chip).order_by_gate()
@@ -61,51 +105,42 @@ if __name__ == '__main__':
 
             elif heuristic == 'order by location':
                 heuristics.Heuristics(my_chip).order_by_location()
-            
+    
 
-            # applies an algorithm to make the connections
-            if algorithm == 'random':
-                validity = random_algorithm.Random_algorithm(my_chip).all_connections()
+    # applies an algorithm to make the connections
+    if args.algorithm == 'random':
+        validity = random_algorithm.Random_algorithm(my_chip).all_connections()
 
-            elif algorithm == 'breadth first':
-                validity = breadth_first.BreadthFirst(my_chip).all_connections()
+    elif args.algorithm == 'breadth first':
+        validity = breadth_first.BreadthFirst(my_chip).all_connections()
 
-            elif algorithm == 'astar':
-                validity = astar_algorithm.Astar(my_chip, [penalty1, penalty2]).all_connections()
+    elif args.algorithm == 'astar':
+        penalties = astar_heuristics[args.netlist]['penalties']
 
-            elif algorithm == 'sim annealing':
-                
-                # load a presaved solution (from A*)
-                my_chip.load_solution('astar', penalty1, penalty2)
+        if penalties and type(penalties[-1]) == int:
+            print('')
+            validity = astar_algorithm.Astar(my_chip, penalties[:-1], penalties[-1]).all_connections()
+        else:
+            validity = astar_algorithm.Astar(my_chip, penalties).all_connections()
 
-                sa = sim_annealing2.simulated_annealing(
-                chip=my_chip,
-                temperature=1000,
-                cooling_rate=0.99,
-                min_temperature=1,
-                penalty1=penalty1,
-                penalty2=penalty2
-                )
+    elif args.algorithm == 'sim annealing':
+        
+        # load a presaved solution (from A*)
+        my_chip.load_solution(file_number=0, algorithm="astar")
 
-                best_solution = sa.run(iterations=1000)
+        sa = sim_annealing_algorithm.simulated_annealing(
+        chip=my_chip,
+        temperature=1000,
+        cooling_rate=0.99,
+        min_temperature=1)
 
-            else:
-                print('No algorithm applied')
-                sys.exit()
-
-
-            # calculates the cost of the current solution
-            cost = my_chip.calculate_cost()
-            print(f'The costs for this solution: {cost}')
+        best_solution = sa.run(iterations=1000)
 
 
-            if output_file == True:
-                my_chip.create_output_file(cost, algorithm, penalty1, penalty2, validity)
+    # calculates the cost of the current solution
+    cost = my_chip.calculate_cost()
+    print(f'The costs for this solution: {cost}')
+    my_chip.create_output_file(cost, args.algorithm, validity)
 
-            if plot_chip == True:
-                my_chip.plot_chip()
-
-            # astar penalties prints
-            if penalty1 == penalty2:
-                print(f'penalty used for chip {chip_number} netlist {netlist}: {penalty1}')
-            else: print(f'penalties used for chip {chip_number} netlist {netlist}: {penalty1}, {penalty2}')
+    if args.plot_chip == True:
+        my_chip.plot_chip()
