@@ -11,7 +11,7 @@ from algorithms import random_algorithm, breadth_first, astar_algorithm, sim_ann
 if __name__ == '__main__':
 
     # loop over every netlist
-    for chipnumber, netlistnumber in [(0,1), (2, 7), (2, 8)]:
+    for chipnumber, netlistnumber in [(0, 2)]:
 
         # loop over every combination of heuristiks (penatlies for nodes)
         for penalty1, penalty2 in [('layers', 'intersections'), ('layers', 'gates'), ('layers', 'layers'), ('intersections', 'gates'), ('intersections', 'intersections'), ('gates', 'gates')]:
@@ -22,7 +22,7 @@ if __name__ == '__main__':
             netlist = netlistnumber
 
             # heuristics that change the order in which the connections will be made, select which connections have to be made first
-            # choose from 'most connected gates', 'shortest distance', 'longest distance', 'center connections', 'edge connections' or None
+            # choose from 'order by gates', 'order by distance', 'order by location' or None
             heuristic = None
 
             # algorithms that can be used to make the connections
@@ -51,22 +51,15 @@ if __name__ == '__main__':
             # creates the chip
             my_chip = chip.Chip(chip_number, netlist)
 
-
             # applies a heuristic to the order in which the connections are made
-            if heuristic == 'most connected gates':
+            if heuristic == 'order by gates':
                 heuristics.Heuristics(my_chip).order_by_gate()
 
-            elif heuristic == 'shortest distance':
+            elif heuristic == 'order by distance':
                 heuristics.Heuristics(my_chip).order_by_distance()
 
-            elif heuristic == 'longest distance':
-                heuristics.Heuristics(my_chip).order_by_distance(long_first = True)
-
-            elif heuristic == 'center connections':
+            elif heuristic == 'order by location':
                 heuristics.Heuristics(my_chip).order_by_location()
-
-            elif heuristic == 'edge connections':
-                heuristics.Heuristics(my_chip).order_by_location(edged_first = True)
             
 
             # applies an algorithm to make the connections
