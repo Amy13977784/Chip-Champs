@@ -11,7 +11,7 @@ Onze oplossinging voor het Chips & circuits probleem kan worden aangeroepen met:
 Door alleen de main aan te roepen zal er in de command terminal een aantal inputs gevraagd worden. Namelijk of je een oplossing wilt maken of een al gemaakte oplossing wilt inladen, het chip nummer, de netlist, het algoritme waarmee de connecties gemaakt moeten worden en of je de chip wilt plotten of niet.
 
 Deze informatie kan ook al meegegeven worden in de command lijn met het format:
-python main.py --solution (creating/loading) --chip_number (0,1,2) --netlist (1-9) --algorithm (alg name) --plot_chip (true/false)
+```python main.py --solution (creating/loading) --chip_number (0,1,2) --netlist (1-9) --algorithm (alg name) --plot_chip (true/false)```
 
 Het algoritme zal dan een oude oplossing inladen of de connecties maken van de meegegeven chip en netlijst met het meegegeven algoritme. Het programma pakt zelf de beste heuristieken en penalties voor die chip en netlijst.
 
