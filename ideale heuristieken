@@ -1,7 +1,7 @@
 Netlist 1: No heuristics --> 20
 2: order by distance, intersections (5) --> 41
 3: order by distance, intersections (5) --> 56
-4: order by location, intersections (5) --> 3.383
+4: order by location, intersections (5) --> 3.385
 5: order by location, order by distance, intersections (8), gates (4) --> 2.031
 6: order by location, order by distance, intersections (5), gates (4) --> 15.427
 7: order by location, intersections (5) + gates(4) --> 25.304
