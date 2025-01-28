@@ -190,8 +190,8 @@ class Chip:
         Gets the details of a solutions and tries to find the file. If a file is found, adds the coordinates lists
         to the connections and plots the chip. 
         """
-        file_path = f'output/output_chip_{self.chip_number}_net_{self.netlist}_{algorithm}_{file_number}.csv'
-        
+        file_path = f'output/output_chip_{self.chip_number}_net_{self.netlist}_{algorithm}_{penalty1}_{penalty2}.csv'
+                
         try:
             df = pd.read_csv(file_path, index_col='net')
         except:
