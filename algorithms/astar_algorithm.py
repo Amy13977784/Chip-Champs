@@ -168,7 +168,7 @@ class Astar:
                     
                     # when gate is found and its location is not equal to end_node: extra penalty
                     if any(possible_gate_location == gate.coor for gate in self.chip.gates.values()) and possible_gate_location != self.end_node.location:
-                        child.f += 4
+                        child.f += 3
 
 class Node:
     '''Class that creates an instance of a node. A node has an location (x,y,z coordinate), a
