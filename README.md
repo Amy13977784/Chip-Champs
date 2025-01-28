@@ -8,7 +8,7 @@ Onze oplossinging voor het Chips & circuits probleem kan worden aangeroepen met:
 
 ```python main.py```
 
-In deze code zult u nog een aantal dingen moeten aanpassen. Dit houdt in de chip en netlijst, het gekozen algoritme, of u een output file wilt aanmaken en of u een visualizatie van de oplossing wilt plotten.
+In deze code zult u nog een aantal dingen moeten aanpassen. Dit houdt in de chip en netlijst, het gekozen algoritme, of u een output file wilt aanmaken en of u een visualizatie van de oplossing wilt plotten. In de main staat beschreven waar wat verandert moet worden voor elk van de voorheen genoemde mogelijke aanpassingen van de output.
 
 # Structuur
 De hierop volgende lijst beschrijft de belangrijkste mappen en files in het project, en waar je ze kan vinden:
