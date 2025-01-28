@@ -14,7 +14,7 @@ if __name__ == '__main__':
     for chipnumber, netlistnumber in [(2, 8)]:
 
         # loop over every combination of heuristiks (penatlies for nodes)
-        for penalty1, penalty2 in [('gates', 'intersections')]:
+        for penalty1, penalty2 in [('-', 'intersections')]:
             ### ----- Adjust the following variables ----- ###
 
             # select chip = 1, 2 or 3 and netlist = 0, 1, 2, 3, 4, 5, 6, 7, 8 or 9
