@@ -12,10 +12,11 @@ class Astar:
     Method valid_child checks if a child can be put into the open list
     Method penalties adds to a child nodes' f value according to certain restrictions'''
 
-    def __init__(self, chip, heuristics):
+    def __init__(self, chip, heuristics=[], intersections_penalty=5):
         '''Imports the chip in self.chip '''
         self.chip = chip
         self.penalties = heuristics
+        self.intersections_penalty = intersections_penalty
         self.directions = [(1,0,0), (-1,0,0), (0,1,0), (0,-1,0), (0,0,1), (0,0,-1)]
 
     def all_connections(self):
@@ -153,7 +154,7 @@ class Astar:
         if 'intersections' in penalties:
             # give child node extra penalty if it will cause a crossing of wires (except it it is an end node)
             if any(child.location == gridsegment[1] for gridsegment in self.chip.occupied_segments) and child.location != self.end_node.location:
-                child.f += 5
+                child.f += self.intersections_penalty
 
         if 'layers' in penalties:
             # make higher layers less expensive
@@ -174,7 +175,7 @@ class Astar:
                     
                     # when gate is found and its location is not equal to end_node: extra penalty
                     if any(possible_gate_location == gate.coor for gate in self.chip.gates.values()) and possible_gate_location != self.end_node.location:
-                        child.f += 3
+                        child.f += 4
 
 class Node:
     '''Class that creates an instance of a node. A node has an location (x,y,z coordinate), a
