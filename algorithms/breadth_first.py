@@ -31,6 +31,8 @@ class BreadthFirst:
             for segment in zip(shortest_route.coor_list, shortest_route.coor_list[1:]):
                 self.chip.occupied_segments.add(segment)
 
+        return 'valid'
+
 
     def run(self, start_location, end_location, gates):
         """ Runs the algorithm until one of the routes has reached the end gate. """

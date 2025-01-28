@@ -126,7 +126,7 @@ if __name__ == '__main__':
     elif args.algorithm == 'sim annealing':
         
         # load a presaved solution (from A*)
-        my_chip.load_solution(file_number=0, algorithm="astar")
+        my_chip.load_solution(algorithm='astar')
 
         sa = sim_annealing_algorithm.simulated_annealing(
         chip=my_chip,
