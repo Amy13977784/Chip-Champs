@@ -14,7 +14,7 @@ if __name__ == '__main__':
     for chipnumber, netlistnumber in [(1, 4)]:
 
         # loop over every combination of heuristiks (penatlies for nodes)
-        for penalty1, penalty2 in [('intersections', 'gates')]:
+        for penalty1, penalty2 in [('intersections', 'intersections')]:
             ### ----- Adjust the following variables ----- ###
 
             # select chip = 1, 2 or 3 and netlist = 0, 1, 2, 3, 4, 5, 6, 7, 8 or 9
@@ -23,11 +23,11 @@ if __name__ == '__main__':
 
             # heuristics that change the order in which the connections will be made, select which connections have to be made first
             # choose from 'order by gates', 'order by distance', 'order by location' or None
-            heuristic = 'order by distance'
+            heuristic = None
 
             # algorithms that can be used to make the connections
             # choose from 'random', 'breadt first', 'astar' or 'sim annealing'
-            algorithm = 'astar'
+            algorithm = 'sim annealing'
 
             # adjust to whether you want to create an output file and plot the solution
             # choose True or False
@@ -82,7 +82,10 @@ if __name__ == '__main__':
                 chip=my_chip,
                 temperature=1000,
                 cooling_rate=0.99,
-                min_temperature=1)
+                min_temperature=1,
+                penalty1=penalty1,
+                penalty2=penalty2
+                )
 
                 best_solution = sa.run(iterations=1000)
 

@@ -18,12 +18,13 @@ class simulated_annealing:
     Method plot_costs plots the iterations against the costs. 
     Method run runs the simulated annealing algorithm. """
     
-    def __init__(self, chip, temperature, cooling_rate, min_temperature):
+    def __init__(self, chip, temperature, cooling_rate, min_temperature, penalty1, penalty2):
         self.chip = chip  # chip on which the algorithm is applied
         self.initial_temp = temperature  # starting temperature 
         self.current_temperature = temperature # current temperature
         self.cooling_rate = cooling_rate  # alpha: factor at which the temperature is lowered every iteration
         self.min_temperature = min_temperature  # termination temperature
+        self.penalties = [penalty1, penalty2]
 
         # characteristics of the initial / current solution 
         if not chip.occupied_segments:
@@ -109,7 +110,7 @@ class simulated_annealing:
 
         return kept_path
 
-    def reroute_connection(self, max_attempts = 5):
+    def reroute_connection(self, penalties):
         """ Removes a random connection from the current solution and chooses a different path 
         for this conncection using the A* algorithm."""
         
@@ -141,7 +142,8 @@ class simulated_annealing:
             return None
 
         # use A* algorithm to find a new connection
-        astar_alg = astar_algorithm.Astar(self.chip, None)
+        astar_alg = astar_algorithm.Astar(self.chip, penalties)
+        astar_alg.counter = 1
         astar_alg.connection = connection
         astar_alg.start_node = astar_algorithm.Node(connection.start_location, None)
         astar_alg.end_node = astar_algorithm.Node(connection.end_location, None)
@@ -185,7 +187,7 @@ class simulated_annealing:
         plt.legend()
         plt.show()
 
-    def run(self, iterations=1000):
+    def run(self, iterations):
         
         logging_data = []
         
@@ -194,12 +196,14 @@ class simulated_annealing:
                 break
 
             # Introduce the pertubation and calculate its associated cost
-            new_solution = self.reroute_connection()
+            new_solution = self.reroute_connection(self.penalties)
 
             if new_solution == None:
                 continue
-
+            
+            print(f"Current costs: {self.current_cost}")
             new_cost = self.calculate_cost(new_solution)
+            print(f"New costs: {new_cost}")
 
             # Decide whether to accept the new solution
             if self.accept_solution(new_cost):
