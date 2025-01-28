@@ -5,7 +5,7 @@
 
 import sys
 from classes import chip
-from algorithms import random_algorithm, breadth_first, astar_algorithm, sim_annealing_algorithm, heuristics
+from algorithms import random_algorithm, breadth_first, astar_algorithm, sim_annealing2, heuristics
 
         
 if __name__ == '__main__':
@@ -76,9 +76,9 @@ if __name__ == '__main__':
             elif algorithm == 'sim annealing':
                 
                 # load a presaved solution (from A*)
-                my_chip.load_solution(file_number=0, algorithm="astar")
+                my_chip.load_solution('astar', penalty1, penalty2)
 
-                sa = sim_annealing_algorithm.simulated_annealing(
+                sa = sim_annealing2.simulated_annealing(
                 chip=my_chip,
                 temperature=1000,
                 cooling_rate=0.99,
