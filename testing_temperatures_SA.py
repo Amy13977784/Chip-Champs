@@ -29,7 +29,7 @@ class tuning_params_simulated_annealing:
             return
 
         plt.imshow(self.heatmap, cmap="viridis", origin="lower", 
-                   extent=[cooling_rates[0], cooling_rates[-1], start_temps[0], start_temps[-1]])
+                   extent=[self.cooling_rates[0], self.cooling_rates[-1], self.start_temps[0], self.start_temps[-1]])
         plt.colorbar(label = "Best Cost")
         plt.xlabel("Cooling rate")
         plt.ylabel("Starting temperature")
@@ -41,7 +41,7 @@ class tuning_params_simulated_annealing:
         """
         """
 
-        self.heatmap = np.zeros((len(start_temps), len(cooling_rates)))
+        self.heatmap = np.zeros((len(self.start_temps), len(self.cooling_rates)))
 
         # Perform a grid search 
         for i, start_temp in enumerate(self.start_temps):
@@ -71,6 +71,6 @@ class tuning_params_simulated_annealing:
                 self.results.append((start_temp, cooling_rate, avg_best_cost))
                 self.heatmap[i, j] = avg_best_cost
 
-        self.plot_heatmap(start_temps, cooling_rates, output_file = "tuning_heatmap.png")
+        self.plot_heatmap(self.start_temps, self.cooling_rates, output_file = "tuning_heatmap.png")
 
 
