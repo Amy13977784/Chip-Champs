@@ -78,10 +78,9 @@ class simulated_annealing:
             valid_path = True 
 
             # Validate the vertical steps (check if they are in occupied segments). If not valid, go to next iteration
-            for step in zip(steps_up, steps_up[1:]):
-                if step in new_solution:
+            for step_start, step_end in zip(steps_up, steps_up[1:]):
+                if (step_start, step_end) in new_solution or (step_end, step_start) in new_solution:
                     valid_path = False 
-                    print(f"Step {step} is occupied.")
                     break 
             
             if valid_path:
@@ -199,11 +198,9 @@ class simulated_annealing:
     
     def plot_temp(self, df_data):
         plt.plot(df_data["iteration"], df_data["temperature"], label="Temperature", color="blue")
-
         plt.title("Temperature per iteration")
         plt.xlabel("Iteration")
         plt.ylabel("Temperature")
-
         plt.grid(True)
         plt.legend()
         plt.show()
@@ -211,11 +208,9 @@ class simulated_annealing:
     def plot_costs(self, df_data):
         plt.plot(df_data["iteration"], df_data["current_cost"], label="Current costs", color="orange")
         plt.plot(df_data["iteration"], df_data["best_cost"], label="Best costs", color="red", linestyle='dashed')
-
         plt.title("Costs per iteration")
         plt.xlabel("Iteration")
         plt.ylabel("Cost")
-
         plt.grid(True)
         plt.legend()
         plt.show()
@@ -270,18 +265,3 @@ class simulated_annealing:
 
         self.plot_temp(df_data)
         self.plot_costs(df_data)
-
-        return self.best_solution
-
-
-    def validity(self):
-
-        for connection in self.best_solution.connections:
-            if not connection.coor_list:
-                return 'invalid'
-            elif connection.coor_list[0] != connection.start_location or connection.coor_list[-1] != connection.end_location:
-                return 'invalid'
-            elif len(connection.coor_list) != len(set(connection.coor_list)):
-                return 'invalid'
-        
-        return 'valid'

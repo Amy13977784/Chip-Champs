@@ -1,4 +1,4 @@
-import copy
+from algorithms import general_functions as gf
 from operator import attrgetter
 
 class Astar:
@@ -43,11 +43,8 @@ class Astar:
             self.connection = connection
             self.make_connection()
 
-        # check if connections are complete and thus valid
-        for connection in self.chip.connections:
-            if connection.coor_list == []:
-                return 'invalid'
-        return 'valid'
+        return gf.Functions.validity(self.chip.connections)
+
     
     def make_connection(self):
         """ Makes a connection according to the A* algorithm. It will try to make the shortest route
@@ -103,7 +100,7 @@ class Astar:
                 for child in children:
                     
                     # function to check if child is not a valid step:
-                    if self.valid_child(child) == False:
+                    if gf.Functions.valid_step(self.chip, self.connection, self.current_node.location, child.location, closed_list=self.closed_list) == False:
 
                         # if not valid --> on to next child
                         continue
@@ -117,7 +114,7 @@ class Astar:
                         if any(child.location == open_node.location and child.g > open_node.g for open_node in open_list):
                             continue
 
-                        # give child node necassary penalties
+                        # give child node necessary penalties
                         self.heuristics(child, self.penalties)
 
                         open_list.append(child)
@@ -126,20 +123,15 @@ class Astar:
         return None
 
     def distance_g(self, node):
-        """ Returns the distance from the current node to the start node. """
-
-        # manhattan distance
+        """ Returns the distance from the current node to the start node, calculated with the manhattan distance. """
         return abs(node.location[0] - self.start_node.location[0]) + abs(node.location[1] - self.start_node.location[1]) + abs(node.location[2] - self.start_node.location[2])
 
     def distance_h(self, node):
-        """ Returns the estimated distance between the current node and the end node. """
-
-        # manhattan distance
+        """ Returns the estimated distance between the current node and the end node, calculated with the manhattan distance. """
         return abs(node.location[0] - self.end_node.location[0]) + abs(node.location[1] - self.end_node.location[1]) + abs(node.location[2] - self.end_node.location[2])
     
     def cost_f(self, g, h):
-        """ Returns the cost the node. """
-
+        """ Returns the cost of the node. """
         return g + h
     
     def valid_child(self, child):

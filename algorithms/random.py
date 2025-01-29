@@ -1,4 +1,5 @@
 import random
+from algorithms import general_functions as gf
 
 class Random_algorithm:
     """ Class that implements the connections between the gates via a random algorithm.
@@ -15,7 +16,6 @@ class Random_algorithm:
        
         self.chip = chip
         self.occupied_segments = chip.occupied_segments
-        self.validity = []
 
     def all_connections(self):
         """ Loops over every connection to let them form. """
@@ -24,13 +24,7 @@ class Random_algorithm:
             self.connection = connection
             self.make_connection()
         
-        # checks if all connections are finished and end of connection is at the end gate
-        if len(self.validity) == len(self.chip.connections) and all(valid_connection == True for valid_connection in self.validity):
-            print('\nSolution valid! :) :) :)')
-            return 'Valid'
-        else:
-            print('\nSolution not valid :(')
-            return 'Invalid'
+        return gf.Functions.validity(self.chip.connections)
 
     def make_connection(self):
         """ Form a connection until it has reached the end gate by taking steps along a random axis
@@ -59,13 +53,11 @@ class Random_algorithm:
             new_location = self.make_step(axis)
 
             # If segment still free, updates its current location
-            if self.valid_step(self.current_location, new_location):
+            if gf.Functions.valid_step(self.chip, self.connection, self.current_location, new_location):
                 self.occupied_segments.add((self.current_location, new_location))
                 self.connection.add_coor(new_location)
                 self.current_location = new_location
-        
-        self.validity.append(self.connection.check_end())
-        
+                
 
     def make_step(self, axis):
             """ Let's the connection take a step according to the end location. It returns the coordinates
@@ -87,30 +79,7 @@ class Random_algorithm:
 
             return tuple(new_location)
 
-        
-    def valid_step(self, coor_start, coor_end):
-        """ Checks if a next step on a certain gridsegment can be taken, by checking if that segment is 
-        not yet occupied, not out of bounds, not to a different gate and not a step backwards. """
-
-        # checks if the segment is already occupied
-        segment_occupied = (coor_start, coor_end) in self.chip.occupied_segments or \
-                        (coor_end, coor_start) in self.chip.occupied_segments
-
-        # checks if coordinates are out of bounds
-        out_of_bounds = any(coor < 0 for coor in coor_end) or coor_end[0] > self.chip.x_max or \
-                        coor_end[1] > self.chip.y_max or coor_end[2] > self.chip.z_max
-
-        # checks if coor_end is not any of the other gates
-        valid_end = coor_end == self.connection.end_location or \
-                    all(gate.coor != coor_end for gate in self.chip.gates.values())
-
-        # combines conditions
-        if not segment_occupied and not out_of_bounds and valid_end:
-            return True
-
-        return False
-    
-
+   
     def check_possible_steps(self):
         """ Check if there are any steps available from the current location. """
      

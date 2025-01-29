@@ -1,4 +1,5 @@
 from classes import connection as con
+from algorithms import general_functions as gf
 import copy
 import random
 
@@ -21,22 +22,19 @@ class BreadthFirst:
     def all_connections(self):
         """ Finds the shortest route for every connection. """
 
-        validity = 'valid'
-
         for index, connection in enumerate(self.chip.connections):
 
             # applies the algorithm to find the shortest route for this connection
             shortest_route = self.run(connection.start_location, connection.end_location, connection.gates)
             self.chip.connections[index] = shortest_route
 
-            if shortest_route:
+            if shortest_route.coor_list:
                 # adds all the used segments in the found route to the chip's occupied segments list
                 for segment in zip(shortest_route.coor_list, shortest_route.coor_list[1:]):
                     self.chip.occupied_segments.add(segment)
-            else:
-                validity = validity = 'invalid'
+            
+        return gf.Functions.validity(self.chip.connections)
 
-        return validity
 
 
     def run(self, start_location, end_location, gates):
@@ -61,7 +59,7 @@ class BreadthFirst:
                 return route
         
         print('No route possible')
-        return None
+        return con.Connection(start_location, end_location, gates)
 
 
     def next_steps(self, route):
@@ -87,7 +85,7 @@ class BreadthFirst:
             end_location[axis] += step
 
             # checks if this next step is valid
-            if self.valid_step(start_location, tuple(end_location), route):
+            if gf.Functions.valid_step(self.chip, route, start_location, tuple(end_location), check_previous_step=True):
                 valid_next_steps.append(end_location)
         
         # if beam search present, selects the best beam amount of next step, based on the shortest new distance to the end gate
@@ -99,29 +97,6 @@ class BreadthFirst:
             new_route = copy.deepcopy(route)
             new_route.add_coor(tuple(step))
             self.routes.append(new_route)
-
-
-    def valid_step(self, coor_start, coor_end, connection):
-        """ Checks if a next step on a certain gridsegment can be taken, by checking if that segment is
-        not already occupied, not out of bounds, not to a different gate and not a step backwards. """
-
-        # checks if the segment is not already occupied
-        segment_free = (coor_start, coor_end) not in self.chip.occupied_segments and \
-                        (coor_end, coor_start) not in self.chip.occupied_segments
-
-        # checks if coordinates are not out of the grid bounds
-        inside_grid = all(coor >= 0 for coor in coor_end) and coor_end[0] <= self.chip.x_max and \
-                        coor_end[1] <= self.chip.y_max and coor_end[2] <= self.chip.z_max
-
-        # checks if the segment does not end at another gate, by checking if coor_end is not any of the other gates
-        not_different_gate = all(gate.coor != coor_end for gate in self.chip.gates.values()) or \
-                        coor_end == connection.end_location
-
-        # checks if coor_end is not a step backwards
-        not_previous_step = len(connection.coor_list) < 2 or coor_end != connection.coor_list[-2]
-
-        # combines conditions to check if the step is valid
-        return segment_free and inside_grid and not_different_gate and not_previous_step
 
 
     def select_best_steps(self, next_steps, route):

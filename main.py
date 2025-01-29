@@ -6,7 +6,7 @@
 import sys
 import argparse
 from classes import chip
-from algorithms import astar, random, breadth_first, sim_annealing, heuristics
+from algorithms import astar, general_functions, random, breadth_first, sim_annealing, heuristics
 
 
 def get_input(prompt, valid_values, input_message):
@@ -132,8 +132,11 @@ if __name__ == '__main__':
         min_temperature = 1,
         )
 
-        my_chip = sa.run(iterations = 10)
-        validity = sa.validity()
+        sa.run(iterations = 10)
+        
+        my_chip = sa.best_solution
+        validity = general_functions.Functions.validity(my_chip.connections)
+
 
 
     # calculates the cost of the current solution
