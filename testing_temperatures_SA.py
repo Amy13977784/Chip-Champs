@@ -73,11 +73,9 @@ class tuning_params_simulated_annealing:
                     )
 
                     sa.run(iterations=self.iterations)
-
-                    # Collect the best cost for this run
                     run_costs.append(sa.best_cost)
 
-                # Calculate the average cost for this combination
+                # calculate the average cost for this combination
                 avg_best_cost = np.mean(run_costs)
 
                 print(run_costs)
@@ -86,7 +84,6 @@ class tuning_params_simulated_annealing:
                 self.heatmap[i, j] = avg_best_cost
 
         self.plot_heatmap(output_file = "tuning_heatmap.png")
-
 
 
 if __name__ == '__main__':
