@@ -47,7 +47,7 @@ def set_argument_parser():
 
         if args.algorithm not in ['random', 'breadth_first', 'astar', 'sim_annealing']:
             args.algorithm = get_input('Enter which algorithm to make the connections with: ',
-                valid_values=['random', 'breadth_first', 'astar', 'sim annealing'],
+                valid_values=['random', 'breadth_first', 'astar', 'sim_annealing'],
                 input_message='Choose from: random, breadth first, astar or sim annealing.')
 
         if args.plot_chip not in ['true', 'false']:
