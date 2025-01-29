@@ -218,7 +218,12 @@ class simulated_annealing:
 
     def run(self, iterations):
         
-        logging_data = []
+        logging_data = [{
+            "iteration": 0,
+            "temperature": self.current_temperature,
+            "current_cost": self.current_cost,
+            "best_cost": self.best_cost,
+            }]
         
         for iteration in range(iterations):
             if self.current_temperature < self.min_temperature:
@@ -244,11 +249,11 @@ class simulated_annealing:
                         self.best_cost = new_cost
 
             logging_data.append({
-            "iteration": iteration,
-            "temperature": self.current_temperature,
-            "current_cost": self.current_cost,
-            "best_cost": self.best_cost,
-            })
+                "iteration": iteration,
+                "temperature": self.current_temperature,
+                "current_cost": self.current_cost,
+                "best_cost": self.best_cost,
+                })
             
             # Update the temperature 
             self.update_temperature()

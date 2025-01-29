@@ -133,7 +133,9 @@ if __name__ == '__main__':
         min_temperature = 1,
         )
 
-        best_solution = sa.run(iterations = 100)
+        best_solution = sa.run(iterations = 10)
+        validity = 'valid'
+
 
 
     # calculates the cost of the current solution
