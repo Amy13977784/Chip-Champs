@@ -50,9 +50,9 @@ def set_argument_parser():
                 valid_values=['random', 'breadth_first', 'astar', 'sim_annealing'],
                 input_message='Choose from: random, breadth first, astar or sim annealing.')
 
-        if args.plot_chip.lower() not in ['true', 'false']:
+        if args.plot_chip not in ['true', 'false']:
             args.plot_chip = get_input('Enter if you want to plot the solution: ',
-                valid_values=['true', 'false'], input_message='Choose true or false.')
+                valid_values=['true', 'false'], input_message='Choose true or false. Use lowercase letters.')
         
         args.plot_chip = args.plot_chip.lower() == 'true'
 
