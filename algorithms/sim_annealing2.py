@@ -140,11 +140,16 @@ class simulated_annealing:
         # choose a random connection from the current solution
         intersection =  random.choice(self.chip.intersection_coors)
 
+        connection = None
+
         for con in self.chip.connections:
             if intersection in con.coor_list:
                 connection = con
                 break
-
+            
+        if connection is None:
+            return
+        
         # these are the coordinates that form the connection 
         old_path = copy.deepcopy(connection.coor_list)
 
@@ -163,7 +168,7 @@ class simulated_annealing:
         print(f"Steps up successfully added: {steps_up}") 
 
         # use A* algorithm to find a new connection
-        astar_alg = astar_algorithm.Astar(self.chip, ['intersections'])
+        astar_alg = astar_algorithm.Astar(self.chip, ['intersections'], 10)
         astar_alg.counter = 1
         astar_alg.connection = connection
         astar_alg.start_node = astar_algorithm.Node(connection.start_location, None)
@@ -178,8 +183,9 @@ class simulated_annealing:
             print("A* failed to find a path.")
             return None
         
-        connection.coor_list[:0] = steps_up[-1]
+        connection.coor_list = steps_up[:-1] + connection.coor_list
         new_path = copy.deepcopy(connection.coor_list)
+        print(new_path)
 
         # Add this path to the solution
         for segment in zip(new_path, new_path[1:]):
