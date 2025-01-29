@@ -30,7 +30,7 @@ class simulated_annealing:
         else:
           self.current_solution = copy.deepcopy(chip.occupied_segments)
        
-        self.best_solution = self.current_solution  
+        self.best_solution = copy.deepcopy(chip)  
         self.current_cost = chip.calculate_cost()
         self.best_cost = self.current_cost
 
@@ -181,6 +181,7 @@ class simulated_annealing:
 
         if not connection.coor_list:
             print("A* failed to find a path.")
+            connection.coor_list = old_path
             return None
         
         connection.coor_list = steps_up[:-1] + connection.coor_list
@@ -199,9 +200,11 @@ class simulated_annealing:
     
     def plot_temp(self, df_data):
         plt.plot(df_data["iteration"], df_data["temperature"], label="Temperature", color="blue")
+
         plt.title("Temperature per iteration")
         plt.xlabel("Iteration")
         plt.ylabel("Temperature")
+
         plt.grid(True)
         plt.legend()
         plt.show()
@@ -209,9 +212,11 @@ class simulated_annealing:
     def plot_costs(self, df_data):
         plt.plot(df_data["iteration"], df_data["current_cost"], label="Current costs", color="orange")
         plt.plot(df_data["iteration"], df_data["best_cost"], label="Best costs", color="red", linestyle='dashed')
+
         plt.title("Costs per iteration")
         plt.xlabel("Iteration")
         plt.ylabel("Cost")
+
         plt.grid(True)
         plt.legend()
         plt.show()
@@ -245,7 +250,11 @@ class simulated_annealing:
 
                     # Update best solution if the new solution is better
                     if new_cost < self.best_cost:
-                        self.best_solution = copy.deepcopy(new_solution)
+                        print('chip:', self.chip)
+                        self.best_solution = copy.deepcopy(self.chip)
+                        print('best solution:', self.best_solution)
+                        self.best_solution.occupied_segments = copy.deepcopy(new_solution)
+                        print('occupied list', self.best_solution.occupied_segments)
                         self.best_cost = new_cost
 
             logging_data.append({
@@ -266,3 +275,14 @@ class simulated_annealing:
 
         return self.best_solution
 
+def validity(self):
+
+        for connection in self.chip.connections:
+            if not connection.coor_list:
+                return 'invalid'
+            elif connection.coor_list[0] != connection.start_location or connection.coor_list[-1] != connection.end_location:
+                return 'invalid'
+            elif len(connection.coor_list) != len(set(connection.coor_list)):
+                return 'invalid'
+        
+        return 'valid'
