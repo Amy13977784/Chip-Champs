@@ -1,4 +1,5 @@
-Hieronder is aangegeven welke heuristieken de beste resultaten (laagste kosten + het snelst) geven per netlijst.
+Hieronder is aangegeven welke heuristieken de beste resultaten (laagste kosten + het snelst) geven en wat de kosten zijn
+per netlijst.
 
 1: No heuristics --> 20
 2: order by distance, intersections (5) --> 41
