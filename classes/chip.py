@@ -210,4 +210,45 @@ class Chip:
         if plot:
             self.plot_chip()
 
+class find_best_output:
+    """
+    This class loops through all the output files for a certain chip and netlist and finds the file with the 
+    lowest costs. 
+    Method __init__ initiates the output directory, 
+    Method find_best_output loops through the files and finds the file with the lowest cost. 
+    """
+
+    def __init__(self, output_dir = "output"):
+        self.output_dir = output_dir
+
+    def find_best_output(self, chip_number, netlist):
+        """ This method looks for the best output file for a specific chip and netlist. It returns the filename
+        with the corresponding costs. """
+
+        best_cost = float("inf")
+        best_file = None
+
+        for file_name in os.listdir(self.output_dir):
+            
+            # check if the file matches the chip and netlist
+            if f"chip_{chip_number}" in file_name and f"net_{netlist}" in file_name:
+
+                file_path = os.path.join(self.output_dir, file_name)
+
+                try:
+                    df = pd.read_csv(file_path, index_col = 'net')
+                    
+                    last_row = df.iloc[-1]
+                    info_list = eval(last_row["wires"])
+                    cost = info_list[1]
+
+                    if cost < best_cost:
+                        best_cost = cost
+                        best_file = file_name
+
+                except:
+                    print(f"Trouble reading file {file_name}")
+
+        return best_cost, best_file
+
     

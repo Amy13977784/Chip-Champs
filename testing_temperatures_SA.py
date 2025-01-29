@@ -9,14 +9,13 @@ class tuning_params_simulated_annealing:
     This class performs a grid search to find the best start temperature and cooling rate for the 
     simulated annealing algorithm. 
     Method __init__ initiates the chip and other variables,
-    Method plot_heatmap
+    Method plot_heatmap plots a heatmap to see what combination of temp and cooling rate gives the lowest average cost,
+    Method tune performs the grid search 
     """
 
     def __init__(self, chip, min_temp, iterations):
-        """
-        """
         self.chip = chip
-        self.min_temp = min_temp
+        self.min_temp = min_temp  # termination temperature 
         self.iterations = iterations
         self.runs_per_combination = 10
         self.results = []  
@@ -26,8 +25,7 @@ class tuning_params_simulated_annealing:
         self.cooling_rates = [0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 0.99]
 
     def plot_heatmap(self, output_file="heatmap.png"):
-        """
-        """
+        """ This method plots a heatmap for combinations of the cooling rate and start temperature. """
 
         if self.heatmap is None: 
             print("No data yet available for the heatmap.") 
@@ -43,8 +41,8 @@ class tuning_params_simulated_annealing:
         plt.show()
 
     def tune(self):
-        """
-        """
+        """ This method performs a grid search of the cooling rate and starting temperatures. It runs the Simulated
+        Annealing algorithm a set number of times for every combination and gives the  """
 
         self.heatmap = np.zeros((len(self.start_temps), len(self.cooling_rates)))
 
@@ -78,44 +76,6 @@ class tuning_params_simulated_annealing:
 
         self.plot_heatmap(self.start_temps, self.cooling_rates, output_file = "tuning_heatmap.png")
 
-
-class find_best_output:
-    """
-    """
-
-    def __init__(self, output_dir = "output"):
-        self.output_dir = output_dir
-
-    def find_best_output(self, chip_number, netlist):
-        """
-        Finds the best output file for a specific chip, netlist, and optionally an algorithm.
-        Returns the best cost and the file name.
-        """
-        best_cost = float("inf")
-        best_file = None
-
-        for file_name in os.listdir(self.output_dir):
-            
-            # Check if the file matches the chip and netlist
-            if f"chip_{chip_number}" in file_name and f"net_{netlist}" in file_name:
-
-                file_path = os.path.join(self.output_dir, file_name)
-
-                try:
-                    df = pd.read_csv(file_path, index_col = 'net')
-                    
-                    last_row = df.iloc[-1]
-                    info_list = eval(last_row["wires"])
-                    cost = info_list[1]
-
-                    if cost < best_cost:
-                        best_cost = cost
-                        best_file = file_name
-
-                except:
-                    print(f"Trouble reading file {file_name}")
-
-        return best_cost, best_file
 
 
 
