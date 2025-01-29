@@ -51,7 +51,7 @@ class Astar:
         open_list.append(self.start_node)
 
         # while the end node has not been reached or too many nodes to be investigated
-        while open_list or len(open_list) < 10000:
+        while open_list and len(open_list) < 10000:
 
             # print(f'nodes in open list: {len(open_list)}')
             # get current node --> node with the lowest f value
