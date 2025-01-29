@@ -50,7 +50,7 @@ class Astar:
 
         open_list.append(self.start_node)
 
-        # while the end node has not been reached
+        # while the end node has not been reached or too many nodes to be investigated
         while open_list or len(open_list) < 10000:
 
             # print(f'nodes in open list: {len(open_list)}')
@@ -60,7 +60,7 @@ class Astar:
             # if f value too high
             # if self.current_node.f > 100:
                 # return print(f'f value too high')
-
+   
             open_list.pop(open_list.index(self.current_node))
             self.closed_list.append(self.current_node)
 
@@ -112,7 +112,8 @@ class Astar:
 
                         open_list.append(child)
 
-        return print('No path found :(')
+        print('No path found :( or open list too big')
+        return None
 
     def distance_g(self, node):
         '''Returnst the distance from the current node to the start node.'''
