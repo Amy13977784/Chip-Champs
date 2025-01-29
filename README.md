@@ -6,11 +6,11 @@ Om deze case op te lossen zijn verschillende algoritmes gebruikt. Naast de basel
 
 Om connecties te vormen tussen twee gates die volgens de netlijst verbonden moeten worden, wordt er vanaf de eerste gate stappen gezet totdat de tweede gate bereikt is. In de verschillende algoritmes wordt dit op hun eigen manier gedaan om uiteindelijk de kortste route te vinden tussen de twee gates en daarbij ook rekening te houden met de hierboven genoemde restricties.
 
-Breadth first kon valide oplossingen geven door elke mogelijke stap die een connectie op de chip kan leggen af te gaan totdat hij zijn eindbestemming had bereikt. Om dit algoritme iets efficiënter te maken (en hem dus niet de hele chip af te laten gaan) is er ook een beam search toegevoegd, waarbij bij elke stap alleen de 2/3 beste volgende stappen verder werden onderzacht en de andere stappen te prunen. Dit duurde algoritme echter nog steeds erg lang en dit algoritme hielt geen rekening met het ontwijken van intersection van draden. 
+Breadth first kon valide oplossingen geven door elke mogelijke stap die een connectie op de chip kan leggen af te gaan totdat hij zijn eindbestemming had bereikt. Om dit algoritme iets efficiënter te maken (en hem dus niet de hele chip af te laten gaan) is er ook een beam search toegevoegd, waarbij bij elke stap alleen de 2/3 beste volgende stappen (dichst bij de eindgate) verder werden onderzocht en de andere stappen te prunen. Dit algoritme houdt geen rekening met het ontwijken van intersection van draden. 
 
-A* kon een stuk gerichter zoeken door elke keer de volgende stap te selecteren die de minste kosten met zich mee gaf. Dit algoritme kon al veel sneller en efficienter valide oplossingen vinden en kon, daarbij, ook intersecties ontwijken door die stappen een hogere kosten waarde te geven, waardoor zij dus minder snel geselecteerd werden. 
+A* kon een stuk gerichter zoeken door elke keer de volgende stap te selecteren die de minste kosten met zich mee gaf. Dit algoritme kan al veel sneller en efficienter valide oplossingen vinden en kan ook intersecties ontwijken door die stappen een hogere kosten waarde te geven, waardoor zij dus minder snel geselecteerd werden. 
 
-De oplossingen die uit het A* algoritme kwamen waren allemaal valide oplossingen maar ze konden nog verbeterd worden. Om dit te doen is het simulated annealing algoritme geimplementeerd die op de oplossingen van A* kleine aanpassingen kon maken. Deze aanpassingen waren vooral gericht op de intersecties die A* nog niet kon ontwijken. Door deze op te zoeken en vervolgens één van de twee connecties die de intersectie had veroorzaakt opnieuw te laten leggen door het A* algoritme, kon simulated annealing de oplossingen verbeteren.
+De oplossingen die uit het A* algoritme kwamen waren allemaal valide oplossingen maar ze konden nog verbeterd worden. Om dit te doen is het simulated annealing algoritme geimplementeerd die op de oplossingen van A* aanpassingen kon maken. Deze aanpassingen waren vooral gericht op de intersecties die A* nog niet kon ontwijken. Door deze op te zoeken en vervolgens één van de twee connecties die de intersectie had veroorzaakt opnieuw te laten leggen door hem lagen omhoog te forceren en dan het A* algoritme toe te passen. Simulated annealing verbeterd de oplossingen.
 
 # Gebruik
 De code is volledig geschreven in Python 3.10.
@@ -19,7 +19,7 @@ Onze oplossinging voor het Chips & circuits probleem kan worden aangeroepen met:
 
 ```python main.py```
 
-Door alleen de main aan te roepen zal er in de command terminal een aantal inputs gevraagd worden. Namelijk of je een oplossing wilt maken, al gemaakte oplossing wilt inladen of dat je het bestand die algemeen de beste oplossing bevat wilt inladen, het chip nummer, de netlist, het algoritme waarmee de connecties gemaakt moeten worden en of je de chip wilt plotten of niet.
+Door alleen de main aan te roepen zal er in de command terminal een aantal inputs gevraagd worden. Namelijk of je een oplossing wilt maken, al gemaakte oplossing wilt inladen, of dat je het bestand die algemeen de beste oplossing bevat wilt inladen, het chip nummer, de netlist, het algoritme waarmee de connecties gemaakt moeten worden en of je de chip wilt plotten of niet.
 
 Deze informatie kan ook al meegegeven worden in de command lijn met het format:
 

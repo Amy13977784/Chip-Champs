@@ -1,4 +1,4 @@
-Hieronder is aangegeven welke heuristieken de beste resultaten (laagste kosten + het snelst) geven en wat de kosten zijn
+Hieronder is aangegeven welke heuristieken de beste resultaten (laagste kosten + het snelst) geven van het A* algoritme en wat de kosten zijn
 per netlijst.
 
 #Netlijst: heuristieken --> kosten

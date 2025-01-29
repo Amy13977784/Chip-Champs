@@ -145,7 +145,7 @@ if __name__ == '__main__':
         min_temperature = 1,
         )
 
-        sa.run(iterations = 10)
+        sa.run(iterations = 300)
         
         my_chip = sa.best_solution
         validity = general_functions.Functions.validity(my_chip.connections)
