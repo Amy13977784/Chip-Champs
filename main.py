@@ -45,9 +45,9 @@ def set_argument_parser():
             args.netlist = get_input(f'Enter the netlist: ', valid_values=netlist_options[args.chip_number],
                 input_message=f"With chip {args.chip_number} you can only choose netlists {', '.join(netlist_options[args.chip_number])}.")
 
-        if args.algorithm not in ['random', 'breadth_first', 'astar', 'sim_annealing']:
+        if args.algorithm not in ['random', 'breadth_first', 'astar', 'sim annealing']:
             args.algorithm = get_input('Enter which algorithm to make the connections with: ',
-                valid_values=['random', 'breadth_first', 'astar', 'sim_annealing'],
+                valid_values=['random', 'breadth_first', 'astar', 'sim annealing'],
                 input_message='Choose from: random, breadth first, astar or sim annealing.')
 
         if args.plot_chip not in ['true', 'false']:
