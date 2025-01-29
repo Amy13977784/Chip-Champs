@@ -245,7 +245,7 @@ class simulated_annealing:
 
                     # Update best solution if the new solution is better
                     if new_cost < self.best_cost:
-                        self.best_solution = new_solution
+                        self.best_solution = copy.deepcopy(new_solution)
                         self.best_cost = new_cost
 
             logging_data.append({
