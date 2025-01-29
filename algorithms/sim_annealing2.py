@@ -227,23 +227,21 @@ class simulated_annealing:
             # Introduce the pertubation and calculate its associated cost
             new_solution = self.reroute_connection()
 
-            if new_solution == None:
-                print("Reroute failed, skipping iteration")
-                continue
-            
-            print(f"Current costs: {self.current_cost}")
-            new_cost = self.calculate_cost(new_solution)
-            print(f"New costs: {new_cost}")
+            if new_solution:
+                            
+                print(f"Current costs: {self.current_cost}")
+                new_cost = self.calculate_cost(new_solution)
+                print(f"New costs: {new_cost}")
 
-            # Decide whether to accept the new solution
-            if self.accept_solution(new_cost):
-                self.current_solution = new_solution
-                self.current_cost = new_cost
+                # Decide whether to accept the new solution
+                if self.accept_solution(new_cost):
+                    self.current_solution = new_solution
+                    self.current_cost = new_cost
 
-                # Update best solution if the new solution is better
-                if new_cost < self.best_cost:
-                    self.best_solution = new_solution
-                    self.best_cost = new_cost
+                    # Update best solution if the new solution is better
+                    if new_cost < self.best_cost:
+                        self.best_solution = new_solution
+                        self.best_cost = new_cost
 
             logging_data.append({
             "iteration": iteration,
