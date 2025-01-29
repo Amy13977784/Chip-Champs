@@ -46,14 +46,14 @@ class SimulatedAnnealing:
         probability to decide whether to accept or reject this worse solution. A higher temperature increases the 
         chance of accepting a worse solutions. This method returns true if the new solution is accepted. """
 
-        # Calculate the cost difference (= diff in energy)
+        # calculate the cost difference (= diff in energy)
         delta_cost = new_cost - self.current_cost
 
-        # If the new solution is better, always accept 
+        # if the new solution is better, always accept 
         if delta_cost < 0:
             return True
 
-        # If delta_cost is >0 (so worse cost), use acceptance probability
+        # if delta_cost is > 0 (so worse cost), use acceptance probability
         acceptance_probability = math.exp(-delta_cost / self.current_temperature)
         return random.random() < acceptance_probability
 
@@ -67,26 +67,26 @@ class SimulatedAnnealing:
         for attempt in range(max_retries):
             print(f"Attempt {attempt+1}/{max_retries} for vertical reroute.") 
 
-            # Randomly pick a number of layers to go upwards 
+            # randomly pick a number of layers to go upwards 
             layers_to_add = random.randint(1, self.chip.z_max - point[2] + 1)
 
             steps_up = []
 
-            # Add the coordinates of only this new vertical path to the list 
+            # add the coordinates of only this new vertical path to the list 
             for layer in range(1, layers_to_add + 1):
                 new_coor = (point[0], point[1], point[2] + layer)
                 steps_up.append(new_coor)
 
             valid_path = True 
 
-            # Validate the vertical steps (check if they are in occupied segments). If not valid, go to next iteration
+            # validate the vertical steps (check if they are in occupied segments). If not valid, go to next iteration
             for step_start, step_end in zip(steps_up, steps_up[1:]):
                 if (step_start, step_end) in new_solution or (step_end, step_start) in new_solution:
                     valid_path = False 
                     break 
             
             if valid_path:
-                # Set a new start location for the A* to run from 
+                # set a new start location for the A* to run from 
                 connection.start_location = steps_up[-1]
                 print(f"Vertical path valid: {steps_up}") 
                 return steps_up
@@ -99,7 +99,7 @@ class SimulatedAnnealing:
         """ Reroute the connection from the start coordinate of the current connection. The input requires an 
         old_path that holds the original path coordinates of the connection. """
        
-        # Remove the old path from the connection 
+        # remove the old path from the connection 
         for segment in zip(old_path, old_path[1:]):
             if segment in new_solution:
                 new_solution.remove(segment)
@@ -113,13 +113,16 @@ class SimulatedAnnealing:
     def reroute_from_intersection(self, connection, old_path, new_solution, intersection):
         """ Reroute the connection from an intersection of the current connection. The input requires an 
         old_path that holds the original path coordinates of the connection."""
+        
         index_intersect = connection.coor_list.index(intersection)
         
         kept_path = None
 
+        # checks how many steps back from the intersect it can move upwards
         for step_back in [1, 2, 3]:
             new_start = connection.coor_list[index_intersect - step_back]
             steps_up = self.random_layers(new_start, connection, new_solution)
+
             if steps_up:
                 kept_path = old_path[:index_intersect - step_back + 1]
                 kept_path.extend(steps_up)
@@ -129,6 +132,7 @@ class SimulatedAnnealing:
         if not kept_path:
             return None
         
+        # removes the segments from the point that will be rerouted
         for segment in zip(old_path[index_intersect - definite_step_back:], old_path[index_intersect - definite_step_back + 1:]):
             if segment in new_solution:
                 new_solution.remove(segment)
