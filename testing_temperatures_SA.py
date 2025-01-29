@@ -1,10 +1,15 @@
+import os
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 from algorithms import sim_annealing
 
 class tuning_params_simulated_annealing:
     """
-    This class will be used to tune the start temperature and the cooling rate for simulated annealing.
+    This class performs a grid search to find the best start temperature and cooling rate for the 
+    simulated annealing algorithm. 
+    Method __init__ initiates the chip and other variables,
+    Method plot_heatmap
     """
 
     def __init__(self, chip, min_temp, iterations):
@@ -72,5 +77,45 @@ class tuning_params_simulated_annealing:
                 self.heatmap[i, j] = avg_best_cost
 
         self.plot_heatmap(self.start_temps, self.cooling_rates, output_file = "tuning_heatmap.png")
+
+
+class find_best_output:
+    """
+    """
+
+    def __init__(self, output_dir = "output"):
+        self.output_dir = output_dir
+
+    def find_best_output(self, chip_number, netlist):
+        """
+        Finds the best output file for a specific chip, netlist, and optionally an algorithm.
+        Returns the best cost and the file name.
+        """
+        best_cost = float("inf")
+        best_file = None
+
+        for file_name in os.listdir(self.output_dir):
+            
+            # Check if the file matches the chip and netlist
+            if f"chip_{chip_number}" in file_name and f"net_{netlist}" in file_name:
+
+                file_path = os.path.join(self.output_dir, file_name)
+
+                try:
+                    df = pd.read_csv(file_path, index_col = 'net')
+                    
+                    last_row = df.iloc[-1]
+                    info_list = eval(last_row["wires"])
+                    cost = info_list[1]
+
+                    if cost < best_cost:
+                        best_cost = cost
+                        best_file = file_name
+
+                except:
+                    print(f"Trouble reading file {file_name}")
+
+        return best_cost, best_file
+
 
 
