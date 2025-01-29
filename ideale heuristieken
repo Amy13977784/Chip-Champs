@@ -1,6 +1,8 @@
 Hieronder is aangegeven welke heuristieken de beste resultaten (laagste kosten + het snelst) geven en wat de kosten zijn
 per netlijst.
 
+Netlijst: heuristieken --> kosten
+
 1: No heuristics --> 20
 2: order by distance, intersections (5) --> 41
 3: order by distance, intersections (5) --> 56
