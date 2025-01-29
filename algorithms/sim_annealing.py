@@ -12,18 +12,17 @@ class SimulatedAnnealing:
     Method update_temperature calculates the new temperature after an iteration. 
     Method accept_solution determines whether to accept or reject a new solution. 
     Method reroute_connection chooses a random connection from current solution and reroutes it using A*.  
-    Method is_segment_free checks if a segment is free such that you can make a valid new connection. 
     Method calculate_cost calculates the costs for a solution. 
     Method plot_temp plots the iterations against the temperature. 
     Method plot_costs plots the iterations against the costs. 
     Method run runs the simulated annealing algorithm. """
     
     def __init__(self, chip, temperature, cooling_rate, min_temperature):
-        self.chip = chip  # chip on which the algorithm is applied
-        self.initial_temp = temperature  # starting temperature 
-        self.current_temperature = temperature # current temperature
-        self.cooling_rate = cooling_rate  # alpha: factor at which the temperature is lowered every iteration
-        self.min_temperature = min_temperature  # termination temperature
+        self.chip = chip
+        self.initial_temp = temperature  
+        self.current_temperature = temperature
+        self.cooling_rate = cooling_rate
+        self.min_temperature = min_temperature
         self.counter = 0
 
         if not chip.occupied_segments:
@@ -35,9 +34,11 @@ class SimulatedAnnealing:
         self.current_cost = chip.calculate_cost()
         self.best_cost = self.current_cost
 
+
     def update_temperature(self):
         """ This function implements an exponential cooling scheme: T_new = alpha * T_current """
         self.current_temperature = self.current_temperature * self.cooling_rate
+
 
     def accept_solution(self, new_cost):
         """ Checks whether a new solution after the perturbation has lower costs than the current solution. If so, 
@@ -55,6 +56,7 @@ class SimulatedAnnealing:
         # If delta_cost is >0 (so worse cost), use acceptance probability
         acceptance_probability = math.exp(-delta_cost / self.current_temperature)
         return random.random() < acceptance_probability
+
 
     def random_layers(self, point, connection, new_solution, max_retries = 5):
         """ This method helps to reroute the start of a path where an intersection occurs. It generate 
@@ -92,9 +94,10 @@ class SimulatedAnnealing:
         print("All vertical path attempts failed.")
         return None
     
+
     def reroute_from_start(self, connection, old_path, new_solution):
         """ Reroute the connection from the start coordinate of the current connection. The input requires an 
-        old_path that holds the original path coordinates of the connection."""
+        old_path that holds the original path coordinates of the connection. """
        
         # Remove the old path from the connection 
         for segment in zip(old_path, old_path[1:]):
@@ -106,7 +109,10 @@ class SimulatedAnnealing:
 
         return start + steps_up
 
+
     def reroute_from_intersection(self, connection, old_path, new_solution, intersection):
+        """ Reroute the connection from an intersection of the current connection. The input requires an 
+        old_path that holds the original path coordinates of the connection."""
         index_intersect = connection.coor_list.index(intersection)
         
         kept_path = None
@@ -129,11 +135,12 @@ class SimulatedAnnealing:
 
         return kept_path
 
+
     def reroute_connection(self):
         """ Removes a random connection from the current solution and chooses a different path 
         for this conncection using the A* algorithm."""
         
-        # Copy the current solution (such that you can adapt it)
+        # copy the current solution (such that you can adapt it)
         new_solution = copy.deepcopy(self.current_solution)
         
         self.chip.calculate_intersections()
@@ -151,7 +158,7 @@ class SimulatedAnnealing:
         if connection is None:
             return
         
-        # these are the coordinates that form the connection 
+        # the coordinates that form the connection 
         old_path = copy.deepcopy(connection.coor_list)
 
         pertubation = random.choice(['from start', 'from intersection'])
@@ -186,16 +193,18 @@ class SimulatedAnnealing:
         connection.coor_list = steps_up[:-1] + connection.coor_list
         new_path = copy.deepcopy(connection.coor_list)
 
-        # Add this path to the solution
+        # add this path to the solution
         for segment in zip(new_path, new_path[1:]):
-            new_solution.add(segment)  # is new_solution een set of een lijst? anders append gebruiken
+            new_solution.add(segment) 
 
         return new_solution  
-            
+
+
     def calculate_cost(self, solution):
         self.chip.occupied_segments = solution
         return self.chip.calculate_cost()
     
+
     def plot_temp(self, df_data):
         plt.plot(df_data["iteration"], df_data["temperature"], label="Temperature", color="blue")
         plt.title("Temperature per iteration")
@@ -204,6 +213,7 @@ class SimulatedAnnealing:
         plt.grid(True)
         plt.legend()
         plt.show()
+
 
     def plot_costs(self, df_data):
         plt.plot(df_data["iteration"], df_data["current_cost"], label="Current costs", color="orange")
@@ -214,6 +224,7 @@ class SimulatedAnnealing:
         plt.grid(True)
         plt.legend()
         plt.show()
+
 
     def run(self, iterations):
         
@@ -230,7 +241,7 @@ class SimulatedAnnealing:
 
             self.counter += 1
 
-            # Introduce the pertubation and calculate its associated cost
+            # introduce the pertubation and calculate its associated cost
             new_solution = self.reroute_connection()
 
             if new_solution:
@@ -239,12 +250,12 @@ class SimulatedAnnealing:
                 new_cost = self.calculate_cost(new_solution)
                 print(f"New costs: {new_cost}")
 
-                # Decide whether to accept the new solution
+                # decide whether to accept the new solution
                 if self.accept_solution(new_cost):
                     self.current_solution = new_solution
                     self.current_cost = new_cost
 
-                    # Update best solution if the new solution is better
+                    # update best solution if the new solution is better
                     if new_cost < self.best_cost:
                         self.best_solution = copy.deepcopy(self.chip)
                         self.best_solution.occupied_segments = copy.deepcopy(new_solution)
@@ -257,11 +268,9 @@ class SimulatedAnnealing:
                 "best_cost": self.best_cost,
                 })
             
-            # Update the temperature 
             self.update_temperature()
 
         df_data = pd.DataFrame(logging_data)
-        # df_data.to_csv("simulated_annealing_log.csv", index=False)
 
         self.plot_temp(df_data)
         self.plot_costs(df_data)
