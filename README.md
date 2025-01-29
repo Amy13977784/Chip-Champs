@@ -23,7 +23,7 @@ Door alleen de main aan te roepen zal er in de command terminal een aantal input
 
 Deze informatie kan ook al meegegeven worden in de command lijn met het format:
 
-```python main.py --solution (creating/loading/best solution) --chip_number (0,1,2) --netlist (1-9) --algorithm (alg name) --plot_chip (true/false)```
+```python main.py --solution (creating/loading/best_solution) --chip_number (0,1,2) --netlist (1-9) --algorithm (alg name) --plot_chip (true/false)```
 
 Het algoritme zal dan een oude oplossing inladen of de connecties maken van de meegegeven chip en netlijst met het meegegeven algoritme. Het programma pakt zelf de beste heuristieken en penalties voor die chip en netlijst.
 
