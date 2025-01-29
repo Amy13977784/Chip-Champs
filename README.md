@@ -6,7 +6,7 @@ Om deze case op te lossen zijn verschillende algoritmes gebruikt. Naast de basel
 
 Om connecties te vormen tussen twee gates die volgens de netlijst verbonden moeten worden, wordt er vanaf de eerste gate stappen gezet totdat de tweede gate bereikt is. In de verschillende algoritmes wordt dit op hun eigen manier gedaan om uiteindelijk de kortste route te vinden tussen de twee gates en daarbij ook rekening te houden met de hierboven genoemde restricties.
 
-Breadth first kon valide oplossingen geven, door elke mogelijke stap die een connectie op de chip kan leggen af te gaan totdat hij zijn eindbestemming bereikt. Dit duurde echter erg lang en dit algoritme hielt geen rekening met het ontwijken van intersection van draden. 
+Breadth first kon valide oplossingen geven door elke mogelijke stap die een connectie op de chip kan leggen af te gaan totdat hij zijn eindbestemming bereikt. Dit duurde echter erg lang en dit algoritme hielt geen rekening met het ontwijken van intersection van draden. 
 
 A* kon een stuk gerichter zoeken door elke keer de volgende stap te selecteren die de minste kosten met zich mee gaf. Dit algoritme kon al veel sneller en efficienter valide oplossingen vinden en kon, daarbij, ook intersecties ontwijken door die stappen een hogere kosten waarde te geven, waardoor zij dus minder snel geselecteerd werden. 
 
