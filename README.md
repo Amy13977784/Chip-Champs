@@ -10,7 +10,7 @@ Breadth first kon valide oplossingen geven, door elke mogelijke stap die een con
 
 A* kon een stuk gerichter zoeken door elke keer de volgende stap te selecteren die de minste kosten met zich mee gaf. Dit algoritme kon al veel sneller en efficienter valide oplossingen vinden en kon, daarbij, ook intersecties ontwijken door die stappen een hogere kosten waarde te geven, waardoor zij dus minder snel geselecteerd werden. 
 
-De oplossingen die uit het A* algoritme kwamen waren allemaal valide oplossingen maar ze konden nog verbeterd worden. Om dit te doen is het simulated annealing algoritme geimplementeerd die op de oplossingen van A* kleine aanpassingen kon maken. Deze aanpassingen waren vooral gericht op de intersecties die A* nog niet kon ontwijken. Door deze op te zoeken en vervolgens één van de twee connecties die de intersectie had veroorzaakt opnieuw te laten leggen door het A* algoritme, kon simulates annealing de oplossingen verbeteren.
+De oplossingen die uit het A* algoritme kwamen waren allemaal valide oplossingen maar ze konden nog verbeterd worden. Om dit te doen is het simulated annealing algoritme geimplementeerd die op de oplossingen van A* kleine aanpassingen kon maken. Deze aanpassingen waren vooral gericht op de intersecties die A* nog niet kon ontwijken. Door deze op te zoeken en vervolgens één van de twee connecties die de intersectie had veroorzaakt opnieuw te laten leggen door het A* algoritme, kon simulated annealing de oplossingen verbeteren.
 
 # Gebruik
 De code is volledig geschreven in Python 3.10.
