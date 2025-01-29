@@ -51,16 +51,20 @@ class Astar:
         open_list.append(self.start_node)
 
         # while the end node has not been reached
-        while open_list:
+        while open_list or len(open_list) < 10000:
 
+            # print(f'nodes in open list: {len(open_list)}')
             # get current node --> node with the lowest f value
             self.current_node = min(open_list, key=attrgetter('f'))
+
+            # if f value too high
+            # if self.current_node.f > 100:
+                # return print(f'f value too high')
 
             open_list.pop(open_list.index(self.current_node))
             self.closed_list.append(self.current_node)
 
             if self.current_node.location == self.end_node.location:
-                print("End node reached!")
                 current = self.current_node
 
                 # until the starting node has been reached (its parent None)
