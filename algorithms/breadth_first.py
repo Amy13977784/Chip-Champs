@@ -21,17 +21,22 @@ class BreadthFirst:
     def all_connections(self):
         """ Finds the shortest route for every connection. """
 
+        validity = 'valid'
+
         for index, connection in enumerate(self.chip.connections):
 
             # applies the algorithm to find the shortest route for this connection
             shortest_route = self.run(connection.start_location, connection.end_location, connection.gates)
             self.chip.connections[index] = shortest_route
 
-            # adds all the used segments in the found route to the chip's occupied segments list
-            for segment in zip(shortest_route.coor_list, shortest_route.coor_list[1:]):
-                self.chip.occupied_segments.add(segment)
+            if shortest_route:
+                # adds all the used segments in the found route to the chip's occupied segments list
+                for segment in zip(shortest_route.coor_list, shortest_route.coor_list[1:]):
+                    self.chip.occupied_segments.add(segment)
+            else:
+                validity = validity = 'invalid'
 
-        return 'valid'
+        return validity
 
 
     def run(self, start_location, end_location, gates):
@@ -56,6 +61,7 @@ class BreadthFirst:
                 return route
         
         print('No route possible')
+        return None
 
 
     def next_steps(self, route):

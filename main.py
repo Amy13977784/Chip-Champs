@@ -18,54 +18,52 @@ def get_input(prompt, valid_values, input_message):
             return user_input
 
 def set_argument_parser():
-    # Create the parser
+    # create the parser
     parser = argparse.ArgumentParser(description='Arguments')
     
-    # Define all the arguments
+    # define all the arguments
     parser.add_argument('--solution', type=str, help='Creating or loading a solution')
     parser.add_argument('--chip_number', type=str, help='Chip number (0, 1 or 2)')
     parser.add_argument('--netlist', type=str, help='Netlist number (integer from 1-9)')
     parser.add_argument('--algorithm', type=str, help='Which algorithm to use to make the connections (random, breadth_first, astar, sim annealing)')
     parser.add_argument('--plot_chip', type=str, help='Whether to plot the solution (True or False)')
 
-    # If arguments are not provided in the command line, ask for them interactively
+    # if arguments are not provided in the command line, ask for them as input
     args = parser.parse_args()
 
-    if any(arg == None for arg in vars(args).values()):
-        print('\nEnter the following variables. If you want to stop at any point, use a keyboard interruption.')
-    
-        try: 
-            if args.solution is None:
-                args.solution = get_input('Enter if you are creating or loading a solution: ',
-                    valid_values=['loading', 'creating'], input_message='Choose loading or creating.')
+    try: 
+        if args.solution not in ['loading', 'creating']:
+            args.solution = get_input('Enter if you are creating or loading a solution: ',
+                valid_values=['loading', 'creating'], input_message='Choose loading or creating.')
 
-            if args.chip_number is None:
-                args.chip_number = get_input('Enter the chip number: ',
-                    valid_values=['0', '1', '2'], input_message='Choose 0, 1 or 2 and enter only the number.')
+        if args.chip_number not in ['0', '1', '2']:
+            args.chip_number = get_input('Enter the chip number: ',
+                valid_values=['0', '1', '2'], input_message='Choose 0, 1 or 2 and enter only the number.')
 
-            if args.netlist is None:
-                netlist_options = {'0': ['1', '2', '3'], '1': ['4', '5', '6'], '2': ['7', '8', '9']}
-                args.netlist = get_input(f'Enter the netlist: ', valid_values=netlist_options[args.chip_number],
-                    input_message=f"With chip {args.chip_number} you can only choose netlists {', '.join(netlist_options[args.chip_number])}.")
+        netlist_options = {'0': ['1', '2', '3'], '1': ['4', '5', '6'], '2': ['7', '8', '9']}
+        if args.netlist not in netlist_options[args.chip_number]:
+            args.netlist = get_input(f'Enter the netlist: ', valid_values=netlist_options[args.chip_number],
+                input_message=f"With chip {args.chip_number} you can only choose netlists {', '.join(netlist_options[args.chip_number])}.")
 
-            if args.algorithm is None:
-                args.algorithm = get_input('Enter which algorithm to make the connections with: ',
-                    valid_values=['random', 'breadth_first', 'astar', 'sim annealing'],
-                    input_message='Choose from: random, breadth first, astar or sim annealing.')
+        if args.algorithm not in ['random', 'breadth_first', 'astar', 'sim annealing']:
+            args.algorithm = get_input('Enter which algorithm to make the connections with: ',
+                valid_values=['random', 'breadth_first', 'astar', 'sim annealing'],
+                input_message='Choose from: random, breadth first, astar or sim annealing.')
 
-            if args.plot_chip is None:
-                args.plot_chip = get_input('Enter if you want to plot the solution: ',
-                    valid_values=['true', 'false'], input_message='Choose true or false.')
-            
-            args.plot_chip = args.plot_chip == 'true'
+        if args.plot_chip.lower() not in ['true', 'false']:
+            args.plot_chip = get_input('Enter if you want to plot the solution: ',
+                valid_values=['true', 'false'], input_message='Choose true or false.')
+        
+        args.plot_chip = args.plot_chip.lower() == 'true'
 
-        except KeyboardInterrupt:
-            print("\nInput interrupted. Exiting...")
-            exit()
+    except KeyboardInterrupt:
+        print("\nInput interrupted. Exiting...")
+        exit()
 
     print('\nArguments received:')
     for arg, value in vars(args).items():
         print(f'{arg}: {value}')
+    print()
     
     return args
 
@@ -123,25 +121,19 @@ if __name__ == '__main__':
         else:
             validity = astar_algorithm.Astar(my_chip, penalties).all_connections()
 
-    elif args.algorithm == 'sim annealing':
+    elif args.algorithm == 'sim_annealing':
         
         # load a presaved solution (from A*)
         my_chip.load_solution(algorithm='astar')
-
-        penalties = astar_heuristics[args.netlist]['penalties']
-        penalty1 = penalties[0] if len(penalties) > 0 else None
-        penalty2 = penalties[1] if len(penalties) > 1 else None
 
         sa = sim_annealing2.simulated_annealing(
         chip = my_chip,
         temperature = 1000,
         cooling_rate = 0.99,
         min_temperature = 1,
-        penalty1 = penalty1, 
-        penalty2 = penalty2
         )
 
-        best_solution = sa.run(iterations = 1000)
+        best_solution = sa.run(iterations = 100)
 
 
     # calculates the cost of the current solution

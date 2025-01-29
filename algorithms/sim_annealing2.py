@@ -18,13 +18,12 @@ class simulated_annealing:
     Method plot_costs plots the iterations against the costs. 
     Method run runs the simulated annealing algorithm. """
     
-    def __init__(self, chip, temperature, cooling_rate, min_temperature, penalty1, penalty2):
+    def __init__(self, chip, temperature, cooling_rate, min_temperature):
         self.chip = chip  # chip on which the algorithm is applied
         self.initial_temp = temperature  # starting temperature 
         self.current_temperature = temperature # current temperature
         self.cooling_rate = cooling_rate  # alpha: factor at which the temperature is lowered every iteration
         self.min_temperature = min_temperature  # termination temperature
-        self.penalties = [penalty1, penalty2]  # initiates the penalties needed for the A* algorithm to run 
 
         if not chip.occupied_segments:
             print("Occupied segments is empty...")
@@ -129,12 +128,12 @@ class simulated_annealing:
 
         return kept_path
 
-    def reroute_connection(self, penalties):
+    def reroute_connection(self):
         """ Removes a random connection from the current solution and chooses a different path 
         for this conncection using the A* algorithm."""
         
         # Copy the current solution (such that you can adapt it)
-        new_solution = self.current_solution.copy()
+        new_solution = copy.deepcopy(self.current_solution)
         
         self.chip.calculate_intersections()
 
@@ -147,7 +146,7 @@ class simulated_annealing:
                 break
 
         # these are the coordinates that form the connection 
-        old_path = connection.coor_list
+        old_path = copy.deepcopy(connection.coor_list)
 
         pertubation = random.choice(['from start', 'from intersection'])
         print(pertubation)
@@ -164,7 +163,7 @@ class simulated_annealing:
         print(f"Steps up successfully added: {steps_up}") 
 
         # use A* algorithm to find a new connection
-        astar_alg = astar_algorithm.Astar(self.chip, penalties)
+        astar_alg = astar_algorithm.Astar(self.chip, ['intersections'])
         astar_alg.counter = 1
         astar_alg.connection = connection
         astar_alg.start_node = astar_algorithm.Node(connection.start_location, None)
@@ -179,7 +178,8 @@ class simulated_annealing:
             print("A* failed to find a path.")
             return None
         
-        new_path = steps_up + connection.coor_list 
+        connection.coor_list[:0] = steps_up[-1]
+        new_path = copy.deepcopy(connection.coor_list)
 
         # Add this path to the solution
         for segment in zip(new_path, new_path[1:]):
@@ -219,7 +219,7 @@ class simulated_annealing:
                 break
 
             # Introduce the pertubation and calculate its associated cost
-            new_solution = self.reroute_connection(self.penalties)
+            new_solution = self.reroute_connection()
 
             if new_solution == None:
                 print("Reroute failed, skipping iteration")
