@@ -11,6 +11,9 @@ class SimulatedAnnealing:
     Method __init__ initiates the chip. 
     Method update_temperature calculates the new temperature after an iteration. 
     Method accept_solution determines whether to accept or reject a new solution. 
+    Method random_layer randomly picks how many layers to move up and change the starting pint to.
+    Method reroute_from_start reroutes the entire connection from start.
+    Method reroute_from_intersection reroutes starting right in front of the intersection.
     Method reroute_connection chooses a random connection from current solution and reroutes it using A*.  
     Method calculate_cost calculates the costs for a solution. 
     Method plot_temp plots the iterations against the temperature. 
@@ -59,13 +62,11 @@ class SimulatedAnnealing:
 
 
     def random_layers(self, point, connection, new_solution, max_retries = 5):
-        """ This method helps to reroute the start of a path where an intersection occurs. It generate 
-        a random number of vertical steps to avoid intersections. The method needs a starting point: a 
-        coordinate for where to start the vertical movement. Furthermore, it needs the current connection that is 
-        being rerouted and the new_solution such that the coordinates can be modified."""
+        """ This method generates a random number of vertical steps to a starting point and if
+        these steps up are valid, changes the starting point of the connections to the top of 
+        these steps. The new connection will be made starting from a higher layer. """
 
         for attempt in range(max_retries):
-            print(f"Attempt {attempt+1}/{max_retries} for vertical reroute.") 
 
             # randomly pick a number of layers to go upwards 
             layers_to_add = random.randint(1, self.chip.z_max - point[2] + 1)
@@ -96,8 +97,8 @@ class SimulatedAnnealing:
     
 
     def reroute_from_start(self, connection, old_path, new_solution):
-        """ Reroute the connection from the start coordinate of the current connection. The input requires an 
-        old_path that holds the original path coordinates of the connection. """
+        """ Reroutes the connection from the start coordinate of the current connection. Removes the
+         entire old path and adds steps up to the starting point. """
        
         # remove the old path from the connection 
         for segment in zip(old_path, old_path[1:]):
@@ -111,8 +112,9 @@ class SimulatedAnnealing:
 
 
     def reroute_from_intersection(self, connection, old_path, new_solution, intersection):
-        """ Reroute the connection from an intersection of the current connection. The input requires an 
-        old_path that holds the original path coordinates of the connection."""
+        """ Reroutes the connection from the intersection of the current connection. Moves back from
+        the intersections coordinates, adds steps up there and only reroutes the last part of the
+        connection. """
         
         index_intersect = connection.coor_list.index(intersection)
         
@@ -132,7 +134,7 @@ class SimulatedAnnealing:
         if not kept_path:
             return None
         
-        # removes the segments from the point that will be rerouted
+        # removes the segments starting from the point that will be rerouted
         for segment in zip(old_path[index_intersect - definite_step_back:], old_path[index_intersect - definite_step_back + 1:]):
             if segment in new_solution:
                 new_solution.remove(segment)
