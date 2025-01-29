@@ -6,7 +6,7 @@
 import sys
 import argparse
 from classes import chip
-from algorithms import random_algorithm, breadth_first, astar_algorithm, sim_annealing2, heuristics
+from algorithms import astar, random, breadth_first, sim_annealing, heuristics
 
 
 def get_input(prompt, valid_values, input_message):
@@ -107,7 +107,7 @@ if __name__ == '__main__':
 
     # applies an algorithm to make the connections
     if args.algorithm == 'random':
-        validity = random_algorithm.Random_algorithm(my_chip).all_connections()
+        validity = random.Random_algorithm(my_chip).all_connections()
 
     elif args.algorithm == 'breadth_first':
         validity = breadth_first.BreadthFirst(my_chip).all_connections()
@@ -116,16 +116,16 @@ if __name__ == '__main__':
         penalties = astar_heuristics[args.netlist]['penalties']
 
         if penalties and type(penalties[-1]) == int:
-            validity = astar_algorithm.Astar(my_chip, penalties[:-1], penalties[-1]).all_connections()
+            validity = astar.Astar(my_chip, penalties[:-1], penalties[-1]).all_connections()
         else:
-            validity = astar_algorithm.Astar(my_chip, penalties).all_connections()
+            validity = astar.Astar(my_chip, penalties).all_connections()
 
     elif args.algorithm == 'sim_annealing':
         
         # load a presaved solution (from A*)
         my_chip.load_solution(algorithm='astar')
 
-        sa = sim_annealing2.simulated_annealing(
+        sa = sim_annealing.simulated_annealing(
         chip = my_chip,
         temperature = 1000,
         cooling_rate = 0.99,

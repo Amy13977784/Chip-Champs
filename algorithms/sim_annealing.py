@@ -4,7 +4,7 @@ import copy
 import pandas as pd 
 import matplotlib.pyplot as plt
 
-from algorithms import astar_algorithm 
+from algorithms import astar 
 
 class simulated_annealing:
     """ This class implements the simulated annealing algorithm. 
@@ -168,11 +168,11 @@ class simulated_annealing:
             return None
         
         # use A* algorithm to find a new connection
-        astar_alg = astar_algorithm.Astar(self.chip, ['intersections'], 10)
+        astar_alg = astar.Astar(self.chip, ['intersections'], 10)
         astar_alg.counter = self.counter
         astar_alg.connection = connection
-        astar_alg.start_node = astar_algorithm.Node(connection.start_location, None)
-        astar_alg.end_node = astar_algorithm.Node(connection.end_location, None)
+        astar_alg.start_node = astar.Node(connection.start_location, None)
+        astar_alg.end_node = astar.Node(connection.end_location, None)
 
         connection.coor_list = []
         astar_alg.make_connection()
