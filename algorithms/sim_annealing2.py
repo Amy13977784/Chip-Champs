@@ -24,6 +24,7 @@ class simulated_annealing:
         self.current_temperature = temperature # current temperature
         self.cooling_rate = cooling_rate  # alpha: factor at which the temperature is lowered every iteration
         self.min_temperature = min_temperature  # termination temperature
+        self.counter = 0
 
         if not chip.occupied_segments:
             print("Occupied segments is empty...")
@@ -65,7 +66,7 @@ class simulated_annealing:
             print(f"Attempt {attempt+1}/{max_retries} for vertical reroute.") 
 
             # Randomly pick a number of layers to go upwards 
-            layers_to_add = random.randint(1, self.chip.z_max - point[2])
+            layers_to_add = random.randint(1, self.chip.z_max - point[2] + 1)
 
             steps_up = []
 
@@ -73,8 +74,6 @@ class simulated_annealing:
             for layer in range(1, layers_to_add + 1):
                 new_coor = (point[0], point[1], point[2] + layer)
                 steps_up.append(new_coor)
-
-            print(f"Generated vertical path: {steps_up}")    
 
             valid_path = True 
 
@@ -103,7 +102,10 @@ class simulated_annealing:
             if segment in new_solution:
                 new_solution.remove(segment)
 
-        return self.random_layers(connection.start_location, connection, new_solution)
+        start = [connection.start_location]
+        steps_up = self.random_layers(connection.start_location, connection, new_solution)
+
+        return start + steps_up
 
     def reroute_from_intersection(self, connection, old_path, new_solution, intersection):
         index_intersect = connection.coor_list.index(intersection)
@@ -165,11 +167,9 @@ class simulated_annealing:
             print("Failed to reroute vertically.")
             return None
         
-        print(f"Steps up successfully added: {steps_up}") 
-
         # use A* algorithm to find a new connection
         astar_alg = astar_algorithm.Astar(self.chip, ['intersections'], 10)
-        astar_alg.counter = 1
+        astar_alg.counter = self.counter
         astar_alg.connection = connection
         astar_alg.start_node = astar_algorithm.Node(connection.start_location, None)
         astar_alg.end_node = astar_algorithm.Node(connection.end_location, None)
@@ -186,7 +186,6 @@ class simulated_annealing:
         
         connection.coor_list = steps_up[:-1] + connection.coor_list
         new_path = copy.deepcopy(connection.coor_list)
-        print(new_path)
 
         # Add this path to the solution
         for segment in zip(new_path, new_path[1:]):
@@ -234,6 +233,8 @@ class simulated_annealing:
             if self.current_temperature < self.min_temperature:
                 break
 
+            self.counter += 1
+
             # Introduce the pertubation and calculate its associated cost
             new_solution = self.reroute_connection()
 
@@ -250,11 +251,8 @@ class simulated_annealing:
 
                     # Update best solution if the new solution is better
                     if new_cost < self.best_cost:
-                        print('chip:', self.chip)
                         self.best_solution = copy.deepcopy(self.chip)
-                        print('best solution:', self.best_solution)
                         self.best_solution.occupied_segments = copy.deepcopy(new_solution)
-                        print('occupied list', self.best_solution.occupied_segments)
                         self.best_cost = new_cost
 
             logging_data.append({
@@ -275,9 +273,10 @@ class simulated_annealing:
 
         return self.best_solution
 
-def validity(self):
 
-        for connection in self.chip.connections:
+    def validity(self):
+
+        for connection in self.best_solution.connections:
             if not connection.coor_list:
                 return 'invalid'
             elif connection.coor_list[0] != connection.start_location or connection.coor_list[-1] != connection.end_location:

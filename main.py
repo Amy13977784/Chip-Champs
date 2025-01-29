@@ -109,14 +109,13 @@ if __name__ == '__main__':
     if args.algorithm == 'random':
         validity = random_algorithm.Random_algorithm(my_chip).all_connections()
 
-    elif args.algorithm == 'breadth first':
+    elif args.algorithm == 'breadth_first':
         validity = breadth_first.BreadthFirst(my_chip).all_connections()
 
     elif args.algorithm == 'astar':
         penalties = astar_heuristics[args.netlist]['penalties']
 
         if penalties and type(penalties[-1]) == int:
-            print('')
             validity = astar_algorithm.Astar(my_chip, penalties[:-1], penalties[-1]).all_connections()
         else:
             validity = astar_algorithm.Astar(my_chip, penalties).all_connections()
@@ -133,9 +132,8 @@ if __name__ == '__main__':
         min_temperature = 1,
         )
 
-        best_solution = sa.run(iterations = 10)
+        my_chip = sa.run(iterations = 10)
         validity = sa.validity()
-
 
 
     # calculates the cost of the current solution
