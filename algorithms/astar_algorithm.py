@@ -13,9 +13,6 @@ class Astar:
     Method penalties adds to a child nodes' f value according to certain restrictions. """
 
     def __init__(self, chip, heuristics=[], intersections_penalty=5):
-        """ Imports the chip in self.chip, the penalties (heuristics) that are used for the chips' 
-        netlist with its penalty value. Possible direction and nodes that ajoin gates are also 
-        implemented. """
 
         self.chip = chip
         self.penalties = heuristics
