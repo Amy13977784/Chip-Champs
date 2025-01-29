@@ -1,7 +1,8 @@
 # Chips & Circuits
 # Authors: Merel, Amy, Kyra
 
-# short explanantion
+# This program creates solutions for the chips and circuits case. 
+# It gets a chip and netlist as input and finds the best connections.
 
 import sys
 import argparse
