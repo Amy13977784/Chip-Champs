@@ -10,12 +10,13 @@ class Chip:
     Method __init__ creates self.occupied_segments, self.gates, self.connections, self.x_max, 
       self.y_max, and self.z_max.
     Method gates_dict creates a dictionary in the form; gate numbers: Gate class instance.
-    Method connections_list creates a list. Every elements contains a Connection class instance.
-    Method plot_chip, plots the elements of the chip.
-    Method calculate_intersections calculated how many wires cross in the solution provided by the
-    algorithm.
+    Method connections_list creates a list with Connection class instances.
+    Method plot_chip plots the elements of the chip.
+    Method calculate_intersections finds and counts the wire crosses in the solution.
     Method calculate cost uses a formula to return the cost of the solution.
-    Method output_file creates the an csv_file containing the results from the solution. """
+    Method output_file creates a csv_file containing the results from the solution. 
+    Method load_solution loads a previously made solution from a file.
+    Method """
     
     def __init__(self, chip_number, netlist):
         
@@ -39,7 +40,7 @@ class Chip:
         """ Reads in the coordinates of the gates of a certain chip. It returns a dictionary 
         in which the number of the gate is a key and a Gate class instance is the value. """
 
-        # dictionary tht will ontain the gates in the format: {gate_number: gate_instance}
+        # dictionary that will contain the gates in the format: {gate_number: gate_instance}
         gates = {}
 
         # opens the file from the data with the gates info of the given chip number
@@ -127,9 +128,9 @@ class Chip:
 
 
     def calculate_intersections(self):
-        """ Check if segment ends occurs mulitple times in the occupied segments list. In other words,
-        check if certain point in the grid are used twice or more. Also keeps track of coordinates where
-        an intersections occurs. Function returns the amount of intersections. """
+        """ Finds and counts the intersections of a solution. Checks if segment ends occurs mulitple times 
+        in the occupied segments list. Creates a list with the coordinates of the intersections and counts 
+        the amount of intersections. """
         
         end_points = []
         self.intersection_coors = [] 
@@ -137,14 +138,18 @@ class Chip:
 
         for _, end_coordinates in self.occupied_segments:
 
-            # check if the segment end is not a gate/destination
+            # checks if the segment end is not a gate/destination
             if end_coordinates not in gates_coordinates:
+
+                # checks if there is an intersection
                 if end_coordinates in end_points:
                     self.intersection_coors.append(end_coordinates)
+
                 end_points.append(end_coordinates)
-                
+        
         unique_end_points = set(end_points)
 
+        # compares all the used end points to the unique end points, to find double used crosses
         return len(end_points) - len(unique_end_points)
 
 
@@ -154,11 +159,9 @@ class Chip:
     
 
     def create_output_file(self, cost, algorithm, validity='valid'):
-        """ 
-        Creates the output file, which contains the coordinates of every connection, which chip and 
+        """ Creates the output file, which contains the coordinates of every connection, which chip and 
         netlist, and the cost of the solution. The order of the connections corresponds to the netlist,
-        regardless of the order in which the connections are made.
-        """
+        regardless of the order in which the connections are made. """
  
         # output df with each connection on a row with format: (start gate, end gate) [coordinates in connection]
         df_output = pd.DataFrame([(connection.gates, connection.coor_list) for connection in self.connections], \
@@ -186,10 +189,9 @@ class Chip:
 
 
     def load_solution(self, algorithm, plot=False):
-        """
-        Gets the details of a solutions and tries to find the file. If a file is found, adds the coordinates lists
-        to the connections and plots the chip. 
-        """
+        """ Gets the details of a solutions and tries to find the file. If a file is found, adds the coordinates lists
+        to the connections, fills the occupied segments and possibly plots the chip. """
+
         file_path = f'output/output_chip_{self.chip_number}_net_{self.netlist}_{algorithm}.csv'
                 
         try:
@@ -210,30 +212,20 @@ class Chip:
         if plot:
             self.plot_chip()
 
-class find_best_output:
-    """
-    This class loops through all the output files for a certain chip and netlist and finds the file with the 
-    lowest costs. 
-    Method __init__ initiates the output directory, 
-    Method find_best_output loops through the files and finds the file with the lowest cost. 
-    """
 
-    def __init__(self, output_dir = "output"):
-        self.output_dir = output_dir
-
-    def find_best_output(self, chip_number, netlist):
+    def find_best_output(self, output_dir):
         """ This method looks for the best output file for a specific chip and netlist. It returns the filename
         with the corresponding costs. """
 
-        best_cost = float("inf")
+        best_cost = float('inf')
         best_file = None
 
-        for file_name in os.listdir(self.output_dir):
+        for file_name in os.listdir(output_dir):
             
-            # check if the file matches the chip and netlist
-            if f"chip_{chip_number}" in file_name and f"net_{netlist}" in file_name:
+            # checks if the file matches the chip and netlist
+            if f'chip_{self.chip_number}' in file_name and f'net_{self.netlist}' in file_name:
 
-                file_path = os.path.join(self.output_dir, file_name)
+                file_path = os.path.join(output_dir, file_name)
 
                 try:
                     df = pd.read_csv(file_path, index_col = 'net')

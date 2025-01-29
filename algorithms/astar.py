@@ -54,10 +54,6 @@ class Astar:
 
             # finds the node with the lowest f value
             self.current_node = min(open_list, key=attrgetter('f'))
-
-            # # if f value too high
-            # if self.current_node.f > 100:
-                # return print(f'f value too high')
    
             open_list.pop(open_list.index(self.current_node))
             closed_list.append(self.current_node)

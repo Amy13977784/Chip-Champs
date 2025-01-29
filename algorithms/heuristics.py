@@ -60,21 +60,20 @@ class Heuristics:
         self.sort_and_return(scored_connections, reversed = False)
 
     def order_by_location(self):
-        """ Orders the connection by location: connections that are between gates that lie more in the 
-        middle of the grid are layed first. """
+        """ Orders the connection by location on the grid. The location is based on how far away a gate is 
+        from the center of the grid (layer 0). Connections with gates close to the center are first in order. """
 
         scored_connections = []
 
-        # get the middle x and y coordinates
+        # get the x and y coordinates of the center of the grid layer 0
         center_x = self.chip.x_max / 2
         center_y = self.chip.y_max / 2
 
-        # give every connection a score
         for index, connection in enumerate(self.connections):
             x_start, y_start, _ = connection.start_location
             x_end, y_end, _ = connection.end_location
             
-            # pythagoram theorm
+            # determine the distance to the center for both gates with the pythagorean theorem
             score_start = math.sqrt((x_start - center_x) ** 2 + (y_start - center_y) ** 2)
             score_end = math.sqrt((x_end - center_x) ** 2 + (y_end - center_y) ** 2)
 

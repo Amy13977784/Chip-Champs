@@ -5,7 +5,6 @@
 
 import sys
 import argparse
-# from testing_temperatures_SA import find_best_output
 from classes import chip
 from algorithms import astar, general_functions, random, breadth_first, sim_annealing, heuristics
 
@@ -33,7 +32,7 @@ def set_argument_parser():
     args = parser.parse_args()
 
     try: 
-        if args.solution not in ['loading', 'creating']:
+        if args.solution not in ['loading', 'creating', 'best_solution']:
             args.solution = get_input('Enter if you are creating or loading a solution, or want to load the file with the best overall solution: ',
                 valid_values=['loading', 'creating', 'best_solution'], input_message='Choose loading, creating or best_solution.')
 
@@ -90,14 +89,12 @@ if __name__ == '__main__':
 
     # returns the file with the lowest cost for a certain chip and netlist
     if args.solution == 'best_solution':
-        find_best_output = find_best_output(output_dir="output")
-        best_cost, best_file = find_best_output.find_best_output(args.chip_number, args.netlist)
+        best_cost, best_file = my_chip.find_best_output(output_dir='output')
 
         if best_file:
-            print(f"Het bestand met de beste kosten voor chip {args.chip_number} netlijst {args.netlist} is: {best_file} met kosten {best_cost}")
-
+            print(f"The file with the best costs for chip {args.chip_number} and netlist {args.netlist} is: {best_file} with costs {best_cost}")
         else:
-            print("Geen bestanden gevonden in de output map.")
+            print("No file found.")
 
         sys.exit()
 
