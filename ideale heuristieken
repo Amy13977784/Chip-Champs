@@ -1,4 +1,6 @@
-Netlist 1: No heuristics --> 20
+Hieronder is aangegeven welke heuristieken de beste resultaten (laagste kosten + het snelst) geven per netlijst.
+
+1: No heuristics --> 20
 2: order by distance, intersections (5) --> 41
 3: order by distance, intersections (5) --> 56
 4: order by location, intersections (5) --> 3.385
