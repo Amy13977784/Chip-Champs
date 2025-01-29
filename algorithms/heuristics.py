@@ -3,12 +3,14 @@ import math
 class Heuristics:
     """ Class orders the connections in the connections list by different heuristics.
     Method sort_and_return sorts and return the list by their given scores.
-    Method order_by_gate scored the connections by how many total connections the gates have.
-    Method order_by_distance orders the connections by the Manhattan distance. """
+    Method order_by_gate scores the connections by how many total connections the gates have.
+    Method order_by_distance orders the connections by the Manhattan distance. 
+    Method order_by_location scores the connections by how far the gates are from the center. """
 
     def __init__(self, chip):
         self.chip = chip
         self.connections = chip.connections
+
 
     def sort_and_return(self, scored_connections, reversed):
         """ Sorts the list by scores and returns the newly ordered list of connections. """
@@ -16,9 +18,10 @@ class Heuristics:
         scored_connections.sort(key=lambda x: x[1], reverse=reversed)
         self.chip.connections = [self.connections[index] for index, _ in scored_connections]
 
+
     def order_by_gate(self):
-        """ Orders the connections by gate scores. For each gate is counted how many connections it has
-        and each connection gets a score by adding the amount of connections each of the gates has.
+        """ Orders the connections by gate scores. For each gate is counted how many connections they 
+        have and each connection gets a score by adding the amount of connections each of the gates have.
         Connections with higher scores are classified as harder connections and will be placed first
         in the order. """
 
@@ -39,10 +42,11 @@ class Heuristics:
         
         self.sort_and_return(scored_connections, reversed = True)
 
-    def order_by_distance(self, long_first=False):
+
+    def order_by_distance(self):
         """ Orders the connections by the Manhattan distance. For every connection is the Manhatten distance
-        between the start and end location calculated. The connections are ordere by distance and 
-        long_first determines if the short or long distance connections are first in the order. """
+        between the start and end location calculated. The connections are ordered by distance and 
+        the shorter distance connections are first in the order. """
 
         scored_connections = []
 
@@ -53,10 +57,10 @@ class Heuristics:
                         abs(connection.end_location[1] - connection.start_location[1])
             scored_connections.append((index, distance))
         
-        self.sort_and_return(scored_connections, reversed = long_first)
+        self.sort_and_return(scored_connections, reversed = False)
 
-    def order_by_location(self, edges_first=False):
-        """ Oders the connection by location: connections that are between gates that lie more in the 
+    def order_by_location(self):
+        """ Orders the connection by location: connections that are between gates that lie more in the 
         middle of the grid are layed first. """
 
         scored_connections = []
@@ -78,4 +82,4 @@ class Heuristics:
 
             scored_connections.append((index, total_score))
         
-        self.sort_and_return(scored_connections, reversed = edges_first)
+        self.sort_and_return(scored_connections, reversed = False)

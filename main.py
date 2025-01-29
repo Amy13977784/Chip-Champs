@@ -5,7 +5,7 @@
 
 import sys
 import argparse
-from testing_temperatures_SA import find_best_output
+# from testing_temperatures_SA import find_best_output
 from classes import chip
 from algorithms import astar, general_functions, random, breadth_first, sim_annealing, heuristics
 
@@ -140,7 +140,7 @@ if __name__ == '__main__':
         # load a presaved solution (from A*)
         my_chip.load_solution(algorithm='astar')
 
-        sa = sim_annealing.simulated_annealing(
+        sa = sim_annealing.SimulatedAnnealing(
         chip = my_chip,
         temperature = 1000,
         cooling_rate = 0.99,

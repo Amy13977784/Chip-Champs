@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 
 from algorithms import astar 
 
-class simulated_annealing:
-    """ This class implements the simulated annealing algorithm. 
+class SimulatedAnnealing:
+    """ Class implements the simulated annealing algorithm. 
     Method __init__ initiates the chip. 
     Method update_temperature calculates the new temperature after an iteration. 
     Method accept_solution determines whether to accept or reject a new solution. 
