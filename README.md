@@ -2,7 +2,7 @@
 Chips met gelegde circuits komen in allerlei technologie voor en voeren verschillende functies uit, variërend van tijdwaarneming en motorbesturing tot rekenen en logica. Deze chips bestaan uit een kleine siliconen plaat met gates erop die met elkaar verbonden kunnen worden. Welke gates met elkaar verbonden moeten worden, staat in een netlist. Deze verbindingen moeten zo efficient mogelijk gelegd worden, wat betekent dat ze zo kort mogelijk moeten zijn, niet over elkaar heen kunnen lopen en elkaar zo min mogelijk moeten kruisen. Het leggen van deze connecties, waarbij rekening wordt gehouden met de genoemde restricties, is wat deze case zo moeilijk maakt. Hoe groter de chips, hoe meer gates, hoe meer connecties, en dus ook hoe moeilijker de case.
 
 # Algoritmes
-Om deze case op te lossenzijn verschillende algoritmes gebruikt. Naast de baseline (een random algoritme, die zelden valide oplossingen gaf) is breadth first, A* en simulated annealing geimplementeerd om oplossingen te genereren. 
+Om deze case op te lossen zijn verschillende algoritmes gebruikt. Naast de baseline (een random algoritme, die zelden valide oplossingen gaf) is breadth first, A* en simulated annealing geimplementeerd om oplossingen te genereren. 
 
 Om connecties te vormen tussen twee gates die volgens de netlijst verbonden moeten worden, wordt er vanaf de eerste gate stappen gezet totdat de tweede gate bereikt is. In de verschillende algoritmes wordt dit op hun eigen manier gedaan om uiteindelijk de kortste route te vinden tussen de twee gates en daarbij ook rekening te houden met de hierboven genoemde restricties.
 
