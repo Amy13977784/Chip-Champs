@@ -208,7 +208,7 @@ class simulated_annealing:
 
     def plot_costs(self, df_data):
         plt.plot(df_data["iteration"], df_data["current_cost"], label="Current costs", color="orange")
-        plt.plot(df_data["iteration"], df_data["best_cost"], label="Best costs", color="red")
+        plt.plot(df_data["iteration"], df_data["best_cost"], label="Best costs", color="red", linestyle='dashed')
         plt.title("Costs per iteration")
         plt.xlabel("Iteration")
         plt.ylabel("Cost")
@@ -225,7 +225,7 @@ class simulated_annealing:
             "best_cost": self.best_cost,
             }]
         
-        for iteration in range(iterations):
+        for iteration in range(1, iterations + 1):
             if self.current_temperature < self.min_temperature:
                 break
 
