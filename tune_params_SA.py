@@ -116,7 +116,7 @@ if __name__ == '__main__':
     netlist = 7
     my_chip = chip.Chip(chip_number, netlist)
 
-    min_temp = 1
+    min_temp = 0.1
     iterations = 70  # number of iterations for SA
 
     tuner = tuning_params_simulated_annealing(

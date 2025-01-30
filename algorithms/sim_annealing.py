@@ -218,7 +218,7 @@ class SimulatedAnnealing:
         plt.ylabel("Temperature")
         plt.grid(True)
         plt.legend()
-        plt.show()
+        # plt.show()
 
 
     def plot_costs(self, df_data):
@@ -229,7 +229,7 @@ class SimulatedAnnealing:
         plt.ylabel("Cost")
         plt.grid(True)
         plt.legend()
-        plt.show()
+        # plt.show()
 
 
     def run(self, iterations):
