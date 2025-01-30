@@ -50,7 +50,7 @@ class Astar:
         closed_list = []
 
         # while the end node has not been reached or too many nodes are to be investigated
-        while open_list and len(open_list) < 10000:
+        while open_list and len(open_list) < 12000:
 
             # finds the node with the lowest f value
             self.current_node = min(open_list, key=attrgetter('f'))
@@ -140,7 +140,6 @@ class Astar:
                     # adds penalty when the gate is not the end gate
                     if any(possible_gate_location == gate.coor for gate in self.chip.gates.values()) and possible_gate_location != self.end_node.location:
                         child.f += 4
-                        break
 
 
 class Node:

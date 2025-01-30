@@ -1,6 +1,5 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from matplotlib.cm import get_cmap
 import os
 
 from classes import connection, gate
@@ -96,20 +95,20 @@ class Chip:
             plt.plot([0, self.x_max], y, 0, color='black', linewidth=0.5)
 
         # 20 different colors 
-        colors = get_cmap('tab20')
+        colors = plt.get_cmap('tab20')
 
         # plots the connections 
         for connection_index, connection in enumerate(self.connections):
             for start, end in zip(connection.coor_list, connection.coor_list[1:]):
                     plt.plot((start[0], end[0]), (start[1], end[1]), (start[2], end[2]), \
-                                linewidth = 2, color = colors(connection_index / 19))
+                                linewidth = 2, color = colors(connection_index % 20))
 
         ax = plt.gca() 
 
         # plots the gates
         for number, gate in self.gates.items():
-            plt.plot(gate.x, gate.y, gate.z, 'rD', markersize=20 - max([self.x_max, self.y_max]))
-            ax.text(gate.x, gate.y, gate.z, number, fontsize=20 - max([self.x_max, self.y_max]),
+            plt.plot(gate.x, gate.y, gate.z, 'rD', markersize=25 - max([self.x_max, self.y_max]))
+            ax.text(gate.x, gate.y, gate.z, number, fontsize=25 - max([self.x_max, self.y_max]),
                      horizontalalignment='center', verticalalignment='center_baseline')
 
         # removes axes values
@@ -211,6 +210,10 @@ class Chip:
 
         if plot:
             self.plot_chip()
+
+        validity = eval(df.iloc[-1, 0])[0]
+
+        return validity
 
 
     def find_best_output(self, output_dir):
