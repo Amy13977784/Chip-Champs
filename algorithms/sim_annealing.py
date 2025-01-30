@@ -108,7 +108,9 @@ class SimulatedAnnealing:
         start = [connection.start_location]
         steps_up = self.random_layers(connection.start_location, connection, new_solution)
 
-        return start + steps_up
+        if steps_up:
+            return start + steps_up
+        return None
 
 
     def reroute_from_intersection(self, connection, old_path, new_solution, intersection):

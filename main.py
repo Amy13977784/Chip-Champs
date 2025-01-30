@@ -102,7 +102,6 @@ if __name__ == '__main__':
     # plots a solution from an earlier saved file
     if args.solution == 'loading':
         validity = my_chip.load_solution(args.algorithm, plot=args.plot_chip)
-
         cost = my_chip.calculate_cost()
         print(f'The solution is {validity} and has a cost of {cost}.')
 
@@ -140,20 +139,25 @@ if __name__ == '__main__':
 
     elif args.algorithm == 'sim_annealing':
         
-        # load a presaved solution (from A*)
-        my_chip.load_solution(algorithm='astar')
+        for i in range (10):
+            # load a presaved solution (from A*)
+            my_chip.load_solution(algorithm='astar')
 
-        sa = sim_annealing.SimulatedAnnealing(
-        chip = my_chip,
-        temperature = 1000,
-        cooling_rate = 0.99,
-        min_temperature = 1,
-        )
+            sa = sim_annealing.SimulatedAnnealing(
+            chip = my_chip,
+            temperature = 1000,
+            cooling_rate = 0.9,
+            min_temperature = 0.1,
+            )
 
-        sa.run(iterations = 300)
-        
-        my_chip = sa.best_solution
-        validity = general_functions.Functions.validity(my_chip.connections)
+            sa.run(iterations = 10000)
+            
+            my_chip = sa.best_solution
+            validity = general_functions.Functions().validity(my_chip.connections)
+
+            cost = my_chip.calculate_cost()
+            print(f'\nThe solution is {validity} and has a cost of {cost}.')
+            my_chip.create_output_file(cost, args.algorithm, validity, i)
 
 
     # calculates the cost of the current solution
