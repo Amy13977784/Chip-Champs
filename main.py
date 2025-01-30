@@ -127,7 +127,8 @@ if __name__ == '__main__':
         validity = random.Random_algorithm(my_chip).all_connections()
 
     elif args.algorithm == 'breadth_first':
-        validity = breadth_first.BreadthFirst(my_chip, beam=3).all_connections()
+
+        validity = breadth_first.BreadthFirst(my_chip, beam=2).all_connections()
 
     elif args.algorithm == 'astar':
         penalties = astar_heuristics[args.netlist]['penalties']
