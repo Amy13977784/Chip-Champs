@@ -22,7 +22,7 @@ class tuning_params_simulated_annealing:
         self.results = []
         self.heatmap = None
 
-        self.start_temps = [10, 100, 500, 1000, 5000, 10000]
+        self.start_temps = [1000, 5000, 10000]
         self.cooling_rates = [0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 0.99]
 
     def plot_heatmap(self, output_file="output/tuning_heatmap.png"):
