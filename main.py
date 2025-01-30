@@ -77,10 +77,10 @@ if __name__ == '__main__':
                     '3': {'connection_order': ['order by distance'], 'penalties': ['intersections']},
                     '4': {'connection_order': ['order by location'], 'penalties': ['intersections']},
                     '5': {'connection_order': ['order by location', 'order by distance'], 'penalties': ['gates', 'intersections', 8]},
-                    '6': {'connection_order': ['order by location', 'order by distance'], 'penalties': ['intersections', 'gates']},
-                    '7': {'connection_order': ['order by distance'], 'penalties': ['intersections', 'gates']},
+                    '6': {'connection_order': ['order by location', 'order by distance'], 'penalties': ['gates', 'intersections', 7]},
+                    '7': {'connection_order': ['order by gates', 'order by distance'], 'penalties': ['intersections', 7]},
                     '8': {'connection_order': ['order by distance'], 'penalties': ['intersections']},
-                    '9': {'connection_order': ['order by distance'], 'penalties': ['intersections', 6]}}
+                    '9': {'connection_order': ['order by distance'], 'penalties': ['gates', 'intersections', 6]}}
 
     args = set_argument_parser()
 
@@ -153,7 +153,7 @@ if __name__ == '__main__':
 
     # calculates the cost of the current solution
     cost = my_chip.calculate_cost()
-    print(f'The costs for this solution: {cost}')
+    print(f'The solution is {validity} and has a cost of {cost}.')
     my_chip.create_output_file(cost, args.algorithm, validity)
 
     if args.plot_chip == True:
