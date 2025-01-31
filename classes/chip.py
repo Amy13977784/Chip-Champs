@@ -107,8 +107,8 @@ class Chip:
 
         # plots the gates
         for number, gate in self.gates.items():
-            plt.plot(gate.x, gate.y, gate.z, 'rD', markersize=25 - max([self.x_max, self.y_max]))
-            ax.text(gate.x, gate.y, gate.z, number, fontsize=25 - max([self.x_max, self.y_max]),
+            plt.plot(gate.x, gate.y, gate.z, 'rD', markersize=22 - max([self.x_max, self.y_max]))
+            ax.text(gate.x, gate.y, gate.z, number, fontsize=22 - max([self.x_max, self.y_max]),
                      horizontalalignment='center', verticalalignment='center_baseline')
 
         # removes axes values
@@ -157,7 +157,7 @@ class Chip:
         return len(self.occupied_segments) + 300 * self.calculate_intersections()
     
 
-    def create_output_file(self, cost, algorithm, validity, file_number):
+    def create_output_file(self, cost, algorithm, validity):
         """ Creates the output file, which contains the coordinates of every connection, which chip and 
         netlist, and the cost of the solution. The order of the connections corresponds to the netlist,
         regardless of the order in which the connections are made. """
@@ -184,7 +184,7 @@ class Chip:
             os.makedirs("output")
         
         # saves the dataframe into a csv file
-        df_output.to_csv(f'output/output_chip_{self.chip_number}_net_{self.netlist}_{algorithm}_{file_number}.csv')
+        df_output.to_csv(f'output/output_chip_{self.chip_number}_net_{self.netlist}_{algorithm}.csv')
 
 
     def load_solution(self, algorithm, plot=False):

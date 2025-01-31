@@ -4,7 +4,8 @@ import copy
 import pandas as pd 
 import matplotlib.pyplot as plt
 
-from algorithms import astar 
+from algorithms import astar
+from algorithms import general_functions as gf
 
 class SimulatedAnnealing:
     """ Class implements the simulated annealing algorithm. 
@@ -153,6 +154,11 @@ class SimulatedAnnealing:
         
         self.chip.calculate_intersections()
 
+        # check if there are intersections
+        if not self.chip.intersection_coors:
+            print('No intersections')
+            return 'No intersections'
+
         # choose a random connection from the current solution
         intersection =  random.choice(self.chip.intersection_coors)
 
@@ -193,8 +199,11 @@ class SimulatedAnnealing:
 
         connection.start_location = old_path[0]
 
+        if gf.Functions().validity([connection]) == 'invalid':
+            connection.coor_list = []
+
         if not connection.coor_list:
-            print("A* failed to find a path.")
+            print("A* failed to find a valid path.")
             connection.coor_list = old_path
             return None
         
@@ -251,6 +260,9 @@ class SimulatedAnnealing:
 
             # introduce the pertubation and calculate its associated cost
             new_solution = self.reroute_connection()
+
+            if new_solution == 'No intersections':
+                return
 
             if new_solution:
                             
