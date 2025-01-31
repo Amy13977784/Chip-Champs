@@ -150,11 +150,11 @@ if __name__ == '__main__':
             sa = sim_annealing.SimulatedAnnealing(
             chip = my_chip,
             temperature = 1000,
-            cooling_rate = 0.9,
-            min_temperature = 0.1,
+            cooling_rate = 0.95,
+            min_temperature = 0.01,
             )
 
-            sa.run(iterations = 10)
+            sa.run(iterations = 1000)
             
             my_chip = sa.best_solution
             validity = general_functions.Functions().validity(my_chip.connections)
