@@ -140,6 +140,8 @@ if __name__ == '__main__':
     elif args.algorithm == 'sim_annealing':
         
         for i in range (10):
+
+            # creates the chip
             my_chip = chip.Chip(args.chip_number, args.netlist)
 
             # load a presaved solution (from A*)
@@ -152,7 +154,7 @@ if __name__ == '__main__':
             min_temperature = 0.1,
             )
 
-            sa.run(iterations = 15)
+            sa.run(iterations = 10)
             
             my_chip = sa.best_solution
             validity = general_functions.Functions().validity(my_chip.connections)
